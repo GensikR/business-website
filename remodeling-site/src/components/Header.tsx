@@ -1,26 +1,75 @@
-"use client"; // Ensure this is a client component
+"use client";
 
-import React from "react";
-import Link from "next/link";
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from "react-icons/fa";
+import React from 'react';
+import Link from 'next/link';
+import { FaYoutube, FaInstagram, FaFacebookF } from 'react-icons/fa'; // Import social media icons
 
 const Header: React.FC = () => {
   return (
-    <header className="bg-gray-800 text-white p-4">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-semibold">Mauri Remodeling</h1>
-        </div>
-        <div>
-          <nav>
-            <ul className="flex space-x-4">
-              <li><Link href="/" className="hover:text-blue-300">Home</Link></li>
-              <li><Link href="/about" className="hover:text-blue-300">About</Link></li>
-              <li><Link href="/services" className="hover:text-blue-300">Services</Link></li>
-              <li><Link href="/contact" className="hover:text-blue-300">Contact</Link></li>
-            </ul>
-          </nav>
-        </div>
+    <header className="bg-white py-4 px-6 md:px-12 lg:px-24 flex items-center justify-between shadow-sm">
+      {/* TODO Add Logo */ }
+      <Link href="/" className="text-lg font-semibold text-gray-800">
+        Mauri Remodeling
+      </Link>
+
+      {/* Navigation Links */}
+      <nav className="hidden md:flex space-x-6">
+        <Link href="/" className="text-gray-600 hover:text-blue-500">
+          Home
+        </Link>
+        <Link href="/about" className="text-gray-600 hover:text-blue-500">
+          About Us
+        </Link>
+        <Link href="/portfolio" className="text-gray-600 hover:text-blue-500">
+          Portfolio
+        </Link>
+        <Link href="/services" className="text-gray-600 hover:text-blue-500">
+          Services
+        </Link>
+        <Link href="/contact" className="text-gray-600 hover:text-blue-500">
+          Contact Us
+        </Link>
+      </nav>
+
+      {/* Get a Consultation Button */}
+      <Link
+        href="/consultation"
+        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hidden md:inline-flex items-center space-x-2"
+      >
+        <span>Get a Free Estimate</span>
+        <span></span>
+      </Link>
+
+      {/* TODO Mobile Menu (You'll need to implement the toggle functionality) */}
+      <div className="md:hidden">
+        {/*TODO Hamburger Icon (replace with your preferred icon) */}
+        <button className="text-gray-600 hover:text-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24">
+            <path fillRule="evenodd" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" clipRule="evenodd" />
+          </svg>
+        </button>
+        {/*TODO Mobile Navigation (hidden by default, toggle with JavaScript) */}
+        {/* <div className="absolute top-full left-0 w-full bg-white shadow-md rounded-b-md mt-1 py-2 flex flex-col items-center space-y-3">
+          <Link href="/" className="text-gray-600 hover:text-blue-500">Home</Link>
+          <Link href="/about" className="text-gray-600 hover:text-blue-500">About Us</Link>
+          <Link href="/case-studies" className="text-gray-600 hover:text-blue-500">Case Studies</Link>
+          <Link href="/services" className="text-gray-600 hover:text-blue-500">Services</Link>
+          <Link href="/contact" className="text-gray-600 hover:text-blue-500">Contact Us</Link>
+          <Link href="/consultation" className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md">Get a consultation</Link>
+        </div> */}
+      </div>
+
+      {/* Social Media Icons (Centered - Visible on all screen sizes) */}
+      <div className="absolute bottom-0 left-0 w-full bg-gray-100 py-4 flex justify-center space-x-6 md:hidden">
+        <Link href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" className="text-red-500 hover:text-red-600">
+          <FaYoutube size={24} />
+        </Link>
+        <Link href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" className="text-purple-500 hover:text-purple-600">
+          <FaInstagram size={24} />
+        </Link>
+        <Link href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700">
+          <FaFacebookF size={24} />
+        </Link>
       </div>
     </header>
   );

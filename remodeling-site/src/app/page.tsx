@@ -1,12 +1,5 @@
-import React from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-
-const HomePage: React.FC = () => {
+export default function HomePage() {
   return (
-    <div>
-      <p>Home Page Here</p>
-    </div>);
-};
-
-export default HomePage;
+    <p>HOME PAGE</p>
+  );
+}
