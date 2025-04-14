@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { FaYoutube, FaInstagram, FaFacebookF } from 'react-icons/fa'; // Import social media icons
 
-const Header: React.FC = () => {
+const NavBar: React.FC = () => {
   return (
     <header className="bg-white py-4 px-6 md:px-12 lg:px-24 flex items-center justify-between shadow-sm">
       {/* TODO Add Logo */ }
@@ -58,21 +58,8 @@ const Header: React.FC = () => {
           <Link href="/consultation" className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md">Get a consultation</Link>
         </div> */}
       </div>
-
-      {/* Social Media Icons (Centered - Visible on all screen sizes) */}
-      <div className="absolute bottom-0 left-0 w-full bg-gray-100 py-4 flex justify-center space-x-6 md:hidden">
-        <Link href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" className="text-red-500 hover:text-red-600">
-          <FaYoutube size={24} />
-        </Link>
-        <Link href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" className="text-purple-500 hover:text-purple-600">
-          <FaInstagram size={24} />
-        </Link>
-        <Link href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700">
-          <FaFacebookF size={24} />
-        </Link>
-      </div>
     </header>
   );
 };
 
-export default Header;
+export default NavBar;
