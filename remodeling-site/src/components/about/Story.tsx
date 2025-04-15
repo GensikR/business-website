@@ -16,55 +16,51 @@ const Story: React.FC = () => {
 
           {/* Timeline Events */}
           <div className="mt-8">
-            {/* Event 1: The Beginning */}
+            {/* Event 1: Humble Beginnings */}
             <div className="mb-10 md:flex items-center justify-between md:space-x-8">
               <div className="md:w-1/2 text-center md:text-left">
-                <h3 className="text-xl font-semibold text-blue-600 mb-2">The Beginning</h3>
+                <h3 className="text-xl font-semibold text-blue-600 mb-2">Humble Beginnings</h3>
                 <p className="text-gray-600 text-sm">
-                  ABC Company was founded with a vision to establish innovative engineering solutions to
-                  bridge the gap, focusing on reliability and affordability.
+                  Mauri Remodeling was born from a passion for quality craftsmanship and a vision to help families fall in love with their homes again.
                 </p>
               </div>
               <div className="relative w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold">
-                2017
-              </div>
-            </div>
-
-            {/* Event 2: Expanding Expertise */}
-            <div className="mb-10 md:flex items-center justify-between md:space-x-8 md:flex-row-reverse">
-              <div className="md:w-1/2 text-center md:text-right">
-                <h3 className="text-xl font-semibold text-green-600 mb-2">Expanding Expertise</h3>
-                <p className="text-gray-600 text-sm">
-                  We diversified our offerings to include legacy system migrations and ERP
-                  implementations, catering to small and medium-sized businesses.
-                </p>
-              </div>
-              <div className="relative w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white font-semibold">
                 2018
               </div>
             </div>
 
-            {/* Event 3: Going Global */}
-            <div className="mb-10 md:flex items-center justify-between md:space-x-8">
-              <div className="md:w-1/2 text-center md:text-left">
-                <h3 className="text-xl font-semibold text-indigo-600 mb-2">Going Global</h3>
+            {/* Event 2: Building Trust */}
+            <div className="mb-10 md:flex items-center justify-between md:space-x-8 md:flex-row-reverse">
+              <div className="md:w-1/2 text-center md:text-right">
+                <h3 className="text-xl font-semibold text-green-600 mb-2">Building Trust</h3>
                 <p className="text-gray-600 text-sm">
-                  ABC Company expanded its reach by serving clients across multiple countries, building
-                  strong partnerships with multinational corporations.
+                  Through word-of-mouth and consistent quality, Mauri became a trusted name for kitchen, bathroom, and full-home renovations.
                 </p>
               </div>
-              <div className="relative w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold">
+              <div className="relative w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white font-semibold">
                 2019
               </div>
             </div>
 
-            {/* Event 4: Embracing Cybersecurity */}
+            {/* Event 3: Expanding Services */}
+            <div className="mb-10 md:flex items-center justify-between md:space-x-8">
+              <div className="md:w-1/2 text-center md:text-left">
+                <h3 className="text-xl font-semibold text-indigo-600 mb-2">Expanding Services</h3>
+                <p className="text-gray-600 text-sm">
+                  From patios to living rooms and everything in between, we broadened our services to meet growing demand and diverse home styles.
+                </p>
+              </div>
+              <div className="relative w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold">
+                2020
+              </div>
+            </div>
+
+            {/* Event 4: Weathering the Storm */}
             <div className="mb-10 md:flex items-center justify-between md:space-x-8 md:flex-row-reverse">
               <div className="md:w-1/2 text-center md:text-right">
-                <h3 className="text-xl font-semibold text-purple-600 mb-2">Embracing Cybersecurity</h3>
+                <h3 className="text-xl font-semibold text-purple-600 mb-2">Weathering the Storm</h3>
                 <p className="text-gray-600 text-sm">
-                  To address growing digital threats, we added comprehensive cybersecurity services,
-                  safeguarding our clients' assets worldwide.
+                  Despite global challenges, we continued to serve our clients with the same dedication and resilience that built our foundation.
                 </p>
               </div>
               <div className="relative w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold">
@@ -72,13 +68,12 @@ const Story: React.FC = () => {
               </div>
             </div>
 
-            {/* Event 5: Autonomous Teams Launched */}
+            {/* Event 5: Community Impact */}
             <div className="mb-10 md:flex items-center justify-between md:space-x-8">
               <div className="md:w-1/2 text-center md:text-left">
-                <h3 className="text-xl font-semibold text-orange-600 mb-2">Autonomous Teams Launched</h3>
+                <h3 className="text-xl font-semibold text-orange-600 mb-2">Community Impact</h3>
                 <p className="text-gray-600 text-sm">
-                  We introduced fully autonomous development teams, enabling clients to scale their
-                  projects with ease and efficiency.
+                  We started giving back to our community through local projects and charity renovations, believing in homes and hearts rebuilt together.
                 </p>
               </div>
               <div className="relative w-10 h-10 rounded-full bg-orange-600 flex items-center justify-center text-white font-semibold">
@@ -86,30 +81,15 @@ const Story: React.FC = () => {
               </div>
             </div>
 
-            {/* Event 6: 300+ Projects Completed */}
-            <div className="mb-10 md:flex items-center justify-between md:space-x-8 md:flex-row-reverse">
+            {/* Event 6: Looking Ahead */}
+            <div className="md:flex items-center justify-between md:space-x-8 md:flex-row-reverse">
               <div className="md:w-1/2 text-center md:text-right">
-                <h3 className="text-xl font-semibold text-teal-600 mb-2">300+ Projects Completed</h3>
+                <h3 className="text-xl font-semibold text-teal-600 mb-2">Looking Ahead</h3>
                 <p className="text-gray-600 text-sm">
-                  With over 300 successful projects delivered globally, we solidified our reputation as a
-                  leading provider of tailored engineering solutions.
+                  With plans to expand and innovate, we aim to continue transforming homes across the region while staying true to our values.
                 </p>
               </div>
               <div className="relative w-10 h-10 rounded-full bg-teal-600 flex items-center justify-center text-white font-semibold">
-                2023
-              </div>
-            </div>
-
-            {/* Event 7: A Trusted Partner */}
-            <div className="md:flex items-center justify-between md:space-x-8">
-              <div className="md:w-1/2 text-center md:text-left">
-                <h3 className="text-xl font-semibold text-red-600 mb-2">A Trusted Partner</h3>
-                <p className="text-gray-600 text-sm">
-                  ABC Company continues to innovate, serving startups, SMEs, and enterprises with a focus
-                  on scalable solutions, global collaboration, and unmatched reliability.
-                </p>
-              </div>
-              <div className="relative w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-semibold">
                 2024
               </div>
             </div>
@@ -119,10 +99,7 @@ const Story: React.FC = () => {
         {/* Initial Story Text (Above the Timeline) */}
         <div className="max-w-3xl mx-auto text-center mt-12">
           <p className="text-gray-700 text-sm md:text-base leading-relaxed mb-6">
-            Founded on the principles of innovation and collaboration, ABC Company was created to bridge
-            the gap between complex engineering challenges and simplified solutions. Over the years,
-            we've grown into a global team of experts passionate about helping businesses scale,
-            innovate, and thrive in an ever-changing digital landscape.
+            From a one-man operation to a full-service remodeling company, Mauri Remodeling has always been about heart, integrity, and the joy of turning houses into homes.
           </p>
         </div>
       </div>

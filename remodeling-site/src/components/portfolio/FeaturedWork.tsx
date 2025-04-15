@@ -16,32 +16,33 @@ interface CaseStudy {
 
 const caseStudies: CaseStudy[] = [
   {
-    title: "Seamless Legacy System Migration for a Healthcare Enterprise",
+    title: "Kitchen Remodel for a Family Home",
     challenge:
-      "The client's outdated technical stack was causing inefficiencies and limiting innovation.",
+      "The client's outdated kitchen lacked functionality, efficiency, and modern aesthetics, making it difficult for their family to enjoy cooking and dining.",
     solution:
-      "We architected a custom migration strategy, ensuring data integrity and minimal disruption, resulting in significant operational improvements with advanced analytics.",
-    imageSrc: "/images/case-studies/healthcare.png", // Replace with actual image path
-    imageAlt: "Healthcare Enterprise Case Study",
-    link: "/case-studies/healthcare",
+      "We redesigned the kitchen layout with modern finishes, energy-efficient appliances, and smart storage solutions to enhance the space's functionality and aesthetic appeal.",
+    imageSrc: "/images/portfolio/kitchen-remodel.png", // Replace with actual image path
+    imageAlt: "Kitchen Remodel Case Study",
+    link: "/portfolio/kitchen-remodel",
   },
   {
-    title: "Accelerating MVP Development for a FinTech Startup",
-    challenge: "The startup needed a scalable MVP within a tight timeframe to secure further funding.",
+    title: "Bathroom Renovation for a Modern Living Space",
+    challenge: "The client's bathroom was cramped and lacked a modern design, making it feel outdated and inefficient.",
     solution:
-      "Our agile team delivered a bug-free MVP in under three months, enabling the client to successfully secure their next round of investment.",
-    imageSrc: "/images/case-studies/fintech.png", // Replace with actual image path
-    imageAlt: "FinTech Startup Case Study",
-    link: "/case-studies/fintech",
+      "We created an open, spa-like atmosphere by redesigning the layout, installing luxurious finishes, and optimizing the space for both function and relaxation.",
+    imageSrc: "/images/portfolio/bathroom-renovation.png", // Replace with actual image path
+    imageAlt: "Bathroom Renovation Case Study",
+    link: "/portfolio/bathroom-renovation",
   },
   {
-    title: "Scalable ERP Implementation for a Retail Chain",
-    challenge: "The retail client struggled with fragmented systems, hindering inventory management and efficiency across locations.",
+    title: "Whole House Renovation",
+    challenge:
+      "The house needed extensive upgrades to modernize the structure while preserving its charm and character, making it safe and comfortable for a new family.",
     solution:
-      "We designed and implemented a unified ERP system, streamlining purchasing, sales, and finance processes, providing a comprehensive operational backbone.",
-    imageSrc: "/images/case-studies/retail.png", // Replace with actual image path
-    imageAlt: "Retail Chain Case Study",
-    link: "/case-studies/retail",
+      "We carefully restored the home’s original features while integrating modern amenities, ensuring both beauty and functionality in every room.",
+    imageSrc: "/images/portfolio/whole-house-renovation.png", // Replace with actual image path
+    imageAlt: "Whole House Renovation Case Study",
+    link: "/portfolio/whole-house-renovation",
   },
 ];
 
@@ -52,7 +53,7 @@ const FeaturedWork: React.FC = () => {
         {/* Section Title */}
         <h2 className="text-3xl font-bold text-gray-800 text-center mb-4">Featured Case Studies</h2>
         <p className="text-lg text-gray-600 text-center mb-8">
-          Discover how our tailored solutions have transformed businesses across industries.
+          Discover how our customized remodeling solutions have transformed homes and spaces for our clients.
         </p>
 
         {/* Case Studies Grid */}

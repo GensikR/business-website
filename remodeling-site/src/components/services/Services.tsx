@@ -15,46 +15,44 @@ interface Service {
 
 const servicesData: Service[] = [
   {
-    title: "Product Consulting",
-    description: "Strategically position your digital products for success with actionable insights and market expertise.",
-    imageSrc: "/images/services/product-consulting.png", // Replace with actual image path
-    imageAlt: "Product Consulting Illustration",
-    link: "/services/product-consulting",
+    title: "Cabinet Creation, Installation & Repair",
+    description:
+      "Custom-designed cabinets to suit your home’s style and function, including installation and expert repairs.",
+    imageSrc: "/images/services/cabinet-creation.png", // Replace with actual image path
+    imageAlt: "Cabinet Creation, Installation & Repair Illustration",
+    link: "/services/cabinet-creation",
   },
   {
-    title: "Legacy System Migration",
-    description: "Seamlessly transform outdated systems to enhance efficiency, scalability, and performance.",
-    imageSrc: "/images/services/legacy-migration.png", // Replace with actual image path
-    imageAlt: "Legacy System Migration Illustration",
-    link: "/services/legacy-system-migration",
+    title: "Kitchen & Bathroom Remodeling",
+    description:
+      "Transform your kitchen and bathroom into modern, functional spaces that fit your needs and aesthetic.",
+    imageSrc: "/images/services/kitchen-bath-remodeling.png", // Replace with actual image path
+    imageAlt: "Kitchen & Bathroom Remodeling Illustration",
+    link: "/services/kitchen-bathroom-remodeling",
   },
   {
-    title: "Automated Teams",
-    description: "Drive productivity with fully autonomous, high-performing development teams for scalable solutions.",
-    imageSrc: "/images/services/automated-teams.png", // Replace with actual image path
-    imageAlt: "Automated Teams Illustration",
-    link: "/services/automated-teams",
+    title: "Floors & Walls",
+    description:
+      "Enhance your home with beautifully installed floors and walls, offering a variety of materials and finishes.",
+    imageSrc: "/images/services/floors-walls.png", // Replace with actual image path
+    imageAlt: "Floors & Walls Illustration",
+    link: "/services/floors-walls",
   },
   {
-    title: "Engineering Consulting",
-    description: "Overcome challenges and foster innovation with expert guidance from our engineering professionals.",
-    imageSrc: "/images/services/engineering-consulting.png", // Replace with actual image path
-    imageAlt: "Engineering Consulting Illustration",
-    link: "/services/engineering-consulting",
+    title: "Patio & Decks",
+    description:
+      "Create outdoor living spaces with custom patios and decks designed to blend style, durability, and comfort.",
+    imageSrc: "/images/services/patio-decks.png", // Replace with actual image path
+    imageAlt: "Patio & Decks Illustration",
+    link: "/services/patio-decks",
   },
   {
-    title: "ERP Implementation",
-    description: "Deploy robust, customized ERP solutions to optimize and streamline your operations.",
-    imageSrc: "/images/services/erp-implementation.png", // Replace with actual image path
-    imageAlt: "ERP Implementation Illustration",
-    link: "/services/erp-implementation",
-  },
-  {
-    title: "Cybersecurity Services",
-    description: "Protect your digital assets with industry-leading security solutions, including comprehensive vulnerability assessments.",
-    imageSrc: "/images/services/cybersecurity.png", // Replace with actual image path
-    imageAlt: "Cybersecurity Services Illustration",
-    link: "/services/cybersecurity",
+    title: "Custom Furniture",
+    description:
+      "Bring your vision to life with custom furniture pieces tailored to your home’s unique style and needs.",
+    imageSrc: "/images/services/custom-furniture.png", // Replace with actual image path
+    imageAlt: "Custom Furniture Illustration",
+    link: "/services/custom-furniture",
   },
 ];
 
@@ -65,8 +63,7 @@ const Services: React.FC = () => {
         {/* Section Title */}
         <h2 className="text-3xl font-bold text-gray-800 text-center mb-4">Our Expertise</h2>
         <p className="text-lg text-gray-600 text-center mb-8">
-          We specialize in delivering tailored solutions to address your business needs across these
-          key areas:
+          We specialize in delivering tailored solutions to address your home remodeling needs in the following areas:
         </p>
 
         {/* Services Grid */}

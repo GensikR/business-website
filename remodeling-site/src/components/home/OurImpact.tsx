@@ -8,10 +8,10 @@ interface ImpactStat {
 }
 
 const impactStats: ImpactStat[] = [
-  { value: "95%", label: "Client Satisfaction Rate" },
-  { value: "300+", label: "Successful Projects Delivered" },
-  { value: "40%", label: "Faster MVP Delivery" },
-  { value: "10+", label: "Years of Combined Expertise" },
+  { value: "98%", label: "Client Satisfaction Rate" },
+  { value: "500+", label: "Remodeling Projects Completed" },
+  { value: "30%", label: "Faster Project Turnaround" },
+  { value: "15+", label: "Years of Combined Expertise" },
 ];
 
 const OurImpact: React.FC = () => {
@@ -20,7 +20,9 @@ const OurImpact: React.FC = () => {
       <div className="container mx-auto px-6 md:px-12 text-center">
         {/* Section Title */}
         <h2 className="text-3xl font-bold text-gray-800 mb-4">Our Impact</h2>
-        <p className="text-lg text-gray-600 mb-12">Discover the milestones that define our success.</p>
+        <p className="text-lg text-gray-600 mb-12">
+          Discover the milestones that define Mauri Remodeling's success in delivering high-quality home remodeling services.
+        </p>
 
         {/* Impact Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
@@ -33,8 +35,8 @@ const OurImpact: React.FC = () => {
         </div>
 
         {/* Uptime Guarantee */}
-        <div className="text-5xl font-bold text-green-600 mb-2">99.9%</div>
-        <div className="text-sm text-gray-700">Uptime Guarantee</div>
+        <div className="text-5xl font-bold text-green-600 mb-2">100%</div>
+        <div className="text-sm text-gray-700">Quality Commitment Guarantee</div>
       </div>
     </section>
   );

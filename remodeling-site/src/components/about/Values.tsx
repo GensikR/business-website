@@ -5,34 +5,34 @@ import React from "react";
 interface Value {
   title: string;
   description: string;
-  imageSrc: string; // You'll need to provide the actual image paths
+  imageSrc: string;
   imageAlt: string;
 }
 
 const valuesData: Value[] = [
   {
-    title: "Innovation",
-    description: "Pioneering solutions tailored to your unique needs.",
-    imageSrc: "/images/innovation.svg", // Replace with your actual image path
-    imageAlt: "Illustration of Innovation",
+    title: "Craftsmanship",
+    description: "Meticulous attention to detail and pride in every cut, tile, and finish.",
+    imageSrc: "/images/values/craftsmanship.png", 
+    imageAlt: "Illustration of Craftsmanship",
   },
   {
-    title: "Reliability",
-    description: "Delivering on promises with precision and excellence.",
-    imageSrc: "/images/reliability.svg", // Replace with your actual image path
-    imageAlt: "Illustration of Reliability",
+    title: "Honesty",
+    description: "Clear communication, fair pricing, and dependable service from start to finish.",
+    imageSrc: "/images/values/honesty.png",
+    imageAlt: "Illustration of Honesty",
   },
   {
-    title: "Collaboration",
-    description: "Partnering with clients to achieve shared success.",
-    imageSrc: "/images/collaboration.svg", // Replace with your actual image path
-    imageAlt: "Illustration of Collaboration",
+    title: "Family-Driven Service",
+    description: "A family business rooted in trust, respect, and personal care for every client.",
+    imageSrc: "/images/values/family.png",
+    imageAlt: "Illustration of Family Values",
   },
   {
-    title: "Integrity",
-    description: "Building trust through transparency and accountability.",
-    imageSrc: "/images/integrity.svg", // Replace with your actual image path
-    imageAlt: "Illustration of Integrity",
+    title: "Adaptability",
+    description: "Flexible solutions that meet your space, style, and budget needs.",
+    imageSrc: "/images/values/adaptability.png",
+    imageAlt: "Illustration of Adaptability",
   },
 ];
 
@@ -43,7 +43,7 @@ const Values: React.FC = () => {
         {/* Section Title */}
         <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">What We Stand For</h2>
         <p className="text-lg text-gray-600 text-center mb-12">
-          Our unwavering values shape our approach to delivering impactful solutions.
+          Our values guide every remodel, ensuring your home gets the care and craftsmanship it deserves.
         </p>
 
         {/* Values Grid */}

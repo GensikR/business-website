@@ -13,23 +13,23 @@ interface Testimonial {
 const testimonialsData: Testimonial[] = [
   {
     quote:
-      "ABC Company delivered exactly what we needed—a scalable and secure ERP system that streamlined our operations. Their team's professionalism and expertise were evident every step of the way.",
-    author: "Manager",
-    company: "Global Retail Company",
+      "Mauri Remodeling transformed our outdated kitchen into a modern, functional space. The team was professional, efficient, and exceeded our expectations in both design and execution.",
+    author: "Homeowner",
+    company: "Residential Project",
   },
   {
     quote:
-      "As a startup, we were looking for a reliable partner to build our MVP. ABC Company exceeded our expectations, delivering a bug-free product ahead of schedule. Their team felt like an extension of ours!",
-    author: "Founder",
-    company: "Fintech Startup",
+      "We hired Mauri Remodeling to renovate our bathroom, and the results were incredible! They worked within our budget and timeline, delivering high-quality craftsmanship. Highly recommended!",
+    author: "Homeowner",
+    company: "Residential Project",
   },
   {
     quote:
-      "The legacy system migration ABC Company handled for us was seamless. We were impressed with their attention to detail, proactive communication, and ability to complete the project with zero downtime.",
-    author: "CTO",
-    company: "Healthcare Enterprise",
+      "Mauri Remodeling did a fantastic job with our living room remodel. The team was attentive to detail, and their design suggestions brought new life to our home. We'll definitely work with them again in the future.",
+    author: "Homeowner",
+    company: "Residential Project",
   },
-  // Add more testimonials here
+  // Add more testimonials as needed
 ];
 
 const Testimonials: React.FC = () => {
@@ -39,8 +39,7 @@ const Testimonials: React.FC = () => {
         {/* Section Title */}
         <h2 className="text-3xl font-bold text-gray-800 mb-4">Success Stories</h2>
         <p className="text-lg text-gray-600 mb-12">
-          Explore how we've transformed challenges into opportunities, driving success for businesses
-          across industries worldwide.
+          Discover how Mauri Remodeling has transformed homes with personalized renovations and high-quality craftsmanship.
         </p>
 
         {/* Testimonials Grid */}
@@ -62,7 +61,7 @@ const Testimonials: React.FC = () => {
             href="/case-studies"
             className="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold text-sm"
           >
-            View Case Studies
+            View Featured Works
             <FaArrowRight className="ml-2" />
           </Link>
         </div>

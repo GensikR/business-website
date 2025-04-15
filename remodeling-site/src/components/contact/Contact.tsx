@@ -13,7 +13,9 @@ const Contact: React.FC = () => {
     message: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -23,18 +25,16 @@ const Contact: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Implement your form submission logic here (e.g., sending data to an API)
     console.log("Form Data:", formData);
-    alert("Message sent (implementation pending)!");
+    alert("Thank you for reaching out! We'll be in touch soon.");
   };
 
   return (
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-6 md:px-12">
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-4">Our Expertise</h2>
+        <h2 className="text-3xl font-bold text-gray-800 text-center mb-4">Get a Free Estimate</h2>
         <p className="text-lg text-gray-600 text-center mb-8">
-          We specialize in delivering tailored solutions to address your business needs across these
-          key areas:
+          Tell us more about your remodeling project. We'll get back to you with a free, no-obligation estimate.
         </p>
 
         <div className="max-w-lg mx-auto bg-white rounded-lg shadow-md p-8">
@@ -82,32 +82,32 @@ const Contact: React.FC = () => {
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               >
                 <option value="">Select Service</option>
-                <option value="product-consulting">Product Consulting</option>
-                <option value="legacy-migration">Legacy System Migration</option>
-                <option value="automated-teams">Automated Teams</option>
-                <option value="engineering-consulting">Engineering Consulting</option>
-                <option value="erp-implementation">ERP Implementation</option>
-                <option value="cybersecurity-services">Cybersecurity Services</option>
-                {/* Add more service options as needed */}
+                <option value="bathroom-remodeling">Bathroom Remodeling</option>
+                <option value="kitchen-remodeling">Kitchen Remodeling</option>
+                <option value="bedroom-renovation">Bedroom Renovation</option>
+                <option value="livingroom-makeover">Living Room Makeover</option>
+                <option value="patio-upgrade">Patio Upgrade</option>
+                <option value="custom-project">Custom Project</option>
               </select>
             </div>
 
             {/* Budget */}
             <div>
               <label htmlFor="budget" className="block text-gray-700 text-sm font-bold mb-2">
-                Budget
+                Estimated Budget
               </label>
               <input
                 type="text"
                 id="budget"
                 name="budget"
+                placeholder="$5,000 - $20,000"
                 value={formData.budget}
                 onChange={handleChange}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
 
-            {/* Subject (Full Width) */}
+            {/* Subject */}
             <div className="col-span-full">
               <label htmlFor="subject" className="block text-gray-700 text-sm font-bold mb-2">
                 Subject
@@ -122,7 +122,7 @@ const Contact: React.FC = () => {
               />
             </div>
 
-            {/* Message (Full Width) */}
+            {/* Message */}
             <div className="col-span-full">
               <label htmlFor="message" className="block text-gray-700 text-sm font-bold mb-2">
                 Message
@@ -137,7 +137,7 @@ const Contact: React.FC = () => {
               />
             </div>
 
-            {/* Send Message Button (Full Width) */}
+            {/* Submit Button */}
             <div className="col-span-full">
               <button
                 type="submit"

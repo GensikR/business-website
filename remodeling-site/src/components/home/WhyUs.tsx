@@ -14,22 +14,22 @@ interface WhyUsReason {
 
 const whyUsReasons: WhyUsReason[] = [
   {
-    title: "Global Reach",
-    description: "Serving clients worldwide, from startups to enterprises.",
-    imageSrc: "/images/why-us/global-reach.svg", // Replace with actual image path
-    imageAlt: "Illustration of Global Reach",
+    title: "Quality Craftsmanship",
+    description: "Our team of skilled professionals ensures every project is completed with the highest standards of quality.",
+    imageSrc: "/images/why-us/craftsmanship.png", // Replace with actual image path
+    imageAlt: "Illustration of Quality Craftsmanship",
   },
   {
-    title: "Scalable Solutions",
-    description: "Flexible services tailored to businesses of all sizes.",
-    imageSrc: "/images/why-us/scalable-solutions.svg", // Replace with actual image path
-    imageAlt: "Illustration of Scalable Solutions",
+    title: "Personalized Designs",
+    description: "We work closely with clients to design spaces that reflect their unique tastes and preferences.",
+    imageSrc: "/images/why-us/personalized-designs.png", // Replace with actual image path
+    imageAlt: "Illustration of Personalized Designs",
   },
   {
-    title: "Expertise You Can Trust",
-    description: "Decades of experience delivering quality solutions for complex problems.",
-    imageSrc: "/images/why-us/expertise.svg", // Replace with actual image path
-    imageAlt: "Illustration of Expertise",
+    title: "Timely Project Completion",
+    description: "We respect our clients' time, ensuring that every project is completed on schedule without compromising quality.",
+    imageSrc: "/images/why-us/timely-completion.png", // Replace with actual image path
+    imageAlt: "Illustration of Timely Completion",
   },
 ];
 
@@ -38,10 +38,9 @@ const WhyUs: React.FC = () => {
     <section className="py-16 bg-white">
       <div className="container mx-auto px-6 md:px-12 text-center">
         {/* Section Title */}
-        <h2 className="text-3xl font-bold text-gray-800 mb-4">Why Choose ABC Company?</h2>
+        <h2 className="text-3xl font-bold text-gray-800 mb-4">Why Choose Mauri Remodeling?</h2>
         <p className="text-lg text-gray-600 mb-12">
-          We provide end-to-end solutions to help businesses across industries overcome challenges,
-          innovate, and scale.
+          Discover why our clients trust us for transforming their homes with personalized, high-quality remodeling services.
         </p>
 
         {/* Reasons Grid */}
