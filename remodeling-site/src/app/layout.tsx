@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import Header from "../components/NavBar";
 import Footer from "../components/Footer";
+import ChatBot from "../components/ChatBot";
 import "./globals.css";
 
 // Initialize fonts
@@ -40,8 +41,9 @@ export default function RootLayout({
         {/* Footer */}
         <Footer />
 
-        {/*TODO Chat Button */}
-        
+        {/* Chat Button */}
+        <ChatBot />
+
       </body>
     </html>
   );
