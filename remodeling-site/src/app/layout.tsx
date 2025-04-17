@@ -41,7 +41,7 @@ export default function RootLayout({
         {/* Footer */}
         <Footer />
 
-        {/* Chat Button */}
+        {/* Chat Bot */}
         <ChatBot />
 
       </body>

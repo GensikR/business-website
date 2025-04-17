@@ -6,6 +6,7 @@ import { X } from 'lucide-react';
 interface Message {
   sender: 'user' | 'bot';
   text: string;
+  buttons?: { title: string; payload: string }[]; // Add buttons as part of the message
 }
 
 const ChatBot: React.FC = () => {
@@ -35,9 +36,10 @@ const ChatBot: React.FC = () => {
       });
 
       const data = await response.json();
-      const botMessages = data.map((msg: { text: string }) => ({
+      const botMessages = data.map((msg: { text: string; buttons?: any[] }) => ({
         sender: 'bot',
         text: msg.text,
+        buttons: msg.buttons, // Include buttons in the message if available
       }));
 
       setMessages((prevMessages) => [...prevMessages, ...botMessages]);
@@ -64,6 +66,10 @@ const ChatBot: React.FC = () => {
     sendMessageToRasa(input);
   };
 
+  const handleButtonClick = (payload: string) => {
+    sendMessageToRasa(payload);
+  };
+
   return (
     <>
       <button
@@ -79,7 +85,7 @@ const ChatBot: React.FC = () => {
       </button>
 
       {isOpen && (
-        <div className="fixed bottom-20 right-6 z-50 w-80 bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col overflow-hidden">
+        <div className="fixed bottom-20 right-6 z-50 w-96 h-[500px] bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col overflow-hidden">
           <div className="bg-blue-500 text-white px-4 py-2 flex justify-between items-center">
             <h3 className="font-semibold text-sm">Chat with Us</h3>
             <button onClick={() => setIsOpen(false)} aria-label="Close Chat">
@@ -87,30 +93,37 @@ const ChatBot: React.FC = () => {
             </button>
           </div>
 
-          <div className="p-4 text-sm text-gray-700 space-y-2 h-60 overflow-y-auto">
+          <div className="p-4 text-sm text-gray-700 space-y-2 h-full overflow-y-auto">
             {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
+              <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div
                   className={`px-3 py-2 rounded-md max-w-[70%] ${
-                    msg.sender === 'user'
-                      ? 'bg-blue-100 text-blue-800'
-                      : 'bg-gray-100 text-gray-800'
+                    msg.sender === 'user' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
                   }`}
                 >
-                  {msg.text}
+                  <div>{msg.text}</div>
+
+                  {/* Render buttons below the text message */}
+                  {msg.buttons && (
+                    <div className="mt-2 space-y-2">
+                      {msg.buttons.map((button, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => handleButtonClick(button.payload)}
+                          className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700 w-full"
+                        >
+                          {button.title}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
             <div ref={messageEndRef} />
           </div>
 
-          <form
-            onSubmit={handleSend}
-            className="px-4 py-2 border-t bg-gray-50 flex items-center space-x-2"
-          >
+          <form onSubmit={handleSend} className="px-4 py-2 border-t bg-gray-50 flex items-center space-x-2">
             <input
               type="text"
               value={input}
