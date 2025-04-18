@@ -1,0 +1,103 @@
+version: "3.1"
+
+nlu:
+- intent: arrival
+  examples: |
+    - Hi
+    - Hello
+    - Hey there
+    - Good morning
+    - Good afternoon
+    - I'm here
+
+- intent: estimates
+  examples: |
+    - Can I get an estimate?
+    - I want a quote
+    - How much would it cost?
+    - I need a price
+    - Can you give me an estimate?
+
+- intent: service_info
+  examples: |
+    - What services do you offer?
+    - Tell me about your services
+    - Do you remodel kitchens and bathrooms?
+    - What kind of remodeling do you do?
+
+- intent: about_us
+  examples: |
+    - Tell me about your company
+    - Who are you?
+    - I'd like to know more about your business
+    - What’s your background?
+
+- intent: need_human
+  examples: |
+    - I want to talk to a person
+    - Can I speak with someone?
+    - I need to talk to a human
+    - Let me talk to your team
+
+- intent: kitchen_service
+  examples: |
+    - I need kitchen remodeling
+    - Do you do kitchen renovations?
+    - I want to update my kitchen
+    - Kitchen service
+
+- intent: bathroom_service
+  examples: |
+    - I need a new bathroom
+    - Can you remodel bathrooms?
+    - Bathroom renovation
+    - Bathroom service
+
+- intent: living_room_service
+  examples: |
+    - Living room remodeling
+    - I want to redo my living room
+    - Do you update living rooms?
+    - Living room service
+
+- intent: bedroom_service
+  examples: |
+    - Bedroom remodeling
+    - I want to renovate my bedroom
+    - Can you update my bedroom?
+    - Bedroom service
+
+- intent: patio_service
+  examples: |
+    - Do you do patios?
+    - Patio remodeling
+    - I need a new patio
+    - Outdoor space upgrade
+
+- intent: comercial_service
+  examples: |
+    - Do you work on commercial buildings?
+    - Commercial remodeling
+    - I have a business space to renovate
+    - Can you remodel my office?
+
+- intent: custom_service
+  examples: |
+    - I need something custom
+    - Can you build something unique?
+    - I have a custom project in mind
+    - Custom service
+
+- intent: estimator_init
+  examples: |
+    - I want to schedule a free estimate
+    - Can I book an estimator?
+    - Schedule a visit
+    - Book an appointment for an estimate
+
+- intent: goodbye
+  examples: |
+    - Bye
+    - Goodbye
+    - See you later
+    - Thanks, that’s all for now
