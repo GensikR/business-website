@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",                          // Specifies the target JavaScript version.
+    "module": "Node16",                        // Specifies the module system (commonjs for Node.js).
+    "lib": ["ES2020"],                           // Specifies the library files to include during the compilation.
+    "esModuleInterop": true,                     // Allows compatibility with common JS modules.
+    "skipLibCheck": true,                        // Skip type checking of declaration files for improved performance.
+    "forceConsistentCasingInFileNames": true,    // Ensures that file names are consistent across the project.
+    "strict": true,                              // Enable all strict type-checking options.
+    "noImplicitAny": true,                       // Raises an error on variables without type annotations.
+    "strictNullChecks": true,                    // Ensures null and undefined are handled correctly.
+    "noUnusedLocals": true,                      // Throws errors for unused variables.
+    "noUnusedParameters": true,                  // Throws errors for unused function parameters.
+    "moduleResolution": "node16",                // Resolves modules the same way Node.js 16 does.
+    "resolveJsonModule": true,                   // Allows importing JSON files as modules.
+    "outDir": "./dist",                          // Output directory for compiled JavaScript files.
+    "rootDir": "./src",                          // Specifies the root directory for TypeScript source files.
+    "baseUrl": "./",                             // Base directory to resolve non-relative modules.
+    "paths": {                                   // Define custom paths for module resolution.
+      "@/*": ["src/*"]
+    },
+    "noEmitOnError": true,                       // Prevents emitting output files if there are type errors.
+    "skipDefaultLibCheck": true,                 // Skips type checking of the default library.
+    "resolvePackageJsonExports": true,           // Resolves imports from package.json exports field.
+    "jsx": "react",                             // This can be omitted for backend, but it's helpful if you want to include React JSX in the future.
+    "declaration": true,                         // Generates corresponding '.d.ts' declaration files.
+    "declarationMap": true,                      // Generates map files for declaration files for debugging.
+    "sourceMap": true,                           // Generates source map files for better debugging experience.
+    "inlineSourceMap": false                     // Set to false as we're using separate .map files.
+  },
+  "include": [
+    "src/**/*"                                    // Include all files in the src folder.
+  ],
+  "exclude": [
+    "node_modules",                              // Exclude node_modules folder from being compiled.
+    "dist"                                       // Exclude dist folder to avoid infinite compilation loops.
+  ]
+}
