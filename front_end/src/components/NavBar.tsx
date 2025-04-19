@@ -20,6 +20,7 @@ const NavBar: React.FC = () => {
         <Link href="/portfolio" className="text-gray-600 hover:text-blue-500">Portfolio</Link>
         <Link href="/services" className="text-gray-600 hover:text-blue-500">Services</Link>
         <Link href="/contact" className="text-gray-600 hover:text-blue-500">Contact Us</Link>
+        <Link href="/remodeling-blog" className="text-gray-600 hover:text-blue-500">Blog</Link>
       </nav>
 
       {/* Get a Consultation Button */}

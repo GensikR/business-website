@@ -1,13 +1,13 @@
 import UniversalHeader from "@/components/UniversalHeader";
-import Blog from "@/components/Blog";
+import Blog from "@/components/blog/Blog";
 
 export default function PortfolioPage() {
   return (
     <div>
       {/* Universal Header Component */}
     <UniversalHeader
-      title="This Will Be a Remodeling Blog"
-      subtitle="Browse Our Completed Remodeling Projects"
+      title="Home Remodeling Blog"
+      subtitle="Your Guide to Home Renovation and Design"
       description="From cozy bathroom updates to full-home renovations, see how we've helped clients turn their ideas into beautiful spaces. Your dream home could be next!"
     />
 

@@ -11,7 +11,7 @@ export default function PortfolioPage() {
       description="From cozy bathroom updates to full-home renovations, see how we've helped clients turn their ideas into beautiful spaces. Your dream home could be next!"
     />
 
-    {/* Featured Work Section */}
+    {/* Seletected Service Featured Work */}
     <FeaturedWork />
 
     </div>
