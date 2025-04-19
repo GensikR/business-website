@@ -13,6 +13,7 @@ export default async function BlogPage({ params }: { params: { slug: string } })
 
   return (
     <div>
+      {/*TODO: fix the await issue*/}
       <BlogPost post={post} />
     </div>
   );
