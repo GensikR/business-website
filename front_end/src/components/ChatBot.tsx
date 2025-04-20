@@ -1,234 +1,270 @@
-// 'use client';
+'use client';
 
-// import React, { useState, useRef, useEffect } from 'react';
-// import { X } from 'lucide-react';
-// import {
-//   getFirestore,
-//   collection,
-//   addDoc,
-//   serverTimestamp,
-// } from 'firebase/firestore';
-// import { initializeApp } from 'firebase/app';
-// //TODO: HIDE THIS INFO IN ENV FILE
-// // Firebase config setup — replace with your actual config
+import React, { useState, useRef, useEffect } from 'react';
+import { X } from 'lucide-react';
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp,
+  onSnapshot,
+  query,
+  orderBy,
+  doc,
+  updateDoc
+} from 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
 
-// // Initialize Firebase app and Firestore
-// const app = initializeApp(firebaseConfig);
-// const db = getFirestore(app);
 
-// // Message interface to define chat message shape
-// interface Message {
-//   sender: 'user' | 'bot' | 'admin';
-//   text: string;
-//   senderId?: string;
-//   buttons?: { title: string; payload: string }[];
-// }
 
-// const ChatBot: React.FC = () => {
-//   const [isOpen, setIsOpen] = useState(false);           // Controls whether chat UI is visible
-//   const [messages, setMessages] = useState<Message[]>([
-//     { sender: 'bot', text: 'Hello! How can we help you today?' },
-//   ]);
-//   const [input, setInput] = useState('');                // Current input value
-//   const [loading, setLoading] = useState(false);         // Loading state during message send
-//   const [escalated, setEscalated] = useState(false);     // Flag for escalation state
-//   const [chatId, setChatId] = useState<string | null>(null); // Store the unique chat ID
-//   const messageEndRef = useRef<HTMLDivElement>(null);    // For scrolling to the bottom of chat
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-//   // WebSocket setup (for communication with the admin)
-//   const [socket, setSocket] = useState<WebSocket | null>(null);
+// Message interface
+interface Message {
+  sender: 'user' | 'bot' | 'admin';
+  text: string;
+  time: string;
+  buttons?: { title: string; payload: string }[];
+}
 
-//   useEffect(() => {
-//     messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-//   }, [messages]);
+const ChatBot: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      sender: 'bot',
+      text: 'Hello! How can we help you today?',
+      time: new Date().toISOString()
+    }
+  ]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [escalated, setEscalated] = useState(false);
+  const [chatid, setChatId] = useState<string>('');
+  const messageEndRef = useRef<HTMLDivElement>(null);
 
-//   // Called when escalation is triggered
-//   const startWebSocketCommunication = () => {
-//     const newSocket = new WebSocket('ws://localhost:5000'); // Replace with your WebSocket server URL
-//     newSocket.onopen = () => {
-//       console.log('WebSocket connection established');
-//     };
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
-//     newSocket.onmessage = (event) => {
-//       const data = JSON.parse(event.data);
-//       if (data.sender === 'admin') {
-//         setMessages((prev) => [
-//           ...prev,
-//           { sender: 'admin', text: data.text, senderId: data.senderId },
-//         ]);
-//       }
-//     };
+  const sendMessageToRasa = async (message: string) => {
+    try {
+      setLoading(true);
+      const response = await fetch('http://localhost:5005/webhooks/rest/webhook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sender: 'user123',
+          message
+        })
+      });
 
-//     setSocket(newSocket);
-//   };
+      const data = await response.json();
 
-//   // Escalate message to Firestore (for escalation only)
-//   const escalateMessageToFirestore = async (text: string) => {
-//     if (!chatId) return;
-//     const messagesRef = collection(db, 'escalatedMessages');
-//     try {
-//       await addDoc(messagesRef, {
-//         chatId,
-//         text,
-//         sender: 'user',
-//         timestamp: serverTimestamp(),
-//       });
-//     } catch (err) {
-//       console.error('Error escalating to Firestore:', err);
-//     }
-//   };
+      const botMessages: Message[] = data.map((msg: any) => {
+        const newMsg: Message = {
+          sender: 'bot',
+          text: msg.text,
+          time: new Date().toISOString(),
+          buttons: msg.buttons
+        };
 
-//   // Send message to Rasa — only called before escalation
-//   const sendMessageToRasa = async (message: string) => {
-//     try {
-//       setLoading(true);
-//       const response = await fetch('http://localhost:5005/webhooks/rest/webhook', {
-//         method: 'POST',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify({
-//           sender: 'user123',
-//           message: message,
-//         }),
-//       });
+        if (msg.text.toLowerCase().includes('human was requested')) {
+          setEscalated(true);
+          escalateChat();
+        }
 
-//       const data = await response.json();
+        return newMsg;
+      });
 
-//       // Process and display Rasa's responses
-//       const botMessages = data.map((msg: { text: string; buttons?: any[] }) => {
-//         // Check if escalation was triggered
-//         if (msg.text.toLowerCase().includes('escalated')) {
-//           setEscalated(true);                  // Mark state as escalated
-//           startWebSocketCommunication();       // Start WebSocket communication for admin interaction
-//           setChatId(generateChatId());         // Assign a unique chat ID
-//         }
+      setMessages(prev => [...prev, ...botMessages]);
+    } catch (err) {
+      console.error('Rasa error:', err);
+      setMessages(prev => [
+        ...prev,
+        {
+          sender: 'bot',
+          text: 'Sorry, something went wrong.',
+          time: new Date().toISOString()
+        }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-//         return {
-//           sender: 'bot',
-//           text: msg.text,
-//           buttons: msg.buttons,
-//         };
-//       });
+  const handleSend = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
 
-//       setMessages((prevMessages) => [...prevMessages, ...botMessages]);
-//     } catch (error) {
-//       console.error('Error sending message to Rasa:', error);
-//       const botMessage: Message = {
-//         sender: 'bot',
-//         text: 'Sorry, I could not understand that. Please try again later.',
-//       };
-//       setMessages((prevMessages) => [...prevMessages, botMessage]);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
+    const userMessage: Message = {
+      sender: 'user',
+      text: input,
+      time: new Date().toISOString()
+    };
 
-//   // Function to generate a unique chat ID (this could be more sophisticated)
-//   const generateChatId = () => {
-//     return `chat-${Date.now()}`;
-//   };
+    setMessages(prev => [...prev, userMessage]);
 
-//   // Handles "Send" button click or Enter key
-//   const handleSend = (e: React.FormEvent) => {
-//     e.preventDefault();
-//     if (!input.trim()) return;
+    if (escalated) {
+      sendMessageToAdmin(userMessage);
+    } else {
+      sendMessageToRasa(input);
+    }
 
-//     const userMessage: Message = { sender: 'user', text: input };
-//     setMessages((prev) => [...prev, userMessage]);
+    setInput('');
+  };
 
-//     if (escalated) {
-//       escalateMessageToFirestore(input);   // Escalate to Firestore after escalation
-//       socket?.send(JSON.stringify({ text: input, sender: 'user' })); // Send message to admin via WebSocket
-//     } else {
-//       sendMessageToRasa(input);        // Send to Rasa before escalation
-//     }
+  const handleButtonClick = (payload: string) => {
+    const userMessage: Message = {
+      sender: 'user',
+      text: payload,
+      time: new Date().toISOString()
+    };
 
-//     setInput('');
-//   };
+    setMessages(prev => [...prev, userMessage]);
 
-//   // Handles Rasa buttons
-//   const handleButtonClick = (payload: string) => {
-//     const userMessage: Message = { sender: 'user', text: payload };
-//     setMessages((prev) => [...prev, userMessage]);
+    if (escalated) {
+      sendMessageToAdmin(userMessage);
+    } else {
+      sendMessageToRasa(payload);
+    }
+  };
 
-//     if (escalated) {
-//       escalateMessageToFirestore(payload);   // If escalated, treat button as normal message
-//       socket?.send(JSON.stringify({ text: payload, sender: 'user' })); // Send to admin via WebSocket
-//     } else {
-//       sendMessageToRasa(payload);        // Otherwise, send payload to Rasa
-//     }
-//   };
+  const escalateChat = async () => {
+    try {
+      const chatRef = await addDoc(collection(db, 'Chats'), {
+        createdAt: serverTimestamp()
+      });
 
-//   return (
-//     <>
-//       {/* Floating button to open chat */}
-//       <button
-//         className="fixed bottom-6 right-6 z-50 bg-white border border-gray-300 shadow-md rounded-full p-2 hover:shadow-lg transition"
-//         onClick={() => setIsOpen(!isOpen)}
-//         aria-label="Open Chat"
-//       >
-//         <img src="/images/team/chatbot.png" alt="Chat" className="h-12 w-12 object-contain" />
-//       </button>
+      setChatId(chatRef.id);
 
-//       {isOpen && (
-//         <div className="fixed bottom-20 right-6 z-50 w-96 h-[500px] bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col overflow-hidden">
-//           {/* Chat Header */}
-//           <div className="bg-blue-500 text-white px-4 py-2 flex justify-between items-center">
-//             <h3 className="font-semibold text-sm">Chat with Us</h3>
-//             <button onClick={() => setIsOpen(false)} aria-label="Close Chat">
-//               <X className="h-4 w-4" />
-//             </button>
-//           </div>
+      const initialMessage: Message = {
+        sender: 'bot',
+        text: "A Human will be you shortly.",
+        time: new Date().toISOString()
+      };
 
-//           {/* Chat Messages */}
-//           <div className="p-4 text-sm text-gray-700 space-y-2 h-full overflow-y-auto">
-//             {messages.map((msg, index) => (
-//               <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-//                 <div
-//                   className={`px-3 py-2 rounded-md max-w-[70%] ${msg.sender === 'user' ? 'bg-blue-100 text-blue-800' : msg.sender === 'admin' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}
-//                 >
-//                   <div>{msg.text}</div>
+      await addDoc(collection(db, 'Chats', chatRef.id, 'messages'), initialMessage);
 
-//                   {/* Render buttons (if any) */}
-//                   {msg.buttons && (
-//                     <div className="mt-2 space-y-2">
-//                       {msg.buttons.map((button, idx) => (
-//                         <button
-//                           key={idx}
-//                           onClick={() => handleButtonClick(button.payload)}
-//                           className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700 w-full"
-//                         >
-//                           {button.title}
-//                         </button>
-//                       ))}
-//                     </div>
-//                   )}
-//                 </div>
-//               </div>
-//             ))}
-//             <div ref={messageEndRef} />
-//           </div>
+      setMessages(prev => [...prev, initialMessage]);
+    } catch (err) {
+      console.error('Error escalating:', err);
+    }
+  };
 
-//           {/* Input Area */}
-//           <form onSubmit={handleSend} className="px-4 py-2 border-t bg-gray-50 flex items-center space-x-2">
-//             <input
-//               type="text"
-//               value={input}
-//               onChange={(e) => setInput(e.target.value)}
-//               className="flex-grow px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-//               placeholder="Type your message..."
-//             />
-//             <button
-//               type="submit"
-//               className="text-blue-500 font-semibold hover:text-blue-700"
-//               disabled={loading}
-//             >
-//               {loading ? 'Sending...' : 'Send'}
-//             </button>
-//           </form>
-//         </div>
-//       )}
-//     </>
-//   );
-// };
+  const sendMessageToAdmin = async (message: Message) => {
+    if (!chatid) return;
 
-// export default ChatBot;
+    try {
+      await addDoc(collection(db, 'Chats', chatid, 'messages'), {
+        sender: message.sender,
+        text: message.text,
+        timestamp: serverTimestamp()
+      });
+    } catch (err) {
+      console.error('Error sending to admin:', err);
+    }
+  };
+  //TODO: FIX THIS
+  // Listen for new messages from admin
+  useEffect(() => {
+    if (!chatid) return;
+
+    const q = query(
+      collection(db, 'Chats', chatid, 'messages'),
+      orderBy('timestamp')
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === 'added') {
+          const data = change.doc.data();
+          console.log('New message from admin:', data);
+          if (data.sender === 'admin') { // Only process admin messages
+            const newMessage: Message = {
+              sender: data.sender || 'unknown',
+              text: data.text || '',
+              time: data.time || (data.timestamp?.toDate()?.toISOString() ?? new Date().toISOString()),
+            };
+            setMessages(prev => [...prev, newMessage]);
+          }
+        }
+      });
+    });
+
+    return () => unsubscribe();
+  }, [chatid]);
+
+  return (
+    <>
+      <button
+        className="fixed bottom-6 right-6 z-50 bg-white border border-gray-300 shadow-md rounded-full p-2 hover:shadow-lg transition"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <img src="/images/team/chatbot.png" alt="Chat" className="h-12 w-12 object-contain" />
+      </button>
+
+      {isOpen && (
+        <div className="fixed bottom-20 right-6 z-50 w-96 h-[500px] bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col overflow-hidden">
+          <div className="bg-blue-500 text-white px-4 py-2 flex justify-between items-center">
+            <h3 className="font-semibold text-sm">Chat with Us</h3>
+            <button onClick={() => setIsOpen(false)} aria-label="Close Chat">
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="p-4 text-sm text-gray-700 space-y-2 h-full overflow-y-auto">
+            {messages.map((msg, index) => (
+              <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div
+                  className={`px-3 py-2 rounded-md max-w-[70%] ${
+                    msg.sender === 'user'
+                      ? 'bg-blue-100 text-blue-800'
+                      : msg.sender === 'admin'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-gray-100 text-gray-800'
+                  }`}
+                >
+                  <div>{msg.text}</div>
+                  {msg.buttons && (
+                    <div className="mt-2 space-y-2">
+                      {msg.buttons.map((button, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => handleButtonClick(button.payload)}
+                          className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700 w-full"
+                        >
+                          {button.title}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+            <div ref={messageEndRef} />
+          </div>
+
+          <form onSubmit={handleSend} className="px-4 py-2 border-t bg-gray-50 flex items-center">
+            <input
+              type="text"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm mr-2"
+              placeholder="Type your message..."
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 disabled:opacity-50"
+            >
+              Send
+            </button>
+          </form>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default ChatBot;
