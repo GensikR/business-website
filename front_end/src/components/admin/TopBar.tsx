@@ -40,7 +40,7 @@ const TopBar: React.FC = () => {
 
         <div className="flex items-center">
           <div className="rounded-full w-8 h-8 bg-gray-300 overflow-hidden mr-2">
-            <img src="images/team/diana.png" alt="User Avatar" className="object-cover w-full h-full" />
+            <img src="../images/team/diana.png" alt="User Avatar" className="object-cover w-full h-full" />
           </div>
           <div className="text-right">
             <span className="block text-sm font-semibold text-gray-700">Diana Rubio</span>
