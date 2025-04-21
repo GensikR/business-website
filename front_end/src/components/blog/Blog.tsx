@@ -1,149 +1,132 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { BlogPost } from '@/types';
+import firebaseConfig from '@/lib/fb_config';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
 
-interface Post {
-  id: number;
-  category: string;
-  date: string;
-  title: string;
-  description: string;
-  author: string;
-  authorImage: string;
-  imageSrc: string;
-  link: string; // New link field
-}
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-const samplePosts: Post[] = [
-  {
-    id: 1,
-    category: 'Kitchen',
-    date: '05.08.2025',
-    title: 'Dream Kitchen Transformation in Arlington',
-    description: 'Explore how we turned a dated kitchen into a modern, functional space perfect for family gatherings and entertaining.',
-    author: 'Jane Miller',
-    authorImage: '/images/team/diana.png',
-    imageSrc: '/images/portfolio/kitchen-remodel.png',
-    link: '/remodeling-blog/dream-kitchen-transformation-in-arlington',
-  },
-  {
-    id: 2,
-    category: 'Bathroom',
-    date: '05.07.2025',
-    title: 'Spa-Like Bathroom Renovation Project',
-    description: 'Discover the details of our recent bathroom remodel, creating a relaxing and luxurious retreat for homeowners.',
-    author: 'Robert Davis',
-    authorImage: '/images/team/diana.png',
-    imageSrc: '/images/portfolio/bathroom-renovation.png',
-    link: '/remodeling-blog/spa-like-bathroom-renovation-project',
-  },
-  {
-    id: 3,
-    category: 'Whole House',
-    date: '05.05.2025',
-    title: 'Complete Home Remodel in Grand Prairie',
-    description: 'See how we revitalized an entire house, updating its style and improving its flow to meet the clients\' evolving needs.',
-    author: 'Alice Brown',
-    authorImage: '/images/team/diana.png',
-    imageSrc: '/images/portfolio/whole-house-renovation.png',
-    link: '/remodeling-blog/complete-home-remodel-in-grand-prairie',
-  },
-  {
-    id: 4,
-    category: 'Living Room',
-    date: '05.03.2025',
-    title: 'Cozy Living Room Makeover',
-    description: 'Learn about the design choices and material selections that transformed a dull living room into a warm and inviting area.',
-    author: 'John Wilson',
-    authorImage: '/images/team/diana.png',
-    imageSrc: '/images/portfolio/whole-house-renovation.png',
-    link: '/remodeling-blog/cozy-living-room-makeover',
-  },
-  {
-    id: 5,
-    category: 'Kitchen',
-    date: '05.01.2025',
-    title: 'Modern Kitchen Design Trends',
-    description: 'An inside look at the latest trends in kitchen design, featuring sleek cabinetry, innovative appliances, and stylish finishes.',
-    author: 'Sarah Green',
-    authorImage: '/images/team/diana.png',
-    imageSrc: '/images/portfolio/kitchen-remodel.png',
-    link: '/remodeling-blog/modern-kitchen-design-trends',
-  },
-  {
-    id: 6,
-    category: 'Bathroom',
-    date: '04.29.2025',
-    title: 'Small Bathroom Remodel Ideas',
-    description: 'Clever solutions and design tips for maximizing space and style in smaller bathroom renovation projects.',
-    author: 'David Lee',
-    authorImage: '/images/team/diana.png',
-    imageSrc: '/images/portfolio/bathroom-renovation.png',
-    link: '/remodeling-blog/small-bathroom-remodel-ideas',
-  },
+const blogCategories = [
+  { value: 'all', label: 'All' },
+  { value: 'kitchen', label: 'Kitchen' },
+  { value: 'bathroom', label: 'Bathroom' },
+  { value: 'living room', label: 'Living Room' },
+  { value: 'bedroom', label: 'Bedroom' },
+  { value: 'outdoor', label: 'Outdoor' },
+  { value: 'office', label: 'Office' },
 ];
 
-const PopularTopics: React.FC = () => {
-  const allCategories = ['All', ...new Set(samplePosts.map((post) => post.category))];
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [filteredPosts, setFilteredPosts] = useState(samplePosts);
+const shuffleArray = (arr: BlogPost[]) => {
+  return [...arr].sort(() => 0.5 - Math.random());
+};
+
+const FeaturedProjects: React.FC = () => {
+  const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const postsSnapshot = await getDocs(collection(db, 'Blogposts'));
+      const postsData = postsSnapshot.docs.map(
+        (doc) => ({ id: doc.id, ...doc.data() } as BlogPost)
+      );
+      setAllPosts(postsData);
+      filterPosts('all'); // Initial load with random 6 of all categories
+    };
+
+    fetchPosts();
+  }, []);
 
   const filterPosts = (category: string) => {
     setSelectedCategory(category);
-    if (category === 'All') {
-      setFilteredPosts(samplePosts);
+    if (category === 'all') {
+      const randomAll = shuffleArray(allPosts).slice(0, 6);
+      setFilteredPosts(randomAll);
     } else {
-      setFilteredPosts(samplePosts.filter((post) => post.category === category));
+      const filteredByCategory = allPosts.filter((post) => post.category === category);
+      const randomFiltered = shuffleArray(filteredByCategory).slice(0, 6);
+      setFilteredPosts(randomFiltered);
+    }
+  };
+
+  const isValidImageUrl = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
     }
   };
 
   return (
     <section className="bg-white py-12">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-gray-800">Popular topics</h2>
-          <button className="text-sm text-gray-600 hover:text-gray-800">View All</button>
-        </div>
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Featured Projects</h2>
 
-        <div className="mb-6 flex space-x-2 overflow-x-auto">
-          {allCategories.map((category) => (
+        <div className="mb-6 flex space-x-4 overflow-x-auto">
+          {blogCategories.map((cat) => (
             <button
-              key={category}
-              onClick={() => filterPosts(category)}
-              className={`px-3 py-1 rounded-full text-sm ${
-                selectedCategory === category ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              } focus:outline-none`}
+              key={cat.value}
+              onClick={() => filterPosts(cat.value)}
+              className={`px-4 py-2 rounded-md text-sm font-medium ${
+                selectedCategory === cat.value
+                  ? 'bg-blue-500 text-white shadow-md'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1`}
             >
-              {category}
+              {cat.label}
             </button>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredPosts.map((post) => (
             <div key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-              <Link href={post.link} className="block">
-                  <div className="relative w-full h-48">
-                    <Image src={post.imageSrc} alt={post.title} layout="fill" objectFit="cover" className="rounded-t-lg" />
-                    <span className="absolute top-2 left-2 bg-blue-500 text-white text-xs rounded-full px-2 py-1 font-semibold">
-                      {post.category}
+              <Link href={`/blog/${post.id}`} className="block">
+                <div className="relative w-full h-64">
+                  {isValidImageUrl(post.imageSrc) ? (
+                    <Image
+                      src={post.imageSrc}
+                      alt={post.imageAlt}
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-t-lg"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-600">
+                      Image not available
+                    </div>
+                  )}
+                  <span className="absolute top-3 left-3 bg-blue-500 text-white text-xs rounded-full px-3 py-1 font-semibold">
+                    {blogCategories.find(cat => cat.value === post.category)?.label || post.category}
+                  </span>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-3 line-clamp-2">
+                    {post.title}
+                  </h3>
+                  <div className="mb-4">
+                    <h4 className="text-sm font-semibold text-gray-600 mb-1">Challenge</h4>
+                    <p className="text-gray-700 text-sm line-clamp-2">{post.challenge}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-600 mb-1">Solution</h4>
+                    <p className="text-gray-700 text-sm line-clamp-2">{post.solution}</p>
+                  </div>
+                  <div className="mt-4">
+                    <span className="text-blue-500 hover:underline text-sm font-semibold">
+                      Read Full Project Details <span className="inline-block ml-1">&#8594;</span>
                     </span>
                   </div>
-                  <div className="p-4">
-                    <p className="text-gray-500 text-xs mb-1">{post.date}</p>
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2">{post.title}</h3>
-                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">{post.description}</p>
-                    <div className="flex items-center space-x-2">
-                      <div className="relative w-6 h-6 rounded-full overflow-hidden">
-                        <Image src={post.authorImage} alt={post.author} layout="fill" objectFit="cover" />
-                      </div>
-                      <p className="text-gray-700 text-xs">{post.author}</p>
-                    </div>
-                  </div>
-                </Link>
-
+                </div>
+              </Link>
             </div>
           ))}
         </div>
@@ -152,4 +135,4 @@ const PopularTopics: React.FC = () => {
   );
 };
 
-export default PopularTopics;
+export default FeaturedProjects;
