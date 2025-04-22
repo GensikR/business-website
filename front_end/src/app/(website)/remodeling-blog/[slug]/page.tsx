@@ -1,6 +1,6 @@
 // app/remodeling-blog/[slug]/page.tsx
 import { getPost } from '@/lib/getPost'; // Make sure this is correct path
-import BlogPost from '@/components/blog/BlogPost';
+import BlogPost from '@/components/blog/BlogPostView';
 import { notFound } from 'next/navigation';
 
 export default async function BlogPage({ params }: { params: { slug: string } }) {

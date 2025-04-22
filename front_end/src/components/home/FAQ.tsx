@@ -43,31 +43,29 @@ const FAQ: React.FC = () => {
   };
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200">
       <div className="container mx-auto px-6 md:px-12">
         {/* Section Title */}
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-4">
+        <h2 className="text-4xl font-extrabold text-gray-800 text-center mb-6 tracking-tight">
           Frequently Asked Questions
         </h2>
-        <p className="text-lg text-gray-600 text-center mb-12">
+        <p className="text-lg text-gray-600 text-center mb-12 max-w-3xl mx-auto">
           Have questions about our remodeling services? We're here to help.
         </p>
 
         {/* FAQ Items */}
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-2xl mx-auto space-y-4">
           {faqData.map((item, index) => (
-            <div key={index} className="border-b border-gray-200 py-4">
+            <div key={index} className="bg-white shadow-lg rounded-lg overflow-hidden">
               <div
-                className="flex items-center justify-between cursor-pointer"
+                className="flex items-center justify-between cursor-pointer py-4 px-6 hover:bg-gray-50 transition-all duration-300"
                 onClick={() => toggleAccordion(index)}
               >
-                <h3 className="text-lg font-semibold text-gray-700">
-                  {item.question}
-                </h3>
+                <h3 className="text-xl font-semibold text-gray-700">{item.question}</h3>
                 <button className="text-gray-500 focus:outline-none">
                   {expandedIndex === index ? (
                     <svg
-                      className="w-6 h-6"
+                      className="w-6 h-6 transform rotate-180 transition-transform"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -81,7 +79,7 @@ const FAQ: React.FC = () => {
                     </svg>
                   ) : (
                     <svg
-                      className="w-6 h-6"
+                      className="w-6 h-6 transform rotate-0 transition-transform"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -97,7 +95,7 @@ const FAQ: React.FC = () => {
                 </button>
               </div>
               {expandedIndex === index && (
-                <div className="mt-2 text-gray-600 text-sm">
+                <div className="px-6 pb-4 text-gray-600 text-sm bg-gray-50">
                   {item.answer}
                 </div>
               )}

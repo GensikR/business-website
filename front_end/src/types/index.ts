@@ -1,5 +1,5 @@
 // Example interface for BlogPost
-export interface BlogPost {
+export interface WorkPost {
   id: string;
   title: string;
   category: "kitchen" | "bathroom" | "living room" | "bedroom" | "outdoor" | "office";
@@ -14,6 +14,18 @@ export interface BlogPost {
   imageSrc: string;
   imageAlt: string;
 }
+
+export interface BlogPost 
+{
+  title: string;
+  category: string; // e.g. "DIY"
+  subcategory: string; // e.g. "Kitchen"
+  summary: string;
+  content: string;
+  img1: string;
+  img2: string;
+}
+
 
 // Interface for Message (unchanged)
 export interface Message {

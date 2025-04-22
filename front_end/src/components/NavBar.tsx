@@ -1,98 +1,147 @@
 "use client";
 
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { FaYoutube, FaInstagram, FaFacebookF } from 'react-icons/fa';
+import React, { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { FaYoutube, FaInstagram, FaFacebookF } from "react-icons/fa";
+import { HiMenu, HiX } from "react-icons/hi";
+import { motion, AnimatePresence } from "framer-motion";
 
-const NavBar: React.FC = () => {
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About Us" },
+  { href: "/portfolio", label: "Portfolio" },
+  { href: "/services", label: "Services" },
+  { href: "/contact", label: "Contact Us" },
+  { href: "/remodeling-blog", label: "Blog" },
+];
+
+export default function NavBar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   return (
-    <header className="bg-white h-16 px-6 md:px-12 lg:px-24 flex items-center justify-between shadow-md sticky top-0 z-50">
-  {/* Logo */}
-  <Link href="/" className="flex items-center h-full">
-    <div className="h-full flex items-center">
-      <Image
-        src="/images/company-logo.png"
-        alt="Your Company Logo"
-        width={150}
-        height={40}
-        className="max-h-full object-contain"
-      />
-    </div>
-  </Link>
+    <header className="sticky top-0 z-50">
+      <div className="container mx-auto flex items-center justify-between h-20 px-6 md:px-12 lg:px-24 
+        bg-white/30 md:bg-white/30 md:backdrop-blur-md shadow-md md:shadow-md">
+        {/* Logo */}
+        <Link href="/" className="flex items-center h-full">
+          <Image
+            src="/images/company-logo.png"
+            alt="Mauri Remodeling Logo"
+            width={160}
+            height={48}
+            className="object-contain"
+          />
+        </Link>
 
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex space-x-8">
+          {navLinks.map((link) => (
+            <motion.div
+              key={link.href}
+              whileHover={{ y: -2, scale: 1.05 }}
+              className="relative"
+            >
+              <Link
+                href={link.href}
+                className="text-gray-800 font-medium hover:text-blue-600 transition-colors"
+              >
+                {link.label}
+              </Link>
+            </motion.div>
+          ))}
+        </nav>
 
-      {/* Navigation Links */}
-      <nav className="hidden md:flex space-x-6">
-        <Link
-          href="/"
-          className="text-gray-600 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
-        >
-          Home
-        </Link>
-        <Link
-          href="/about"
-          className="text-gray-600 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
-        >
-          About Us
-        </Link>
-        <Link
-          href="/portfolio"
-          className="text-gray-600 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
-        >
-          Portfolio
-        </Link>
-        <Link
-          href="/services"
-          className="text-gray-600 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
-        >
-          Services
-        </Link>
-        <Link
-          href="/contact"
-          className="text-gray-600 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
-        >
-          Contact Us
-        </Link>
-        <Link
-          href="/remodeling-blog"
-          className="text-gray-600 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
-        >
-          Blog
-        </Link>
-      </nav>
+        {/* Right Actions (Always Visible) */}
+        <div className="flex items-center space-x-4 md:space-x-6">
+          {/* Social Icons */}
+          <div className="flex space-x-3 md:space-x-4">
+            {[FaYoutube, FaInstagram, FaFacebookF].map((Icon, i) => (
+              <Link
+                key={i}
+                href="#"
+                className="p-2 bg-white/50 backdrop-blur-sm rounded-full hover:bg-white transition"
+              >
+                <Icon className="w-5 h-5 text-gray-800 hover:text-blue-600" />
+              </Link>
+            ))}
+          </div>
 
-      {/* Social Media Icons */}
-      <div className="flex space-x-4 md:space-x-6 items-center">
-        <Link href="https://www.youtube.com" target="_blank" className="text-gray-600 hover:text-red-500 transition-all duration-300">
-          <FaYoutube className="h-6 w-6" />
-        </Link>
-        <Link href="https://www.instagram.com" target="_blank" className="text-gray-600 hover:text-pink-500 transition-all duration-300">
-          <FaInstagram className="h-6 w-6" />
-        </Link>
-        <Link href="https://www.facebook.com" target="_blank" className="text-gray-600 hover:text-blue-600 transition-all duration-300">
-          <FaFacebookF className="h-6 w-6" />
-        </Link>
-      </div>
+          {/* Estimate button (always visible) */}
+          <Link
+            href="/consultation"
+            className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition-all text-sm"
+          >
+            Get a Free Estimate
+          </Link>
+        </div>
 
-      {/* Get a Consultation Button */}
-      <Link
-        href="/consultation"
-        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hidden md:inline-flex items-center space-x-2 h-12 transition-all duration-300 transform hover:scale-105"
-      >
-        <span>Get a Free Estimate</span>
-      </Link>
-
-      {/* Mobile Menu */}
-      <div className="md:hidden">
-        <button className="text-gray-600 hover:text-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105">
-          <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24">
-            <path fillRule="evenodd" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" clipRule="evenodd" />
-          </svg>
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setMobileOpen((o) => !o)}
+          className="md:hidden text-gray-800 p-2 focus:outline-none"
+        >
+          {mobileOpen ? <HiX className="w-6 h-6" /> : <HiMenu className="w-6 h-6" />}
         </button>
       </div>
+
+      {/* Mobile Off‑canvas */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "tween", duration: 0.3 }}
+            className="fixed inset-y-0 right-0 w-3/4 max-w-xs bg-white shadow-2xl z-50 flex flex-col p-6"
+          >
+            <div className="flex items-center justify-end mb-4">
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="text-gray-800 p-2"
+              >
+                <HiX className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="flex flex-col space-y-4">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="text-gray-800 font-medium py-2 hover:text-blue-600 transition"
+                >
+                  {link.label}
+                </Link>
+              ))}
+
+              {/* Social buttons in mobile menu */}
+              <div className="flex space-x-4 pt-4">
+                {[FaYoutube, FaInstagram, FaFacebookF].map((Icon, i) => (
+                  <Link
+                    key={i}
+                    href="#"
+                    onClick={() => setMobileOpen(false)}
+                    className="p-2 bg-gray-100 rounded-full hover:bg-blue-100 transition"
+                  >
+                    <Icon className="w-5 h-5 text-gray-800 hover:text-blue-600" />
+                  </Link>
+                ))}
+              </div>
+
+              {/* Estimate button in mobile menu */}
+              <Link
+                href="/consultation"
+                onClick={() => setMobileOpen(false)}
+                className="mt-4 block text-center bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-full shadow transition"
+              >
+                Get a Free Estimate
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
-};
-
-export default NavBar;
+}

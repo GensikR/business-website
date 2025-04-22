@@ -1,158 +1,125 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { FaArrowRight } from "react-icons/fa";
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { BlogPost as WorkPost } from '@/types';
+import firebaseConfig from '@/lib/fb_config';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
 
-interface Project {
-  title: string;
-  challenge: string;
-  solution: string;
-  imageSrc: string;
-  imageAlt: string;
-  link: string;
-  category: "All" | "Kitchen" | "Bathroom" | "Whole House";
-}
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-const projects: Project[] = [
-  {
-    title: "Kitchen Remodel for a Family Home",
-    challenge: "The client's outdated kitchen lacked functionality and style.",
-    solution: "Redesigned layout, modern appliances, and efficient storage.",
-    imageSrc: "/images/portfolio/kitchen-remodel.png",
-    imageAlt: "Kitchen Remodel Project",
-    link: "/portfolio/kitchen-remodel",
-    category: "Kitchen",
-  },
-  {
-    title: "Modern Bathroom Oasis",
-    challenge: "The space felt cramped and outdated.",
-    solution: "Created an open, spa-like experience with sleek finishes.",
-    imageSrc: "/images/portfolio/bathroom-renovation.png",
-    imageAlt: "Bathroom Renovation Project",
-    link: "/portfolio/bathroom-renovation",
-    category: "Bathroom",
-  },
-  {
-    title: "Whole House Modernization",
-    challenge: "Aging home needed a full makeover.",
-    solution: "Blended charm with modern upgrades throughout the house.",
-    imageSrc: "/images/portfolio/whole-house-renovation.png",
-    imageAlt: "Whole House Renovation Project",
-    link: "/portfolio/whole-house-renovation",
-    category: "Whole House",
-  },
-  {
-    title: "Contemporary Kitchen for Entertaining",
-    challenge: "The kitchen wasn't functional for large gatherings.",
-    solution: "Opened the layout, added an island, and updated finishes.",
-    imageSrc: "/images/portfolio/kitchen-remodel.png",
-    imageAlt: "Entertaining Kitchen Project",
-    link: "/portfolio/kitchen-entertaining",
-    category: "Kitchen",
-  },
-  {
-    title: "Compact Bathroom Upgrade",
-    challenge: "A small space needed better utility and a refresh.",
-    solution: "Maximized space with clever design and fixtures.",
-    imageSrc: "/images/portfolio/kitchen-remodel.png",
-    imageAlt: "Compact Bathroom Project",
-    link: "/portfolio/compact-bathroom",
-    category: "Bathroom",
-  },
-  {
-    title: "Whole Home Scandinavian Style",
-    challenge: "The house lacked a cohesive style.",
-    solution: "Applied a Scandinavian design across all living areas.",
-    imageSrc: "/images/portfolio/kitchen-remodel.png",
-    imageAlt: "Scandinavian Whole House Project",
-    link: "/portfolio/scandinavian-home",
-    category: "Whole House",
-  },
+const blogCategories = [
+  { value: 'all', label: 'All' },
+  { value: 'kitchen', label: 'Kitchen' },
+  { value: 'bathroom', label: 'Bathroom' },
+  { value: 'living room', label: 'Living Room' },
+  { value: 'bedroom', label: 'Bedroom' },
+  { value: 'outdoor', label: 'Outdoor' },
+  { value: 'office', label: 'Office' },
 ];
 
-const categories: Project["category"][] = ["All", "Kitchen", "Bathroom", "Whole House"];
+const shuffleArray = (arr: WorkPost[]) => [...arr].sort(() => 0.5 - Math.random());
 
 const FeaturedWork: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<Project["category"]>("All");
+  const [allPosts, setAllPosts] = useState<WorkPost[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<WorkPost[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
-  const filteredProjects =
-    selectedCategory === "All"
-      ? projects
-      : projects.filter((project) => project.category === selectedCategory);
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const postsSnapshot = await getDocs(collection(db, 'portfolioPosts'));
+      const postsData = postsSnapshot.docs.map(
+        (doc) => ({ id: doc.id, ...doc.data() } as WorkPost)
+      );
+      setAllPosts(postsData);
+      filterPosts('all');
+    };
+    fetchPosts();
+  }, []);
+
+  const filterPosts = (category: string) => {
+    setSelectedCategory(category);
+    const filtered = category === 'all'
+      ? shuffleArray(allPosts)
+      : shuffleArray(allPosts.filter((post) => post.category === category));
+    setFilteredPosts(filtered.slice(0, 6));
+  };
+
+  const isValidImageUrl = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
   return (
-    <section className="py-14 bg-gray-50">
-      <div className="container mx-auto px-4 md:px-10">
-        <h2 className="text-3xl font-bold text-gray-800 flex flex-wrap gap-3.5 pl-4 mb-6">Featured Projects</h2>
+    <section className="bg-gradient-to-br from-gray-50 via-white to-gray-100 py-16 px-6 sm:px-10 lg:px-24 transition-all duration-300">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-4xl font-extrabold text-gray-900 mb-10 text-center">
+          Featured Work
+        </h2>
 
-        {/* Category Navigation Bar (horizontal and indented) */}
-        <div className="flex flex-wrap gap-3.5 pl-4 mb-6">
-          {categories.map((cat) => (
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
+          {blogCategories.map((cat) => (
             <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-3.5 py-1.5 font-medium rounded-full transition ${
-                selectedCategory === cat
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              key={cat.value}
+              onClick={() => filterPosts(cat.value)}
+              className={`px-5 py-2 rounded-full text-sm font-medium border transition duration-200 ${
+                selectedCategory === cat.value
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-lg'
+                  : 'bg-white text-gray-700 border-gray-300 hover:bg-blue-50 hover:border-blue-400'
               }`}
             >
-              {cat}
+              {cat.label}
             </button>
           ))}
         </div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredProjects.map((project, index) => (
-            <div
-              key={index}
-              className="transform scale-90 bg-white rounded-lg shadow-md overflow-hidden"
-            >
-              <div className="relative w-full h-64">
-                <Image
-                  src={project.imageSrc}
-                  alt={project.imageAlt}
-                  layout="fill"
-                  objectFit="cover"
-                  className="object-center"
-                />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          {filteredPosts.map((post) => (
+            <Link href={`/blog/${post.id}`} key={post.id} className="group">
+              <div className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-shadow duration-300 overflow-hidden border border-gray-100">
+                <div className="relative h-56 sm:h-64 md:h-72 lg:h-60 w-full overflow-hidden">
+                  {isValidImageUrl(post.imageSrc) ? (
+                    <Image
+                      src={post.imageSrc}
+                      alt={post.imageAlt}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full w-full bg-gray-200 text-gray-500">
+                      No Image
+                    </div>
+                  )}
+                  <span className="absolute top-4 left-4 bg-blue-600 text-white text-xs font-medium uppercase tracking-wide px-3 py-1 rounded-full shadow-md">
+                    {blogCategories.find(cat => cat.value === post.category)?.label || post.category}
+                  </span>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition duration-200 mb-2 line-clamp-2">
+                    {post.title}
+                  </h3>
+                  <div className="text-sm text-gray-700 mb-2 line-clamp-2">
+                    <strong className="block text-gray-500 mb-1">Challenge</strong>
+                    {post.challenge}
+                  </div>
+                  <div className="text-sm text-gray-700 line-clamp-2">
+                    <strong className="block text-gray-500 mb-1">Solution</strong>
+                    {post.solution}
+                  </div>
+                  <div className="mt-4 text-blue-600 font-medium text-sm hover:underline">
+                    View full project →
+                  </div>
+                </div>
               </div>
-              <div className="p-5">
-                <h3 className="text-xl font-semibold text-blue-600 mb-1.5">{project.title}</h3>
-                <div className="mt-3">
-                  <h4 className="text-sm font-semibold text-gray-700 mb-0.5">Challenge</h4>
-                  <p className="text-gray-600 text-sm leading-relaxed">{project.challenge}</p>
-                </div>
-                <div className="mt-3">
-                  <h4 className="text-sm font-semibold text-gray-700 mb-0.5">Solution</h4>
-                  <p className="text-gray-600 text-sm leading-relaxed">{project.solution}</p>
-                </div>
-                <div className="mt-5">
-                  <Link
-                    href={project.link}
-                    className="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold text-sm"
-                  >
-                    Read Full Project Details
-                    <FaArrowRight className="ml-2" />
-                  </Link>
-                </div>
-              </div>
-            </div>
+            </Link>
           ))}
-        </div>
-
-        {/* View More Link */}
-        <div className="mt-10 text-center">
-          <Link
-            href="/remodeling-blog"
-            className="inline-flex items-center text-gray-700 hover:text-gray-900 font-semibold text-sm"
-          >
-            View More
-            <FaArrowRight className="ml-2" />
-          </Link>
         </div>
       </div>
     </section>
