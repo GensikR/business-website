@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FaArrowRight } from "react-icons/fa";
-import { getService, getAllServiceSlugs } from "@/lib/getService"; // Correctly importing the functions from getService.ts
+import { getService, getAllServiceSlugs } from "@/lib/getService";
 
 interface Service {
   slug: string;
@@ -16,72 +16,84 @@ interface Service {
 const Services: React.FC = () => {
   const [servicesData, setServicesData] = useState<Service[]>([]);
 
-  // Fetch all service slugs using getAllServiceSlugs and then fetch the services
   useEffect(() => {
     async function fetchServices() {
-      const slugs = getAllServiceSlugs(); // Get all service slugs
-      const services = slugs.map((slug) => getService(slug)); // Fetch each service based on the slug
-      setServicesData(services.filter((service) => service !== undefined) as Service[]); // Filter out any undefined values
+      const slugs = getAllServiceSlugs();
+      const services = slugs.map((slug) => getService(slug));
+      setServicesData(services.filter((s) => s !== undefined) as Service[]);
     }
     fetchServices();
   }, []);
 
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-6 md:px-12">
-        {/* Section Title */}
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-4">
-          Our Expertise
-        </h2>
-        <p className="text-lg text-gray-600 text-center mb-8">
-          We specialize in delivering tailored solutions to address your home
-          remodeling needs in the following areas:
-        </p>
+    <section className="py-24 bg-gradient-to-b from-gray-100 to-white">
+      <div className="container mx-auto px-6 md:px-12 lg:px-20">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">
+            Craftsmanship Meets Creativity
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Explore our diverse remodeling services designed to elevate your living space — personalized, precise, and built to last.
+          </p>
+        </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {servicesData.map((service, index) => (
-            <Link
+            <div
               key={index}
-              href={`/services/${service.slug}`} // Linking to the service detail page using the slug
-              className="block bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden"
+              className="group relative bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300 flex flex-col"
             >
-              {/* Image for service */}
-              <div className="relative w-full h-48">
+              {/* Image */}
+              <div className="relative h-56 w-full overflow-hidden">
                 <Image
-                  src={service.images[0]} // Using the first image in the array
+                  src={service.images[0]}
                   alt={service.title}
                   layout="fill"
                   objectFit="cover"
-                  className="rounded-t-lg"
+                  className="group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
 
-              {/* Service Info */}
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-blue-600 mb-2">
+              {/* Content */}
+              <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-2xl font-semibold text-blue-800 mb-2 group-hover:text-blue-900 transition-colors">
                   {service.title}
                 </h3>
-                <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
                   {service.description}
                 </p>
-                <div className="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold text-sm">
-                  Learn More
-                  <FaArrowRight className="ml-2" />
+
+                {/* Links */}
+                  <div className="mt-auto space-y-3 flex flex-col items-center">
+                  <Link
+                    href="/consultation"
+                    className="inline-block w-full text-center bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold py-2 px-4 rounded-full transition-all duration-300"
+                  >
+                    Get Free Estimate
+                  </Link>
+
+                  <Link
+                    href={`/services/${service.slug}`}
+                    className="inline-flex items-center justify-center text-blue-700 font-medium hover:text-blue-900 transition-colors"
+                  >
+                    Learn More <FaArrowRight className="ml-2" />
+                  </Link>
                 </div>
+
               </div>
-            </Link>
+            </div>
           ))}
         </div>
 
-        {/* Get a consultation Button */}
-        <div className="mt-12 text-center">
+        {/* Main CTA at bottom */}
+        <div className="mt-20 text-center">
           <Link
             href="/consultation"
-            className="inline-flex items-center bg-blue-800 hover:bg-blue-900 text-white font-semibold py-3 px-6 rounded-md text-lg space-x-2"
+            className="inline-flex items-center gap-3 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-4 px-8 rounded-full text-lg shadow-lg transition-all duration-300"
           >
-            <span>Get a consultation</span>
-            <FaArrowRight className="w-5 h-5" />
+            Get a Free Consultation <FaArrowRight className="w-5 h-5" />
           </Link>
         </div>
       </div>

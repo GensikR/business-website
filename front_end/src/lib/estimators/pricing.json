@@ -1,0 +1,162 @@
+{
+    "demolition": {
+      "perSqFt": 3.5
+    },
+    "cabinets": {
+      "none": 0,
+      "refinish": 25,
+      "replace": 55,
+      "custom": 90
+    },
+    "countertops": {
+      "none": 0,
+      "laminate": 15,
+      "granite": 40,
+      "quartz": 45,
+      "marble": 50
+    },
+    "appliances": {
+      "none": 0,
+      "basic": 10,
+      "premium": 20,
+      "luxury": 30
+    },
+    "flooring": {
+      "none": 0,
+      "vinyl": 8,
+      "laminate": 10,
+      "tile": 14,
+      "hardwood": 18
+    },
+    "lighting": {
+      "none": 0,
+      "basic": 5,
+      "premium": 10,
+      "luxury": 20
+    },
+    "cleaning": {
+      "perSqFt": 1.2
+    },
+    "luxuryPackage": {
+      "flatFee": 500
+    },
+    "labor": {
+      "hourlyRate": 60,
+      "hoursPerSqFt": 0.15
+    },
+    "tileWork": {
+      "none": 0,
+      "basic": 5,
+      "premium": 10
+    },
+    "vanity": {
+      "none": 0,
+      "basic": 300,
+      "luxury": 1500
+    },
+    "bathtub": {
+      "none": 0,
+      "basic": 800,
+      "luxury": 3000
+    },
+    "shower": {
+      "none": 0,
+      "basic": 600,
+      "luxury": 2000
+    },
+    "flooringDetails": {
+      "none": 0,
+      "tile": 4,
+      "vinyl": 2.5,
+      "laminate": 3
+    },
+    "lightingDetails": {
+      "none": 0,
+      "basic": 150,
+      "premium": 600
+    },
+    "plumbing": {
+      "none": 0,
+      "basic": 500,
+      "upgraded": 1200
+    },
+    "livingRoom": {
+      "none": 0,
+      "basic": 5,
+      "premium": 10,
+      "luxury": 20
+    },
+    "walls": {
+      "none": 0,
+      "paint": 2,
+      "wallpaper": 4,
+      "paneling": 6
+    },
+    "livingRoomFlooring": {
+      "none": 0,
+      "carpet": 5,
+      "tile": 10,
+      "hardwood": 12,
+      "vinyl": 7
+    },
+    "livingRoomLighting": {
+      "none": 0,
+      "basic": 50,
+      "premium": 100,
+      "luxury": 200
+    },
+    "livingRoomFurniture": {
+      "none": 0,
+      "basic": 300,
+      "premium": 1000,
+      "luxury": 5000
+    },
+    "livingRoomCleaning": {
+      "perSqFt": 1.2
+    },
+    "livingRoomLabor": {
+      "hourlyRate": 60,
+      "hoursPerSqFt": 0.1
+    },
+    "livingRoomDemolition": {
+      "perSqFt": 3.5
+    },
+    "patio": {
+      "none": 0,
+      "basic": 5,
+      "premium": 15,
+      "luxury": 30
+    },
+
+    "patioFlooring": {
+    "none": 0,
+    "pavers": 10,
+    "wood": 15,
+    "concrete": 20,
+    "tile": 25 ,   
+    "stone": 30
+    },
+
+
+    "patioLighting": {
+      "none": 0,
+      "basic": 100,
+      "premium": 250,
+      "luxury": 500
+    },
+    "patioFurniture": {
+      "none": 0,
+      "basic": 200,
+      "premium": 1000,
+      "luxury": 3000
+    },
+    "patioLabor": {
+      "hourlyRate": 60,
+      "hoursPerSqFt": 0.2
+    },
+    "patioDemolition": {
+      "perSqFt": 3.5
+    },
+    "luxurySurcharge": 0.25
+  }
+  

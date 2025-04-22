@@ -13,60 +13,64 @@ const teamMembers: TeamMember[] = [
   {
     name: "Mauricio Comar",
     role: "Founder & Master Builder",
-    imageSrc: "/images/team/mauricio.png", 
+    imageSrc: "/images/team/mauricio.png",
   },
   {
     name: "Diana Comar",
     role: "Administrative Lead",
-    imageSrc: "/images/team/diana.png", 
+    imageSrc: "/images/team/diana.png",
   },
   {
     name: "Gensik Rubio",
     role: "Technology Specialist",
-    imageSrc: "/images/team/alejandro.png", 
+    imageSrc: "/images/team/alejandro.png",
   },
   {
     name: "Personalized Chatbot",
     role: "Coming Soon",
-    imageSrc: "/images/team/chatbot.png", 
+    imageSrc: "/images/team/chatbot.png",
   },
 ];
 
 const Team: React.FC = () => {
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-20 bg-gradient-to-br from-white to-gray-100">
       <div className="container mx-auto px-6 md:px-12">
         {/* Section Title */}
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-8">
-          Meet Our Team
-        </h2>
-        <p className="text-lg text-gray-600 text-center mb-12 max-w-2xl mx-auto">
-          We’re a family-driven team committed to excellence, craftsmanship, and
-          innovation. From hands-on construction to cutting-edge tech solutions,
-          we bring heart and skill to every project.
-        </p>
+        <div className="text-center mb-14">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-800 tracking-tight mb-4">
+            Meet Our Team
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            We’re a family-driven team committed to excellence, craftsmanship, and
+            innovation. From hands-on construction to cutting-edge tech solutions,
+            we bring heart and skill to every project.
+          </p>
+        </div>
 
         {/* Team Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {teamMembers.map((member, index) => (
             <div
               key={index}
-              className="bg-white rounded-lg shadow-md overflow-hidden"
+              className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 group"
             >
-              <div className="relative w-full h-64">
+              <div className="relative w-full h-72 overflow-hidden">
                 <Image
                   src={member.imageSrc}
                   alt={member.name}
                   layout="fill"
                   objectFit="cover"
-                  className="object-top"
+                  className="transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
-              <div className="p-4 text-center">
-                <h3 className="text-xl font-semibold text-blue-600 mb-1">
+              <div className="p-6 text-center">
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">
                   {member.name}
                 </h3>
-                <p className="text-gray-600 text-sm">{member.role}</p>
+                <p className="text-blue-600 font-medium text-sm uppercase tracking-wide">
+                  {member.role}
+                </p>
               </div>
             </div>
           ))}
