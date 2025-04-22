@@ -13,7 +13,7 @@ const navLinks = [
   { href: "/portfolio", label: "Portfolio" },
   { href: "/services", label: "Services" },
   { href: "/contact", label: "Contact Us" },
-  { href: "/remodeling-blog", label: "Blog" },
+  //TODO{ href: "/remodeling-blog", label: "Blog" },
 ];
 
 export default function NavBar() {

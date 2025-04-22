@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { BlogPost as WorkPost } from '@/types';
+import { WorkPost } from '@/types'; // Assuming WorkPost is correctly exported as per interface definition
 import firebaseConfig from '@/lib/fb_config';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
@@ -82,42 +82,45 @@ const FeaturedWork: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
           {filteredPosts.map((post) => (
-            <Link href={`/blog/${post.id}`} key={post.id} className="group">
-              <div className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-shadow duration-300 overflow-hidden border border-gray-100">
-                <div className="relative h-56 sm:h-64 md:h-72 lg:h-60 w-full overflow-hidden">
-                  {isValidImageUrl(post.imageSrc) ? (
-                    <Image
-                      src={post.imageSrc}
-                      alt={post.imageAlt}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full w-full bg-gray-200 text-gray-500">
-                      No Image
+            <Link href={`/blog/${post.id}`} key={post.id} passHref>
+              <a className="group">
+                <div className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-shadow duration-300 overflow-hidden border border-gray-100">
+                  <div className="relative h-56 sm:h-64 md:h-72 lg:h-60 w-full overflow-hidden">
+                    {isValidImageUrl(post.imageSrc) ? (
+                      <Image
+                        src={post.imageSrc}
+                        alt={post.imageAlt}
+                        layout="fill"
+                        objectFit="cover"
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full w-full bg-gray-200 text-gray-500">
+                        No Image
+                      </div>
+                    )}
+                    <span className="absolute top-4 left-4 bg-blue-600 text-white text-xs font-medium uppercase tracking-wide px-3 py-1 rounded-full shadow-md">
+                      {blogCategories.find((cat) => cat.value === post.category)?.label || post.category}
+                    </span>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition duration-200 mb-2 line-clamp-2">
+                      {post.title}
+                    </h3>
+                    <div className="text-sm text-gray-700 mb-2 line-clamp-2">
+                      <strong className="block text-gray-500 mb-1">Challenge</strong>
+                      {post.challenge}
                     </div>
-                  )}
-                  <span className="absolute top-4 left-4 bg-blue-600 text-white text-xs font-medium uppercase tracking-wide px-3 py-1 rounded-full shadow-md">
-                    {blogCategories.find(cat => cat.value === post.category)?.label || post.category}
-                  </span>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition duration-200 mb-2 line-clamp-2">
-                    {post.title}
-                  </h3>
-                  <div className="text-sm text-gray-700 mb-2 line-clamp-2">
-                    <strong className="block text-gray-500 mb-1">Challenge</strong>
-                    {post.challenge}
-                  </div>
-                  <div className="text-sm text-gray-700 line-clamp-2">
-                    <strong className="block text-gray-500 mb-1">Solution</strong>
-                    {post.solution}
-                  </div>
-                  <div className="mt-4 text-blue-600 font-medium text-sm hover:underline">
-                    View full project →
+                    <div className="text-sm text-gray-700 line-clamp-2">
+                      <strong className="block text-gray-500 mb-1">Solution</strong>
+                      {post.solution}
+                    </div>
+                    <div className="mt-4 text-blue-600 font-medium text-sm hover:underline">
+                      View full project →
+                    </div>
                   </div>
                 </div>
-              </div>
+              </a>
             </Link>
           ))}
         </div>
