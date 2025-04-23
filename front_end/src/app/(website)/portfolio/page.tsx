@@ -1,7 +1,7 @@
 import UniversalHeader from "@/components/UniversalHeader";
 import FeaturedWork from "@/components/portfolio/FeaturedWork"; 
 import EstimatorHome from "@/components/estimate/EstimatorHome";
-import Scheduler from "@/components/Scheduler";
+import Scheduler from "@/components/scheduler/Scheduler";
 
 export default function PortfolioPage() {
   return (

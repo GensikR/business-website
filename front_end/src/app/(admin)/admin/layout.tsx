@@ -1,7 +1,7 @@
 import React from 'react';
 import AdminNav from '@/components/admin/AdminNav';
 import TopBar from '@/components/admin/TopBar';
-import '../../globals.css';
+import '@/app/globals.css'; // Import global styles
 
 export const metadata = {
   title: 'Admin Panel',

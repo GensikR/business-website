@@ -2,6 +2,7 @@
 export interface WorkPost {
   id: string;
   title: string;
+  slug: string;
   category: "kitchen" | "bathroom" | "living room" | "bedroom" | "outdoor" | "office";
   challenge: string;
   challenge_summary: string;
@@ -11,13 +12,16 @@ export interface WorkPost {
   solution_content: string;
   conclusion_title: string;
   conclusion_content: string;
-  imageSrc: string;
-  imageAlt: string;
+  image1Src: string;
+  image1Alt: string;
+  image2Src: string;
+  image2Alt: string;
 }
 
 export interface BlogPost 
 {
   title: string;
+  slug: string;
   category: string; // e.g. "DIY"
   subcategory: string; // e.g. "Kitchen"
   summary: string;
@@ -40,3 +44,12 @@ export interface Chat {
   title: string;
   messages: Message[];
 }
+
+// types.ts (or top of your component)
+type Appointment = {
+  id: string;
+  date: string; // in YYYY-MM-DD format
+  time: string;
+  createdAt: any;
+};
+

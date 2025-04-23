@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { WorkPost } from '@/types'; // Assuming WorkPost is correctly exported as per interface definition
+import { WorkPost } from '@/types';
 import firebaseConfig from '@/lib/fb_config';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
@@ -27,18 +27,25 @@ const FeaturedWork: React.FC = () => {
   const [allPosts, setAllPosts] = useState<WorkPost[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<WorkPost[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const postsSnapshot = await getDocs(collection(db, 'portfolioPosts'));
+      const postsSnapshot = await getDocs(collection(db, 'workPosts'));
       const postsData = postsSnapshot.docs.map(
         (doc) => ({ id: doc.id, ...doc.data() } as WorkPost)
       );
       setAllPosts(postsData);
-      filterPosts('all');
+      setLoading(false);
     };
     fetchPosts();
   }, []);
+
+  useEffect(() => {
+    if (allPosts.length > 0) {
+      filterPosts('all');
+    }
+  }, [allPosts]);
 
   const filterPosts = (category: string) => {
     setSelectedCategory(category);
@@ -49,12 +56,14 @@ const FeaturedWork: React.FC = () => {
   };
 
   const isValidImageUrl = (url: string) => {
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
-    }
+    return true;
+    //TODO: Uncomment the following code to validate image URLs
+    // try {
+    //   new URL(url);
+    //   return true;
+    // } catch {
+    //   return false;
+    // }
   };
 
   return (
@@ -64,7 +73,7 @@ const FeaturedWork: React.FC = () => {
           Featured Work
         </h2>
 
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
+        <div className="flex flex-wrap justify-center gap-3 mb-6">
           {blogCategories.map((cat) => (
             <button
               key={cat.value}
@@ -78,18 +87,30 @@ const FeaturedWork: React.FC = () => {
               {cat.label}
             </button>
           ))}
+          <button
+            onClick={() => filterPosts(selectedCategory)}
+            className="px-5 py-2 rounded-full text-sm font-medium bg-white border border-gray-300 hover:bg-blue-50 hover:border-blue-400 transition"
+          >
+            🔁 Reshuffle
+          </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-          {filteredPosts.map((post) => (
-            <Link href={`/blog/${post.id}`} key={post.id} passHref>
-              <a className="group">
+        {loading ? (
+          <div className="text-center py-20 text-gray-500">Loading work posts...</div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            {filteredPosts.map((post) => (
+              <Link
+                href={`/portfolio/${post.category}/${post.slug}`}
+                key={post.id}
+                passHref
+              >
                 <div className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-shadow duration-300 overflow-hidden border border-gray-100">
                   <div className="relative h-56 sm:h-64 md:h-72 lg:h-60 w-full overflow-hidden">
-                    {isValidImageUrl(post.imageSrc) ? (
+                    {isValidImageUrl(post.image1Src) ? (
                       <Image
-                        src={post.imageSrc}
-                        alt={post.imageAlt}
+                        src={post.image1Src}
+                        alt={post.image1Alt}
                         layout="fill"
                         objectFit="cover"
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -109,21 +130,21 @@ const FeaturedWork: React.FC = () => {
                     </h3>
                     <div className="text-sm text-gray-700 mb-2 line-clamp-2">
                       <strong className="block text-gray-500 mb-1">Challenge</strong>
-                      {post.challenge}
+                      {post.challenge_summary}
                     </div>
                     <div className="text-sm text-gray-700 line-clamp-2">
                       <strong className="block text-gray-500 mb-1">Solution</strong>
-                      {post.solution}
+                      {post.solution_summary}
                     </div>
                     <div className="mt-4 text-blue-600 font-medium text-sm hover:underline">
-                      View full project →
+                      View full project → 
                     </div>
                   </div>
                 </div>
-              </a>
-            </Link>
-          ))}
-        </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

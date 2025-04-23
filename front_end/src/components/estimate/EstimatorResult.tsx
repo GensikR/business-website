@@ -80,7 +80,7 @@ export default function EstimatorResults({ inputs, service }: EstimatorResultsPr
             onClick={() => alert("Recalculating...")}
           >
             <span>🔄</span>
-            <span>Recalculate</span>
+            <span>Schedule a final estimate</span>
           </motion.button>
         </motion.div>
       </div>

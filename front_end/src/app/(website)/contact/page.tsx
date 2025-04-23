@@ -1,6 +1,6 @@
 import UniversalHeader from "@/components/UniversalHeader";
 import Contact from "@/components/contact/Contact";
-import Scheduler from "@/components/Scheduler";
+import Scheduler from "@/components/scheduler/Scheduler";
 
 export default function ContactPage() {
   return (

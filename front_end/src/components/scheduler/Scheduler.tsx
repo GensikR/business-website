@@ -3,6 +3,16 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaCalendarAlt, FaClock, FaCheckCircle, FaArrowLeft } from "react-icons/fa";
+import firebaseConfig from "@/lib/fb_config";
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore"; // make sure this is imported from Firebase SDK
+
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 
 // Function to generate weekdays excluding Sunday
 const generateWeekdays = (count: number) => 
@@ -34,9 +44,24 @@ export default function Scheduler() {
     setAvailableDates(generateWeekdays(7)); // Get next 7 days excluding Sunday
   }, []);
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (selectedDate && selectedTime) {
       setConfirmed(true);
+  
+      try {
+        const docRef = doc(collection(db, "appointments")); // creates a new doc with auto ID
+        await setDoc(docRef, {
+          //TODO: add appointment type and user ID
+          date: selectedDate,
+          time: selectedTime,
+          createdAt: new Date(),
+        });
+        console.log("Appointment saved successfully!");
+      } catch (error) {
+        console.error("Error saving appointment:", error);
+      }
+    } else {
+      console.warn("Date or time not selected.");
     }
   };
 
