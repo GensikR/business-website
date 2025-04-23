@@ -56,14 +56,12 @@ const FeaturedWork: React.FC = () => {
   };
 
   const isValidImageUrl = (url: string) => {
-    return true;
-    //TODO: Uncomment the following code to validate image URLs
-    // try {
-    //   new URL(url);
-    //   return true;
-    // } catch {
-    //   return false;
-    // }
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
   };
 
   return (
@@ -107,19 +105,14 @@ const FeaturedWork: React.FC = () => {
               >
                 <div className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-shadow duration-300 overflow-hidden border border-gray-100">
                   <div className="relative h-56 sm:h-64 md:h-72 lg:h-60 w-full overflow-hidden">
-                    {isValidImageUrl(post.image1Src) ? (
-                      <Image
-                        src={post.image1Src}
-                        alt={post.image1Alt}
-                        layout="fill"
-                        objectFit="cover"
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center h-full w-full bg-gray-200 text-gray-500">
-                        No Image
-                      </div>
-                    )}
+                    {/* Image Path from public folder */}
+                    <Image
+                      src="/images/before.png"  // Use image from public/images folder
+                      alt="No Image"
+                      layout="fill"
+                      objectFit="cover"
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
                     <span className="absolute top-4 left-4 bg-blue-600 text-white text-xs font-medium uppercase tracking-wide px-3 py-1 rounded-full shadow-md">
                       {blogCategories.find((cat) => cat.value === post.category)?.label || post.category}
                     </span>
@@ -130,11 +123,11 @@ const FeaturedWork: React.FC = () => {
                     </h3>
                     <div className="text-sm text-gray-700 mb-2 line-clamp-2">
                       <strong className="block text-gray-500 mb-1">Challenge</strong>
-                      {post.challenge_summary}
+                      {post.challenge_title}
                     </div>
                     <div className="text-sm text-gray-700 line-clamp-2">
                       <strong className="block text-gray-500 mb-1">Solution</strong>
-                      {post.solution_summary}
+                      {post.solution_title}
                     </div>
                     <div className="mt-4 text-blue-600 font-medium text-sm hover:underline">
                       View full project → 

@@ -4,11 +4,13 @@ export interface WorkPost {
   title: string;
   slug: string;
   category: "kitchen" | "bathroom" | "living room" | "bedroom" | "outdoor" | "office";
+  introduction_title: string;
+  introduction: string;
   challenge: string;
-  challenge_summary: string;
+  challenge_title: string;
   challenge_content: string;
   solution: string;
-  solution_summary: string;
+  solution_title: string;
   solution_content: string;
   conclusion_title: string;
   conclusion_content: string;

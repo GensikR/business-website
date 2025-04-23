@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import firebaseConfig from '@/lib/fb_config';
-import { postWorkPosts } from '@/lib/postWorkPosts';
+import generateAndUploadWorkPost from "@/lib/generateAIPosts";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -64,7 +64,13 @@ export default function AdminWorkPostForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    await postWorkPosts();
+    await generateAndUploadWorkPost({
+      category: "kitchen",
+      image1Src: "http://localhost:3000/images/before.png",
+      image2Src: "http://localhost:3000/images/after.png",
+      description: "TV unit, fireplace, and mantle remodel",
+    });
+    
     // e.preventDefault();
     // try {
     //   const postWithId: WorkPost = { ...formData, id: crypto.randomUUID() };
