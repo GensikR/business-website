@@ -6,7 +6,8 @@ export interface UniversalHeaderProps {
 }
 
 
-export interface WorkPost {
+export interface WorkPost 
+{
   id: string;
   title: string;
   slug: string;
@@ -41,7 +42,8 @@ export interface BlogPost
 
 
 // Interface for Message (unchanged)
-export interface Message {
+export interface Message 
+{
   sender: 'user' | 'admin' | 'bot';
   text: string;
   time: string;
@@ -49,14 +51,16 @@ export interface Message {
 }
 
 // Interface for Chat (unchanged)
-export interface Chat {
+export interface Chat 
+{
   id: string;
   title: string;
   messages: Message[];
 }
 
 // types.ts (or top of your component)
-export type Appointment = {
+export type Appointment = 
+{
   id: string;
   date: string; // in YYYY-MM-DD format
   time: string;
@@ -64,10 +68,13 @@ export type Appointment = {
 };
 
 
-export type Service = {
+export type Service = 
+{
   title: string;
   description: string;
   images: string[];
   link: string;
   details: string;
 };
+
+export type ServiceId = "bathroom" | "kitchen" | "livingRoom" | "patio" | "bedroom" | "custom";

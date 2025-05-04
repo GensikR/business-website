@@ -23,14 +23,18 @@ const blogCategories = [
 
 const shuffleArray = (arr: WorkPost[]) => [...arr].sort(() => 0.5 - Math.random());
 
-const FeaturedWork: React.FC = () => {
+const FeaturedWork: React.FC = () => 
+{
   const [allPosts, setAllPosts] = useState<WorkPost[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<WorkPost[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
+  // Fetch all posts from Firestore
+  useEffect(() => 
+  {
+    const fetchPosts = async () => 
+    {
       const postsSnapshot = await getDocs(collection(db, 'workPosts'));
       const postsData = postsSnapshot.docs.map(
         (doc) => ({ id: doc.id, ...doc.data() } as WorkPost)
@@ -41,27 +45,23 @@ const FeaturedWork: React.FC = () => {
     fetchPosts();
   }, []);
 
+  // Filter posts when allPosts changes
   useEffect(() => {
-    if (allPosts.length > 0) {
+    if (allPosts.length > 0) 
+    {
       filterPosts('all');
     }
   }, [allPosts]);
 
-  const filterPosts = (category: string) => {
+
+  // Filter posts based on selected category
+  const filterPosts = (category: string) => 
+  {
     setSelectedCategory(category);
     const filtered = category === 'all'
       ? shuffleArray(allPosts)
       : shuffleArray(allPosts.filter((post) => post.category === category));
     setFilteredPosts(filtered.slice(0, 6));
-  };
-
-  const isValidImageUrl = (url: string) => {
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
-    }
   };
 
   return (
@@ -107,7 +107,7 @@ const FeaturedWork: React.FC = () => {
                   <div className="relative h-56 sm:h-64 md:h-72 lg:h-60 w-full overflow-hidden">
                     {/* Image Path from public folder */}
                     <Image
-                      src="/images/before.png"  // Use image from public/images folder
+                      src={`/images/portfolio/${post.id}/after.png`} // Use image from public/images folder
                       alt="No Image"
                       layout="fill"
                       objectFit="cover"

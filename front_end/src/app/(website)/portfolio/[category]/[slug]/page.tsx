@@ -3,6 +3,7 @@ import firebaseConfig from '@/lib/fb_config';
 import { initializeApp } from 'firebase/app';
 import { notFound } from 'next/navigation';
 import { WorkPost } from '@/types';
+import Image from 'next/image';
 
 // Firebase init
 const app = initializeApp(firebaseConfig);
@@ -15,7 +16,8 @@ interface PageProps {
   };
 }
 
-export default async function WorkPostPage({ params }: PageProps) {
+export default async function WorkPostPage({ params }: PageProps) 
+{
   const { category, slug } = params;
   const workPostsRef = collection(db, 'workPosts');
   const q = query(workPostsRef, where('slug', '==', slug));
@@ -42,11 +44,13 @@ export default async function WorkPostPage({ params }: PageProps) {
         
         {/* Before Image after Challenge Content */}
         <div className="mt-8 flex justify-center">
-          <img
-            src={"images/before.png"}
-            alt={"No before image available"}
-            className="max-w-sm w-full h-auto rounded-lg shadow-lg transition duration-300 transform hover:scale-105"
-          />
+        <Image
+          src={`/images/portfolio/${post.id}/before.png`}
+          alt="Before Image"
+          width={600}
+          height={400}
+          className="max-w-sm w-full h-auto rounded-lg shadow-lg transition duration-300 transform hover:scale-105"
+        />
         </div>
       </section>
 
@@ -57,11 +61,13 @@ export default async function WorkPostPage({ params }: PageProps) {
         
         {/* After Image after Solution Content */}
         <div className="mt-8 flex justify-center">
-          <img
-            src={"images/after.png"}
-            alt={"No after image available"}
-            className="max-w-sm w-full h-auto rounded-lg shadow-lg transition duration-300 transform hover:scale-105"
-          />
+        <Image
+          src={`/images/portfolio/${post.id}/after.png`}
+          alt="After Image"
+          width={600}
+          height={400}
+          className="max-w-sm w-full h-auto rounded-lg shadow-lg transition duration-300 transform hover:scale-105"
+        />
         </div>
       </section>
 
