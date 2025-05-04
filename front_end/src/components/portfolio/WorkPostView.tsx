@@ -11,12 +11,13 @@ interface WorkPostViewProps {
 const WorkPostView: React.FC<WorkPostViewProps> = ({ post }) => {
   // Helper function to check if image URL is valid
   const isValidImageUrl = (url: string) => {
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
-    }
+    return true;
+    // try {
+    //   new URL(url);
+    //   return true;
+    // } catch {
+    //   return false;
+    // }
   };
 
   return (

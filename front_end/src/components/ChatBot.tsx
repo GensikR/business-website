@@ -202,7 +202,8 @@ const ChatBot: React.FC = () => {
         className="fixed bottom-6 right-6 z-50 bg-white border border-gray-300 shadow-md rounded-full p-2 hover:shadow-lg transition"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <img src="/images/team/chatbot.png" alt="Chat" className="h-12 w-12 object-contain" />
+        <img src="/images/team/chatbot.png" alt="Chat" className="h-12 w-12 rounded-full object-cover" />
+
       </button>
 
       {isOpen && (

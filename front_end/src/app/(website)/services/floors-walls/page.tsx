@@ -4,19 +4,21 @@ import React from "react";
 import {getService} from "@/lib/getService";
 import EstimatorHome from "@/components/estimate/EstimatorHome";
 import Scheduler from "@/components/scheduler/Scheduler";
+import FeaturedWork from "@/components/portfolio/FeaturedWork";
 
 
-const service = getService("/services/custom-furniture");
+const service = getService("/services/floors-walls");
 
 
-export default function CustomFurniture() 
+export default function FloorWallService() 
 {
     return(
         <div>
         < ServiceInfo service = {service} />
-
+        < FeaturedWork />
         < EstimatorHome />
         < Scheduler />
+        
         </div>
     )
 }
