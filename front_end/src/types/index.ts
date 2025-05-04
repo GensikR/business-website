@@ -5,9 +5,7 @@ export interface UniversalHeaderProps {
   backgroundImageUrl?: string;
 }
 
-
-export interface WorkPost 
-{
+export interface WorkPost {
   id: string;
   title: string;
   slug: string;
@@ -28,8 +26,7 @@ export interface WorkPost
   image2Alt: string;
 }
 
-export interface BlogPost 
-{
+export interface BlogPost {
   title: string;
   slug: string;
   category: string; // e.g. "DIY"
@@ -40,10 +37,8 @@ export interface BlogPost
   img2: string;
 }
 
-
 // Interface for Message (unchanged)
-export interface Message 
-{
+export interface Message {
   sender: 'user' | 'admin' | 'bot';
   text: string;
   time: string;
@@ -51,25 +46,20 @@ export interface Message
 }
 
 // Interface for Chat (unchanged)
-export interface Chat 
-{
+export interface Chat {
   id: string;
   title: string;
   messages: Message[];
 }
 
-// types.ts (or top of your component)
-export type Appointment = 
-{
+export type Appointment = {
   id: string;
   date: string; // in YYYY-MM-DD format
   time: string;
   createdAt: any;
 };
 
-
-export type Service = 
-{
+export type Service = {
   title: string;
   description: string;
   images: string[];
@@ -78,3 +68,27 @@ export type Service =
 };
 
 export type ServiceId = "bathroom" | "kitchen" | "livingRoom" | "patio" | "bedroom" | "custom";
+
+export type SizeOption = "small" | "medium" | "large";
+
+export type MaterialOption = {
+  id: string;
+  name: string;
+  priceModifier?: number; // Optional modifier
+};
+
+export type ProjectType = {
+  id: string;
+  name: string;
+};
+
+export type ServiceEstimateOptions = {
+  projectTypes: ProjectType[];
+  sizes: SizeOption[];
+  materials: MaterialOption[];
+};
+
+// Map each service ID to its estimate options
+export type AllServiceOptions = {
+  [key in ServiceId]: ServiceEstimateOptions;
+};
