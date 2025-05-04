@@ -13,32 +13,35 @@ export default function HomePage() {
   return (
     <div>
 
-    {/* Team Section */}
-    <Team/>
+      {/* Team Section */}
+      <Team />
 
-    {/* Services Section */}
-    <Services/>
+      {/* Services Section */}
+      <Services />
 
-    {/* Estimator Section */}
-    <EstimatorHome />
 
-    {/* Our Impact Section <OurImpact />*/}
+      {/* Featured Work Section */}
+      <FeaturedWork />
+      {/* Scheduler Section */}
+      <div id="scheduler">
+        <Scheduler />
+      </div>
 
-    {/* Featured Work Section */}
-    <FeaturedWork />
+      {/* Estimator Section */}
+      <div id="estimator">
+        <EstimatorHome />
+      </div>
 
-    {/* Scheduler Section */}
-    <Scheduler />
+      {/* Why Choose Us Section */}
+      <WhyUs />
 
-    {/* Why Choose Us Section */}
-    <WhyUs />
+      {/* Testimonials Section */}
+      <Testimonials />
 
-    {/*Testimonials Section */}
-    <Testimonials />
-
-    {/* FAQ Section */}
-    <FAQ />
-
+      {/* FAQ Section */}
+      <FAQ />
+      
     </div>
   );
 }
+

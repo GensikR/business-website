@@ -69,7 +69,7 @@ export default function NavBar() {
 
           {/* Estimate button (always visible) */}
           <Link
-            href="/consultation"
+            href="#scheduler"
             className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition-all text-sm"
           >
             Get a Free Estimate

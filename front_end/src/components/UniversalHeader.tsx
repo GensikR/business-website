@@ -61,7 +61,7 @@ const UniversalHeader: React.FC<UniversalHeaderProps> = ({
           className="mt-10 flex flex-wrap justify-center gap-6"
         >
           <Link
-            href="/consultation"
+            href="#scheduler"
             className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-full shadow-xl text-lg md:text-xl transition-all duration-300"
           >
             <span>Get a Free Estimate</span>
