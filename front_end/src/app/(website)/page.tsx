@@ -13,7 +13,7 @@ export default function HomePage() {
   return (
     <div>
 
-    {/* Services Section */}
+    {/* Team Section */}
     <Team/>
 
     {/* Services Section */}
@@ -24,16 +24,14 @@ export default function HomePage() {
 
     {/* Our Impact Section <OurImpact />*/}
 
-    {/* Why Choose Us Section */}
-    <WhyUs />
-
     {/* Featured Work Section */}
     <FeaturedWork />
-
 
     {/* Scheduler Section */}
     <Scheduler />
 
+    {/* Why Choose Us Section */}
+    <WhyUs />
 
     {/*Testimonials Section */}
     <Testimonials />

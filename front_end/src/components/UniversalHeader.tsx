@@ -5,13 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaChevronRight } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { UniversalHeaderProps } from "@/types";
 
-interface UniversalHeaderProps {
-  title: string;
-  subtitle?: string;
-  description?: string;
-  backgroundImageUrl?: string;
-}
 
 const UniversalHeader: React.FC<UniversalHeaderProps> = ({
   title,
@@ -75,8 +70,8 @@ const UniversalHeader: React.FC<UniversalHeaderProps> = ({
 
           <Link
             href="/portfolio"
-            className="inline-flex items-center bg-white bg-opacity-20 hover:bg-opacity-30 text-white font-medium py-4 px-8 rounded-full backdrop-blur-sm shadow-lg text-lg md:text-xl transition-all duration-300"
-          >
+            className="inline-flex items-center bg-white bg-opacity-20 hover:bg-opacity-30 text-blue-900 font-medium py-4 px-8 rounded-full backdrop-blur-sm shadow-lg text-lg md:text-xl transition-all duration-300"
+            >
             View Our Work
           </Link>
         </motion.div>

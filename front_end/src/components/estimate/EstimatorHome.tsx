@@ -52,6 +52,9 @@ export default function EstimatorHome() {
   if (selectedService === null) {
     return (
       <div className="py-16 px-6 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 min-h-screen flex flex-col items-center justify-center">
+        <h1 className="text-5xl font-extrabold text-gray-800 mb-6 text-center">
+          Get a Free Estimate Today! 💰
+        </h1>
         <h2 className="text-4xl font-extrabold text-gray-800 mb-6 text-center">
           What would you like to remodel? 🛠️
         </h2>

@@ -4,25 +4,15 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FaArrowRight } from "react-icons/fa";
-import { getService, getAllServiceSlugs } from "@/lib/getService";
-
-interface Service {
-  slug: string;
-  title: string;
-  description: string;
-  images: string[];
-}
+import { Service } from "@/types/index";
+import { services } from "@/lib/getService";
 
 const Services: React.FC = () => {
   const [servicesData, setServicesData] = useState<Service[]>([]);
 
   useEffect(() => {
-    async function fetchServices() {
-      const slugs = getAllServiceSlugs();
-      const services = slugs.map((slug) => getService(slug));
-      setServicesData(services.filter((s) => s !== undefined) as Service[]);
-    }
-    fetchServices();
+    // Simulating async fetching of services
+    setServicesData(services);
   }, []);
 
   return (
@@ -66,7 +56,7 @@ const Services: React.FC = () => {
                 </p>
 
                 {/* Links */}
-                  <div className="mt-auto space-y-3 flex flex-col items-center">
+                <div className="mt-auto space-y-3 flex flex-col items-center">
                   <Link
                     href="/consultation"
                     className="inline-block w-full text-center bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold py-2 px-4 rounded-full transition-all duration-300"
@@ -75,7 +65,7 @@ const Services: React.FC = () => {
                   </Link>
 
                   <Link
-                    href={`/services/${service.slug}`}
+                    href={service.link}
                     className="inline-flex items-center justify-center text-blue-700 font-medium hover:text-blue-900 transition-colors"
                   >
                     Learn More <FaArrowRight className="ml-2" />
@@ -93,7 +83,7 @@ const Services: React.FC = () => {
             href="/consultation"
             className="inline-flex items-center gap-3 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-4 px-8 rounded-full text-lg shadow-lg transition-all duration-300"
           >
-            Get a Free Consultation <FaArrowRight className="w-5 h-5" />
+            Get a Free Estimate <FaArrowRight className="w-5 h-5" />
           </Link>
         </div>
       </div>

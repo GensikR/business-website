@@ -1,4 +1,11 @@
-// Example interface for BlogPost
+export interface UniversalHeaderProps {
+  title: string;
+  subtitle?: string;
+  description?: string;
+  backgroundImageUrl?: string;
+}
+
+
 export interface WorkPost {
   id: string;
   title: string;
@@ -48,10 +55,18 @@ export interface Chat {
 }
 
 // types.ts (or top of your component)
-type Appointment = {
+export type Appointment = {
   id: string;
   date: string; // in YYYY-MM-DD format
   time: string;
   createdAt: any;
 };
 
+
+export type Service = {
+  title: string;
+  description: string;
+  images: string[];
+  link: string;
+  details: string;
+};

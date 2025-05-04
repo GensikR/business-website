@@ -36,6 +36,7 @@ const Team: React.FC = () => {
   return (
     <section className="py-20 bg-gradient-to-br from-white to-gray-100">
       <div className="container mx-auto px-6 md:px-12">
+        
         {/* Section Title */}
         <div className="text-center mb-14">
           <h2 className="text-4xl md:text-5xl font-extrabold text-gray-800 tracking-tight mb-4">
