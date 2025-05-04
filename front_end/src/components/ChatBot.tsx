@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useState, useRef, useEffect } from 'react';
 import { X } from 'lucide-react';
 import {
@@ -14,23 +13,22 @@ import {
   updateDoc
 } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
-import firebaseConfig from '@/lib/fb_config'; // Adjust the path as necessary
+import firebaseConfig from '@/lib/fb_config';
+import {Message} from '@/types'; // Message type
+import getBotResponse  from '@/lib/chat/bot_brain';
+import { get } from 'http';
 
-
-console.log('Firebase Config:', firebaseConfig); // Log the config to check if it's correct
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Message interface
-interface Message {
-  sender: 'user' | 'bot' | 'admin';
-  text: string;
-  time: string;
-  buttons?: { title: string; payload: string }[];
-}
-
-const ChatBot: React.FC = () => {
+const ChatBot: React.FC = () => 
+{
   const [isOpen, setIsOpen] = useState(false);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [escalated, setEscalated] = useState(false);
+  const [chatid, setChatId] = useState<string>('');
+  const messageEndRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([
     {
       sender: 'bot',
@@ -38,108 +36,51 @@ const ChatBot: React.FC = () => {
       time: new Date().toISOString()
     }
   ]);
-  const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [escalated, setEscalated] = useState(false);
-  const [chatid, setChatId] = useState<string>('');
-  const messageEndRef = useRef<HTMLDivElement>(null);
+  
 
-  useEffect(() => {
+  // Scroll to the bottom of the chat when a new message is added
+  useEffect(() => 
+  {
     messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const sendMessageToRasa = async (message: string) => {
-    try {
-      setLoading(true);
-      const response = await fetch('http://localhost:5005/webhooks/rest/webhook', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sender: 'user123',
-          message
-        })
-      });
-
-      const data = await response.json();
-
-      const botMessages: Message[] = data.map((msg: any) => {
-        const newMsg: Message = {
-          sender: 'bot',
-          text: msg.text,
-          time: new Date().toISOString(),
-          buttons: msg.buttons
-        };
-
-        if (msg.text.toLowerCase().includes('human was requested')) {
-          setEscalated(true);
-          escalateChat();
-        }
-
-        return newMsg;
-      });
-
-      setMessages(prev => [...prev, ...botMessages]);
-    } catch (err) {
-      console.error('Rasa error:', err);
-      setMessages(prev => [
-        ...prev,
-        {
-          sender: 'bot',
-          text: 'Sorry, something went wrong.',
-          time: new Date().toISOString()
-        }
-      ]);
-    } finally {
-      setLoading(false);
+  // Send message to bot to receive a response
+  const sendMessageToBot = (message: string) => 
+  { 
+    if (message.toLowerCase().includes('human')) // Check if message contains 'human'
+    {
+      setEscalated(true); // Set escalated to true if human is in the message
+      escalateChat(); // Call escalateChat function
+      return; // Exit the function
     }
-  };
-
-  const handleSend = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-
-    const userMessage: Message = {
+    const usrMsg : Message = {
       sender: 'user',
-      text: input,
+      text: message,
+      time: new Date().toISOString()
+    }
+
+    const botResponse = getBotResponse(usrMsg); // Get bot response from your logic
+    
+    const botMsg: Message = {
+      sender: 'bot',
+      text: botResponse,
       time: new Date().toISOString()
     };
-
-    setMessages(prev => [...prev, userMessage]);
-
-    if (escalated) {
-      sendMessageToAdmin(userMessage);
-    } else {
-      sendMessageToRasa(input);
-    }
-
-    setInput('');
+    setMessages(prev => [...prev, botMsg]);
   };
 
-  const handleButtonClick = (payload: string) => {
-    const userMessage: Message = {
-      sender: 'user',
-      text: payload,
-      time: new Date().toISOString()
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-
-    if (escalated) {
-      sendMessageToAdmin(userMessage);
-    } else {
-      sendMessageToRasa(payload);
-    }
-  };
-
-  const escalateChat = async () => {
+  // Escalate chat to admin when needed
+  const escalateChat = async () => 
+  { // Save chat to firestore to initiate admin chat 
     try {
       const chatRef = await addDoc(collection(db, 'Chats'), {
         createdAt: serverTimestamp()
       });
 
-      setChatId(chatRef.id);
+      setChatId(chatRef.id);  // Update chat ID state
 
-      const initialMessage: Message = {
+      const initialMessage: Message = 
+      {
         sender: 'bot',
         text: "A Human will be you shortly.",
         time: new Date().toISOString()
@@ -153,11 +94,15 @@ const ChatBot: React.FC = () => {
     }
   };
 
-  const sendMessageToAdmin = async (message: Message) => {
+  // When chat is escalated, send message to admin by updating the chat ID
+  const sendMessageToAdmin = async (message: Message) => 
+  {
     if (!chatid) return;
 
-    try {
-      await addDoc(collection(db, 'Chats', chatid, 'messages'), {
+    try 
+    {
+      await addDoc(collection(db, 'Chats', chatid, 'messages'), 
+      {
         sender: message.sender,
         text: message.text,
         timestamp: serverTimestamp()
@@ -166,9 +111,10 @@ const ChatBot: React.FC = () => {
       console.error('Error sending to admin:', err);
     }
   };
-  //TODO: FIX THIS
-  // Listen for new messages from admin
-  useEffect(() => {
+
+  // Listen for new messages from admin by listening to updates in the chat collection
+  useEffect(() => 
+  {
     if (!chatid) return;
 
     const q = query(
@@ -176,7 +122,8 @@ const ChatBot: React.FC = () => {
       orderBy('timestamp')
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribe = onSnapshot(q, (snapshot) => 
+    {
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'added') {
           const data = change.doc.data();
@@ -195,6 +142,51 @@ const ChatBot: React.FC = () => {
 
     return () => unsubscribe();
   }, [chatid]);
+
+  // Send message to bot or admin if escalated
+  const handleSend = (e: React.FormEvent) => 
+    {
+      e.preventDefault();
+      if (!input.trim()) return;
+  
+      const userMessage: Message = 
+      {
+        sender: 'user',
+        text: input,
+        time: new Date().toISOString()
+      };
+  
+      setMessages(prev => [...prev, userMessage]);
+  
+      if (escalated) 
+      {
+        sendMessageToAdmin(userMessage);
+      } else 
+      {
+        sendMessageToBot(input);
+      }
+  
+      setInput('');
+    };
+  
+    // Handle button click from bot response
+    const handleButtonClick = (payload: string) => 
+    {
+      const userMessage: Message = 
+      {
+        sender: 'user',
+        text: payload,
+        time: new Date().toISOString()
+      };
+  
+      setMessages(prev => [...prev, userMessage]);
+  
+      if (escalated) {
+        sendMessageToAdmin(userMessage);
+      } else {
+        sendMessageToBot(payload);
+      }
+    };
 
   return (
     <>

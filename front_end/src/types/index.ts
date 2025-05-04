@@ -45,6 +45,7 @@ export interface Message {
   sender: 'user' | 'admin' | 'bot';
   text: string;
   time: string;
+  buttons?: { title: string; payload: string }[];
 }
 
 // Interface for Chat (unchanged)
