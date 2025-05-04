@@ -11,11 +11,12 @@ import {
   orderBy,
   doc,
   updateDoc
-} from 'firebase/firestore';
+} 
+from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import firebaseConfig from '@/lib/fb_config';
 import {Message} from '@/types'; // Message type
-import getBotResponse  from '@/lib/chat/bot_brain';
+import {getBotResponse}  from '@/lib/chat/bot_brain';
 import { get } from 'http';
 
 const app = initializeApp(firebaseConfig);
@@ -53,15 +54,18 @@ const ChatBot: React.FC = () =>
       escalateChat(); // Call escalateChat function
       return; // Exit the function
     }
-    const usrMsg : Message = {
-      sender: 'user',
-      text: message,
-      time: new Date().toISOString()
-    }
 
-    const botResponse = getBotResponse(usrMsg); // Get bot response from your logic
+    const botResponse = getBotResponse(message);
+    // const usrMsg : Message = {
+    //   sender: 'user',
+    //   text: message,
+    //   time: new Date().toISOString()
+    // }
+
+    // const botResponse = getBotResponse(usrMsg);
     
-    const botMsg: Message = {
+    const botMsg: Message = 
+    {
       sender: 'bot',
       text: botResponse,
       time: new Date().toISOString()
