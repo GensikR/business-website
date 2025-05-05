@@ -3,7 +3,8 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-type EstimatorResultsProps = {
+type EstimatorResultsProps = 
+{
   inputs: Record<string, any>;
   service: string;
 };

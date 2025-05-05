@@ -5,7 +5,7 @@ import WhyUs from "@/components/home/WhyUs";
 import Testimonials from "@/components/home/Testimonials";
 import FAQ from "@/components/home/FAQ";
 import Team from "@/components/about/Team";
-import EstimatorHome from "@/components/estimate/EstimatorHome";
+import EstimatorHome from "@/components/estimator/EstimatorHome";
 import Scheduler from "@/components/scheduler/Scheduler";
 import FeaturedWork from "@/components/portfolio/FeaturedWork"; 
 
@@ -22,7 +22,8 @@ export default function HomePage() {
 
       {/* Featured Work Section */}
       <FeaturedWork />
-      {/* Scheduler Section */}
+
+      {/* Scheduler Sectison */}
       <div id="scheduler">
         <Scheduler />
       </div>

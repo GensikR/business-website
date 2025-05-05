@@ -37,15 +37,15 @@ export interface BlogPost {
   img2: string;
 }
 
-// Interface for Message (unchanged)
+// Interface for Message
 export interface Message {
   sender: 'user' | 'admin' | 'bot';
   text: string;
   time: string;
-  buttons?: { title: string; payload: string }[];
+  buttons?: { title: string; payload: string }[]; // Optional buttons
 }
 
-// Interface for Chat (unchanged)
+// Interface for Chat
 export interface Chat {
   id: string;
   title: string;
@@ -56,7 +56,7 @@ export type Appointment = {
   id: string;
   date: string; // in YYYY-MM-DD format
   time: string;
-  createdAt: any;
+  createdAt: string; // updated to be a string to fit common date formats
 };
 
 export type Service = {
@@ -67,28 +67,14 @@ export type Service = {
   details: string;
 };
 
+export type ServiceButton = {
+  id: ServiceId;
+  name: string;
+  emoji: string;
+};
+
+export type EstimatorSection = "Home" | "ProjectType" | "Size" | "Materials" | "Result";
+
 export type ServiceId = "bathroom" | "kitchen" | "livingRoom" | "patio" | "bedroom" | "custom";
 
-export type SizeOption = "small" | "medium" | "large";
 
-export type MaterialOption = {
-  id: string;
-  name: string;
-  priceModifier?: number; // Optional modifier
-};
-
-export type ProjectType = {
-  id: string;
-  name: string;
-};
-
-export type ServiceEstimateOptions = {
-  projectTypes: ProjectType[];
-  sizes: SizeOption[];
-  materials: MaterialOption[];
-};
-
-// Map each service ID to its estimate options
-export type AllServiceOptions = {
-  [key in ServiceId]: ServiceEstimateOptions;
-};
