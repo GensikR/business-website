@@ -1,7 +1,6 @@
+// AdminRootLayout.tsx
 import React from 'react';
-import AdminNav from '@/components/admin/AdminNav';
-import TopBar from '@/components/admin/TopBar';
-import '@/app/globals.css'; // Import global styles
+import ClientAdminWrapper from '@/components/admin/Layoutwrapper';
 
 export const metadata = {
   title: 'Admin Panel',
@@ -15,20 +14,8 @@ export default function AdminRootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-gray-100 text-gray-900 h-screen overflow-hidden">
-        {/* Top bar */}
-        <TopBar />
-
-        {/* Sidebar and main content */}
-        <div className="flex h-[calc(100vh-4rem)]">
-          {/* Sidebar */}
-          <AdminNav />
-
-          {/* Main content */}
-          <main className="flex-1 overflow-y-auto px-6 ml-20 md:ml-64 pt-16">
-            {children}
-          </main>
-        </div>
+      <body className="bg-gray-100 text-gray-900 h-screen">
+        <ClientAdminWrapper>{children}</ClientAdminWrapper>
       </body>
     </html>
   );
