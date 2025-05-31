@@ -52,7 +52,7 @@ export default function FacebookLogin({ setLoggedIn }: FacebookLoginProps)
           console.log('Logged in, token:', accessToken);
 
           // Send access token to backend
-          fetch('/api/facebook-login', {
+          fetch('https://37a4-129-107-192-128.ngrok-free.app/api/facebook-login', {
             method: 'POST',
             headers: 
             {
