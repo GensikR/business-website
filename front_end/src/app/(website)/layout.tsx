@@ -3,7 +3,7 @@ import React from 'react';
 import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
 import ChatBot from '../../components/ChatBot';
-import '../globals.css';
+import '@/app/globals.css';
 import UniversalHeader from '../../components/UniversalHeader';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

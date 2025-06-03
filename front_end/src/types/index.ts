@@ -5,38 +5,6 @@ export interface UniversalHeaderProps {
   backgroundImageUrl?: string;
 }
 
-export interface WorkPost {
-  id: string;
-  title: string;
-  slug: string;
-  category: "kitchen" | "bathroom" | "living room" | "bedroom" | "outdoor" | "office";
-  introduction_title: string;
-  introduction: string;
-  challenge: string;
-  challenge_title: string;
-  challenge_content: string;
-  solution: string;
-  solution_title: string;
-  solution_content: string;
-  conclusion_title: string;
-  conclusion_content: string;
-  image1Src: string;
-  image1Alt: string;
-  image2Src: string;
-  image2Alt: string;
-}
-
-export interface BlogPost {
-  title: string;
-  slug: string;
-  category: string; // e.g. "DIY"
-  subcategory: string; // e.g. "Kitchen"
-  summary: string;
-  content: string;
-  img1: string;
-  img2: string;
-}
-
 // Interface for Message
 export interface Message {
   sender: 'user' | 'admin' | 'bot';
@@ -76,5 +44,20 @@ export type ServiceButton = {
 export type EstimatorSection = "Home" | "ProjectType" | "Size" | "Materials" | "Result";
 
 export type ServiceId = "bathroom" | "kitchen" | "livingRoom" | "patio" | "bedroom" | "custom";
+
+export type WorkPost = 
+{
+  id: string;
+  title: string;
+  slug?: string;
+  intro: string;
+  body1: string;
+  body2: string;
+  conclusion: string;
+  category: Number;
+  img_srcs: string[];
+  createdAt: string; 
+  permalink: string;
+};
 
 

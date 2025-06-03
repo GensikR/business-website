@@ -1,7 +1,8 @@
 // app/admin/page.tsx
 import React from 'react';
 
-const AdminPage = () => {
+const AdminPage = () => 
+{
   return (
     <div>
       <p>Coming Soon - Admin Dashboard</p>

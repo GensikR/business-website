@@ -1,144 +1,122 @@
 'use client';
-
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { WorkPost } from '@/types';
-import firebaseConfig from '@/lib/fb_config';
+import { motion } from 'framer-motion';
+import { getFirestore, collection, query, orderBy, onSnapshot, doc, updateDoc } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import firebaseConfig from '@/lib/fb_config';
+import { useRouter } from 'next/navigation';
+import type { WorkPost } from '@/types';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const blogCategories = [
-  { value: 'all', label: 'All' },
-  { value: 'kitchen', label: 'Kitchen' },
-  { value: 'bathroom', label: 'Bathroom' },
-  { value: 'living room', label: 'Living Room' },
-  { value: 'bedroom', label: 'Bedroom' },
-  { value: 'outdoor', label: 'Outdoor' },
-  { value: 'office', label: 'Office' },
-];
+// Slugify helper
+const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+    .replace(/\s+/g, '-') // collapse whitespace and replace by -
+    .replace(/-+/g, '-'); // collapse dashes
 
-const shuffleArray = (arr: WorkPost[]) => [...arr].sort(() => 0.5 - Math.random());
-
-const FeaturedWork: React.FC = () => 
-{
-  const [allPosts, setAllPosts] = useState<WorkPost[]>([]);
-  const [filteredPosts, setFilteredPosts] = useState<WorkPost[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+const FeaturedWork: React.FC = () => {
+  const [posts, setPosts] = useState<WorkPost[]>([]);
+  const [featuredPosts, setFeaturedPosts] = useState<WorkPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  // Fetch all posts from Firestore
   useEffect(() => 
-  {
-    const fetchPosts = async () => 
     {
-      const postsSnapshot = await getDocs(collection(db, 'workPosts'));
-      const postsData = postsSnapshot.docs.map(
-        (doc) => ({ id: doc.id, ...doc.data() } as WorkPost)
-      );
-      setAllPosts(postsData);
+    const q = query(collection(db, 'posts'), orderBy('created_time', 'desc'));
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+      const fetched: WorkPost[] = snapshot.docs.map(docSnap => {
+        const data = docSnap.data() as Omit<WorkPost, 'id'>;
+        return { id: docSnap.id, ...data };
+      });
+
+      // For posts missing slug, generate and update Firestore
+      for (const post of fetched) {
+        if (!post.slug && post.title) {
+          const baseSlug = slugify(post.title);
+          // Check slug uniqueness in fetched posts (excluding current post)
+          const slugExists = fetched.some(p => p.slug === baseSlug && p.id !== post.id);
+          const finalSlug = slugExists ? `${baseSlug}-${post.id.substring(0, 5)}` : baseSlug;
+
+          // Update Firestore document with the new slug
+          const postRef = doc(db, 'posts', post.id);
+          await updateDoc(postRef, { slug: finalSlug });
+
+          // Update locally for immediate UI use
+          post.slug = finalSlug;
+        }
+      }
+
+      setPosts(fetched);
       setLoading(false);
-    };
-    fetchPosts();
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  // Filter posts when allPosts changes
+  // Select random featured posts whenever `posts` updates
   useEffect(() => {
-    if (allPosts.length > 0) 
-    {
-      filterPosts('all');
+    if (posts.length > 0) {
+      setFeaturedPosts(getRandomPosts(posts, 6));
     }
-  }, [allPosts]);
+  }, [posts]);
 
+  const getRandomPosts = (arr: WorkPost[], count: number) => {
+    const shuffled = [...arr].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  };
 
-  // Filter posts based on selected category
-  const filterPosts = (category: string) => 
-  {
-    setSelectedCategory(category);
-    const filtered = category === 'all'
-      ? shuffleArray(allPosts)
-      : shuffleArray(allPosts.filter((post) => post.category === category));
-    setFilteredPosts(filtered.slice(0, 6));
+  const handleReshuffle = () => {
+    setFeaturedPosts(getRandomPosts(posts, 6));
   };
 
   return (
-    <section className="bg-gradient-to-br from-gray-50 via-white to-gray-100 py-16 px-6 sm:px-10 lg:px-24 transition-all duration-300">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl font-extrabold text-gray-900 mb-10 text-center">
+    <section className="bg-white px-6 py-12 max-w-screen-xl mx-auto">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center sm:text-left w-full sm:w-auto">
           Featured Work
         </h2>
-
-        <div className="flex flex-wrap justify-center gap-3 mb-6">
-          {blogCategories.map((cat) => (
-            <button
-              key={cat.value}
-              onClick={() => filterPosts(cat.value)}
-              className={`px-5 py-2 rounded-full text-sm font-medium border transition duration-200 ${
-                selectedCategory === cat.value
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-lg'
-                  : 'bg-white text-gray-700 border-gray-300 hover:bg-blue-50 hover:border-blue-400'
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-          <button
-            onClick={() => filterPosts(selectedCategory)}
-            className="px-5 py-2 rounded-full text-sm font-medium bg-white border border-gray-300 hover:bg-blue-50 hover:border-blue-400 transition"
-          >
-            🔁 Reshuffle
-          </button>
-        </div>
-
-        {loading ? (
-          <div className="text-center py-20 text-gray-500">Loading work posts...</div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-            {filteredPosts.map((post) => (
-              <Link
-                href={`/portfolio/${post.category}/${post.slug}`}
-                key={post.id}
-                passHref
-              >
-                <div className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-shadow duration-300 overflow-hidden border border-gray-100">
-                  <div className="relative h-56 sm:h-64 md:h-72 lg:h-60 w-full overflow-hidden">
-                    {/* Image Path from public folder */}
-                    <Image
-                      src={`/images/portfolio/${post.id}/after.png`} // Use image from public/images folder
-                      alt="No Image"
-                      layout="fill"
-                      objectFit="cover"
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <span className="absolute top-4 left-4 bg-blue-600 text-white text-xs font-medium uppercase tracking-wide px-3 py-1 rounded-full shadow-md">
-                      {blogCategories.find((cat) => cat.value === post.category)?.label || post.category}
-                    </span>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition duration-200 mb-2 line-clamp-2">
-                      {post.title}
-                    </h3>
-                    <div className="text-sm text-gray-700 mb-2 line-clamp-2">
-                      <strong className="block text-gray-500 mb-1">Challenge</strong>
-                      {post.challenge_title}
-                    </div>
-                    <div className="text-sm text-gray-700 line-clamp-2">
-                      <strong className="block text-gray-500 mb-1">Solution</strong>
-                      {post.solution_title}
-                    </div>
-                    <div className="mt-4 text-blue-600 font-medium text-sm hover:underline">
-                      View full project → 
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
+        <button
+          onClick={handleReshuffle}
+          className="mt-4 sm:mt-0 px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition duration-200"
+        >
+          Reshuffle
+        </button>
       </div>
+
+      {loading ? (
+        <p className="text-center text-gray-500">Loading...</p>
+      ) : featuredPosts.length === 0 ? (
+        <p className="text-center text-gray-500">No posts found.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {featuredPosts.map(post => (
+            <motion.div
+              key={post.id}
+              whileHover={{ scale: 1.02, y: -4 }}
+              transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+              className="cursor-pointer bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden"
+              onClick={() => router.push(`/portfolio/${post.slug}`)}
+            >
+              <img
+                src={post.img_srcs?.[0] || '/placeholder.jpg'}
+                alt={post.title}
+                className="w-full h-56 object-cover"
+              />
+              <div className="p-5">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">{post.title}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {post.intro?.slice(0, 100) || post.body1?.slice(0, 100)}...
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
     </section>
   );
 };

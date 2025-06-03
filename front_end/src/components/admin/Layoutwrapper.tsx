@@ -4,28 +4,26 @@
 import React, { useEffect, useState } from 'react';
 import AdminNav from './AdminNav';
 import TopBar from './TopBar';
-import FacebookLogin from './FacebookLogin';
-import { loadFacebookSDK } from '@/lib/fb_sdk';
+import AdminLogin from './FacebookLogin';
+import '@/app/globals.css';
+
 
 export default function LayoutWrapper({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [loggedIn, setLoggedIn] = useState(false);
+  //TODO: Change after admin login is implemented
+  const [loggedIn, setLoggedIn] = useState(true);
 
-  useEffect(() => {
-    loadFacebookSDK(process.env.NEXT_PUBLIC_FACEBOOK_APP_ID || '')
-      .then(() => console.log('FB SDK ready'))
-      .catch((err) => console.error('FB SDK failed to load:', err));
-  }, []);
+  
 
   if (!loggedIn) {
     return (
       <div className="flex items-center justify-center h-screen bg-white">
         <div className="max-w-md w-full p-6 bg-white rounded shadow-md">
           <h1 className="text-2xl font-bold mb-4">Admin Login</h1>
-          <FacebookLogin setLoggedIn={setLoggedIn} />
+          <AdminLogin setLoggedIn={setLoggedIn} />
         </div>
       </div>
     );
