@@ -27,10 +27,11 @@ export type Appointment = {
   createdAt: string; // updated to be a string to fit common date formats
 };
 
-export type Service = {
+export type Service = 
+{
   title: string;
   description: string;
-  images: string[];
+  image: string;
   link: string;
   details: string;
 };
@@ -59,5 +60,4 @@ export type WorkPost =
   createdAt: string; 
   permalink: string;
 };
-
 

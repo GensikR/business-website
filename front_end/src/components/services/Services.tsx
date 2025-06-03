@@ -10,7 +10,8 @@ import { services } from "@/lib/getService";
 const Services: React.FC = () => {
   const [servicesData, setServicesData] = useState<Service[]>([]);
 
-  useEffect(() => {
+  useEffect(() => 
+  {
     // Simulating async fetching of services
     setServicesData(services);
   }, []);
@@ -38,7 +39,7 @@ const Services: React.FC = () => {
               {/* Image */}
               <div className="relative h-56 w-full overflow-hidden">
                 <Image
-                  src={service.images[0]}
+                  src={service.image}
                   alt={service.title}
                   layout="fill"
                   objectFit="cover"
