@@ -1,179 +1,175 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { FaCalendarAlt, FaClock, FaCheckCircle, FaArrowLeft } from "react-icons/fa";
-import firebaseConfig from "@/lib/fb_config";
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { collection, doc, setDoc } from "firebase/firestore"; // make sure this is imported from Firebase SDK
+import React, { useState, ChangeEvent } from 'react';
+import { services } from '@/lib/getService'; // reuse your services list
+import Image from 'next/image';
+import { FaArrowRight, FaUpload } from 'react-icons/fa';
 
+const MAX_IMAGES = 3;
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const Scheduler: React.FC = () => {
+  const [step, setStep] = useState(1);
+  const [selectedService, setSelectedService] = useState<string>('');
+  const [description, setDescription] = useState('');
+  const [images, setImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [selectedSlots, setSelectedSlots] = useState<string[]>([]);
 
+  const timeSlots = [
+    'Monday 10am',
+    'Tuesday 2pm',
+    'Wednesday 4pm',
+    'Thursday 11am',
+    'Friday 1pm',
+    'Saturday 3pm',
+  ];
 
-// Function to generate weekdays excluding Sunday
-const generateWeekdays = (count: number) => 
-{
-    const days: string[] = [];
-    let date = new Date();
+  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length + images.length > MAX_IMAGES) return;
 
-    // Start from the next day
-    date.setDate(date.getDate() + 1);
-
-    while (days.length < count) {
-        if (date.getDay() !== 0) { // Exclude Sundays
-        days.push(date.toISOString().split("T")[0]);
-        }
-        date.setDate(date.getDate() + 1);
-    }
-    return days;
-};
-
-const timeSlots = ["10:00 AM", "12:00 PM", "2:00 PM", "4:00 PM", "6:00 PM"];
-
-export default function Scheduler() {
-  const [availableDates, setAvailableDates] = useState<string[]>([]);
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [confirmed, setConfirmed] = useState(false);
-
-  useEffect(() => {
-    setAvailableDates(generateWeekdays(7)); // Get next 7 days excluding Sunday
-  }, []);
-
-  const handleConfirm = async () => {
-    if (selectedDate && selectedTime) {
-      setConfirmed(true);
-  
-      try {
-        const docRef = doc(collection(db, "appointments")); // creates a new doc with auto ID
-        await setDoc(docRef, {
-          //TODO: add appointment type and user ID
-          date: selectedDate,
-          time: selectedTime,
-          createdAt: new Date(),
-        });
-        console.log("Appointment saved successfully!");
-      } catch (error) {
-        console.error("Error saving appointment:", error);
-      }
-    } else {
-      console.warn("Date or time not selected.");
-    }
+    const previews = files.map(file => URL.createObjectURL(file));
+    setImages(prev => [...prev, ...files]);
+    setImagePreviews(prev => [...prev, ...previews]);
   };
 
-  const handleBack = () => {
-    setSelectedDate(null);
-    setSelectedTime(null);
-    setConfirmed(false);
+  const toggleSlot = (slot: string) => {
+    setSelectedSlots(prev =>
+      prev.includes(slot)
+        ? prev.filter(s => s !== slot)
+        : prev.length < 3
+        ? [...prev, slot]
+        : prev
+    );
   };
 
-  const formatDate = (dateString: string) =>
-    new Date(dateString).toLocaleDateString(undefined, {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-    });
+  const handleSubmit = () => {
+    console.log({ selectedService, description, images, selectedSlots });
+    alert('Request submitted! We’ll get back to you shortly.');
+    // send to server or API route
+  };
 
   return (
-    <div className="py-16 px-6 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 min-h-screen flex flex-col items-center justify-center">
-      <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800 mb-4 text-center">
-        {selectedDate
-          ? `Choose a time for ${formatDate(selectedDate)}:`
-          : "Schedule Your In-Person Estimate 📅"}
-      </h2>
+    <main className="min-h-screen bg-gradient-to-b from-white to-gray-50 py-16 px-6 md:px-20">
+      <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-2xl p-8 space-y-8">
+        <h1 className="text-3xl font-bold text-blue-700 text-center">Schedule a Consultation</h1>
 
-      <p className="text-lg text-gray-600 mb-10 text-center max-w-xl">
-        {!selectedDate &&
-          "Pick a date that works for you — then we’ll ask what time you'd like to meet!"}
-      </p>
-
-      {!selectedDate && (
-        <div className="flex flex-wrap justify-center gap-4 mb-8">
-          {availableDates.map((date) => (
-            <motion.button
-              key={date}
-              whileTap={{ scale: 0.95 }}
-              whileHover={{ scale: 1.05 }}
-              onClick={() => {
-                setSelectedDate(date);
-                setConfirmed(false);
-              }}
-              className="px-5 py-3 rounded-2xl shadow-md border bg-white text-gray-800 border-transparent hover:border-blue-400 transition-all text-sm font-semibold"
-            >
-              <FaCalendarAlt className="inline mr-2 text-blue-500" />
-              {new Date(date).toLocaleDateString(undefined, {
-                weekday: "short",
-                month: "short",
-                day: "numeric",
-              })}
-            </motion.button>
-          ))}
-        </div>
-      )}
-
-      {selectedDate && (
-        <>
-          <div className="flex flex-wrap justify-center gap-4 mb-8">
-            {timeSlots.map((slot) => (
-              <motion.button
-                key={slot}
-                whileTap={{ scale: 0.95 }}
-                whileHover={{ scale: 1.05 }}
-                onClick={() => {
-                  setSelectedTime(slot);
-                  setConfirmed(false);
-                }}
-                className={`px-5 py-2.5 rounded-2xl shadow-md text-sm font-semibold transition duration-300 ${
-                  selectedTime === slot
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-gray-800"
-                }`}
-              >
-                <FaClock className="inline mr-2 text-blue-400" />
-                {slot}
-              </motion.button>
-            ))}
+        {step === 1 && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">1. Select a Service</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {services.map(service => (
+                <button
+                  key={service.link}
+                  className={`border rounded-xl p-4 hover:bg-blue-50 transition ${
+                    selectedService === service.link ? 'border-blue-600 bg-blue-100' : 'border-gray-300'
+                  }`}
+                  onClick={() => setSelectedService(service.link)}
+                >
+                  <h3 className="font-semibold text-blue-900">{service.title}</h3>
+                  <p className="text-sm text-gray-600">{service.description}</p>
+                </button>
+              ))}
+            </div>
           </div>
+        )}
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            onClick={handleBack}
-            className="mb-6 px-6 py-2 rounded-full bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 border border-blue-200 shadow-sm transition-all duration-300 flex items-center font-medium"
-          >
-            <FaArrowLeft className="mr-2" />
-            Back to Date Selection
-          </motion.button>
-        </>
-      )}
+        {step === 2 && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">2. Describe Your Project</h2>
+            <textarea
+              className="w-full border border-gray-300 rounded-lg p-4 min-h-[120px]"
+              placeholder="Tell us what you need..."
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+            />
+          </div>
+        )}
 
-      {selectedDate && selectedTime && (
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          onClick={handleConfirm}
-          className="mt-2 px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-full shadow-lg transition"
-        >
-          <FaCheckCircle className="inline mr-2 mb-1" />
-          Confirm Date
-        </motion.button>
-      )}
+        {step === 3 && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">3. Upload Reference Images (Optional)</h2>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageUpload}
+              className="mb-4"
+            />
+            <div className="flex flex-wrap gap-4">
+              {imagePreviews.map((src, i) => (
+                <div key={i} className="w-24 h-24 relative">
+                  <Image src={src} alt="preview" fill className="object-cover rounded-lg" />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
-      {confirmed && (
-        <motion.div
-          className="mt-8 text-green-700 font-medium text-lg"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          ✅ Booked for{" "}
-          <span className="font-bold text-gray-800">
-            {formatDate(selectedDate!)} at {selectedTime}
-          </span>
-        </motion.div>
-      )}
-    </div>
+        {step === 4 && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">4. Choose Up to 3 Preferred Time Slots</h2>
+            <div className="grid grid-cols-2 gap-4">
+              {timeSlots.map(slot => (
+                <button
+                  key={slot}
+                  onClick={() => toggleSlot(slot)}
+                  className={`p-3 rounded-xl border transition ${
+                    selectedSlots.includes(slot)
+                      ? 'bg-blue-600 text-white border-blue-700'
+                      : 'bg-white text-gray-700 border-gray-300 hover:bg-blue-50'
+                  }`}
+                >
+                  {slot}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {step === 5 && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">5. Review & Submit</h2>
+            <ul className="space-y-2 text-gray-700 text-sm">
+              <li><strong>Service:</strong> {services.find(s => s.link === selectedService)?.title}</li>
+              <li><strong>Description:</strong> {description}</li>
+              <li><strong>Time Slots:</strong> {selectedSlots.join(', ')}</li>
+              <li><strong>Images:</strong> {images.length} uploaded</li>
+            </ul>
+          </div>
+        )}
+
+        {/* Step Navigation */}
+        <div className="flex justify-between pt-6 border-t mt-6">
+          {step > 1 ? (
+            <button
+              onClick={() => setStep(step - 1)}
+              className="text-blue-600 hover:underline text-sm"
+            >
+              ← Back
+            </button>
+          ) : <span />}
+
+          {step < 5 ? (
+            <button
+              onClick={() => setStep(step + 1)}
+              className="bg-blue-700 hover:bg-blue-800 text-white px-6 py-2 rounded-full flex items-center gap-2"
+              disabled={(step === 1 && !selectedService) || (step === 2 && !description)}
+            >
+              Next <FaArrowRight />
+            </button>
+          ) : (
+            <button
+              onClick={handleSubmit}
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full"
+            >
+              Submit Request
+            </button>
+          )}
+        </div>
+      </div>
+    </main>
   );
-}
+};
+
+export default Scheduler;

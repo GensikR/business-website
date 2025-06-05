@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,9 +9,7 @@ import { services } from "@/lib/getService";
 const Services: React.FC = () => {
   const [servicesData, setServicesData] = useState<Service[]>([]);
 
-  useEffect(() => 
-  {
-    // Simulating async fetching of services
+  useEffect(() => {
     setServicesData(services);
   }, []);
 
@@ -25,7 +22,8 @@ const Services: React.FC = () => {
             Craftsmanship Meets Creativity
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Explore our diverse remodeling services designed to elevate your living space — personalized, precise, and built to last.
+            Explore our diverse remodeling services designed to elevate your
+            living space — personalized, precise, and built to last.
           </p>
         </div>
 
@@ -66,13 +64,12 @@ const Services: React.FC = () => {
                   </Link>
 
                   <Link
-                    href={service.link}
+                    href={`/services/${service.link}`} // ✅ Fixed path here
                     className="inline-flex items-center justify-center text-blue-700 font-medium hover:text-blue-900 transition-colors"
                   >
                     Learn More <FaArrowRight className="ml-2" />
                   </Link>
                 </div>
-
               </div>
             </div>
           ))}

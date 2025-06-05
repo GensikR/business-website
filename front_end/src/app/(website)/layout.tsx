@@ -21,24 +21,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           backgroundImageUrl="/images/header5.png"
         />
 
-        {
-        /* 
-          Use Only if different header props are needed for different pages
-          <UniversalHeader {....headerProps} />
-        */
-        }
-
-        {/* Main Content Area padding can be adjusted here */}
-        <main className="flex-grow px-12 md:px-24 lg:px-48 relative">
+        {/* Main Content Area with consistent padding but no horizontal centering */}
+        <main className="flex-grow px-6 md:px-20 relative">
           {/* Dots Background */}
           <div className="absolute inset-0 bg-[radial-gradient(#3b82f680_1px,transparent_1px)] bg-[length:20px_20px] z-0 pointer-events-none" />
           
           {/* Children Pages */}
           <div className="relative z-10">
             {children}
-          
           </div>
-        
         </main>
 
         {/* Site Footer */}
@@ -46,9 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Chatbot */}
         <ChatBot />
-
       </body>
-      
     </html>
   );
 }

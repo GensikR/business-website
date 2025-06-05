@@ -28,13 +28,7 @@ export default function HomePage() {
         <Scheduler />
       </div>
 
-      {/* Estimator Section */}
-      <div id="estimator">
-        <EstimatorHome />
-      </div>
-
       {/* Why Choose Us Section */}
-      <WhyUs />
 
       {/* Testimonials Section */}
       <Testimonials />
