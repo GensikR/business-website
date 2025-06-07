@@ -4,13 +4,51 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const timelineEvents = [
-  { year: '2017', title: 'The Beginning', description: 'ABC Company was founded with a vision to provide innovative engineering solutions to startups, focusing on reliability and affordability.' },
-  { year: '2018', title: 'Expanding Expertise', description: 'We diversified our offerings to include legacy system migrations and ERP implementations, catering to small and medium-sized businesses.' },
-  { year: '2019', title: 'Going Global', description: 'ABC Company expanded its reach by serving clients across multiple countries, building strong partnerships with multinational corporations.' },
-  { year: '2020', title: 'Autonomous Teams Launched', description: 'We introduced fully autonomous development teams, enabling clients to scale their projects with ease and efficiency.' },
-  { year: '2021', title: 'Embracing Cybersecurity', description: 'To address growing digital threats, we added comprehensive cybersecurity services, safeguarding our clients’ assets worldwide.' },
-  { year: '2023', title: '300+ Projects Completed', description: 'With over 300 successful projects delivered globally, we solidified our reputation as a leading provider of tailored engineering solutions.' },
-  { year: '2024', title: 'A Trusted Partner', description: 'ABC Company continues to innovate, serving startups, SMBs, and enterprises with a focus on scalable solutions, global collaboration, and unmatched reliability.' },
+  { 
+    year: '2000', 
+    title: 'A New Chapter in the US', 
+    description: 'Mauri, a skilled remodeler, embarked on a new journey, arriving in the United States from Argentina. He established his initial roots and began building his expertise in Los Angeles, California.' 
+  },
+  { 
+    year: '2004', 
+    title: 'Founding Stage One Custom Furniture & Construction', 
+    description: 'Mauri co-founded Stage One Custom Furniture & Construction in Los Angeles, California. This marked a significant step in his career, allowing him to apply his extensive knowledge in woodworking, custom finishes, and general construction to a broader range of projects.' 
+  },
+  { 
+    year: '2008', 
+    title: 'Mastering Diverse Projects', 
+    description: 'During his tenure at Stage One, Mauri gained extensive experience as a Wood Finisher & Project Manager. He worked on diverse and high-profile projects, including contributions to Swinerton Builders and collaborations for Walt Disney Concert Hall and Colburn School.' 
+  },
+  { 
+    year: '2015', 
+    title: 'Broadening Expertise in Design & Healthcare', 
+    description: 'Mauri continued to expand his portfolio, engaging with various design firms and institutions. His work included projects for Gary Gibson Design, Saxony Design & Build, Robert Mahterian Architect, and healthcare facilities like UCLA Hospital and Santa Monica UCLA Hospital, showcasing his adaptability and broad skill set.' 
+  },
+  { 
+    year: '2021', 
+    title: 'Venturing into Texas & Entrepreneurship', 
+    description: 'Mauri made a pivotal move to Texas. Recognizing a thriving market and seeking new challenges, he ventured to establish his own remodeling business, driven by a vision to deliver exceptional craftsmanship and client satisfaction.' 
+  },
+  { 
+    year: '2022', 
+    title: 'Laying the Foundation for Growth', 
+    description: 'In its inaugural year, Mauri’s remodeling business quickly gained traction. Focusing on quality craftsmanship, personalized designs, and timely project completion, the company began to build a strong reputation within the Texas remodeling landscape.' 
+  },
+  { 
+    year: '2023', 
+    title: 'Expanding Service Offerings', 
+    description: 'The business expanded its service offerings, moving beyond general remodeling to specialize in areas such as custom finishes, antiques restoration, bathroom & kitchen remodeling, and cabinet installation. This diversification allowed for a wider range of tailored solutions for clients.' 
+  },
+  { 
+    year: '2024', 
+    title: 'A Portfolio of Success', 
+    description: 'Mauri\'s business continued its steady growth, undertaking successful projects in various remodeling domains, including kitchen remodels, modern bathroom oasis designs, and whole-house modernizations, showcasing a commitment to transforming homes.' 
+  },
+  { 
+    year: 'Present', 
+    title: 'Committed to Excellence', 
+    description: 'Today, Mauri’s remodeling business continues to thrive, known for its proactive and efficient approach, attention to detail, and dedication to delivering high-quality, custom solutions that meet and exceed client expectations.' 
+  },
 ];
 
 const Story: React.FC = () => {
