@@ -61,3 +61,52 @@ export type WorkPost =
   permalink: string;
 };
 
+export const categories = [
+  "kitchen",
+  "bathroom",
+  "custom furniture",
+  "flooring",
+  "walls",
+  "outdoor living",
+  "home office",
+  "consultation",
+  "interior design",
+];
+
+// types.ts or types/index.ts
+
+export interface MediaImage {
+  src: string;
+}
+
+export interface AttachmentMedia {
+  image?: MediaImage;
+}
+
+export interface SubAttachment {
+  media?: AttachmentMedia;
+}
+
+export interface Attachment {
+  media_type?: string;
+  media?: AttachmentMedia;
+  subattachments?: {
+    data: SubAttachment[];
+  };
+}
+
+export interface FacebookPost {
+  id: string;
+  message?: string;
+  created_time: string;
+  permalink_url?: string;
+  attachments?: {
+    data: Attachment[];
+  };
+}
+
+export interface GPTBlogParts {
+  title: string;
+  excerpt: string;
+  body: string;
+}
