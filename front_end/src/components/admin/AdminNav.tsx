@@ -82,16 +82,8 @@ const AdminNav: React.FC = () => {
       {/* Nav Items */}
       <nav>
         <NavItem href="/admin/inbox" label="Inbox" icon={<AiOutlineInbox className="w-5 h-5" />} collapsed={collapsed} />
-        <NavItem href="/admin/estimates" label="Estimates" icon={<AiOutlineCalculator className="w-5 h-5" />} collapsed={collapsed} />
-        <NavItem href="/admin/todo" label="To-Do List" icon={<AiOutlineCheckSquare className="w-5 h-5" />} collapsed={collapsed} />
         <NavItem href="/admin/blog" label="Blog" icon={<AiOutlineBook className="w-5 h-5" />} collapsed={collapsed} />
         <NavItem href="/admin/calendar" label="Calendar" icon={<AiOutlineCalendar className="w-5 h-5" />} collapsed={collapsed} />
-        <NavItem href="/admin/services" label="Services" icon={<AiOutlineTool className="w-5 h-5" />} collapsed={collapsed} />
-        <NavItem href="/admin/financials" label="Financials" icon={<AiOutlineLineChart className="w-5 h-5" />} collapsed={collapsed} />
-        <NavItem href="/admin/clients" label="Clients" icon={<AiOutlineUsergroupAdd className="w-5 h-5" />} collapsed={collapsed} />
-        <NavItem href="/admin/projects" label="Projects" icon={<AiOutlineProject className="w-5 h-5" />} collapsed={collapsed} />
-        <NavItem href="/admin/marketing" label="Marketing" icon={<AiOutlinePieChart className="w-5 h-5" />} collapsed={collapsed} />
-        <NavItem href="/admin/analytics" label="Analytics" icon={<AiOutlineBarChart className="w-5 h-5" />} collapsed={collapsed} />
       </nav>
     </aside>
   );
