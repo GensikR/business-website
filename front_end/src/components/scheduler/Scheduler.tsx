@@ -43,11 +43,33 @@ const Scheduler: React.FC = () => {
     );
   };
 
-  const handleSubmit = () => {
-    console.log({ selectedService, description, images, selectedSlots });
-    alert('Request submitted! We’ll get back to you shortly.');
-    // send to server or API route
+  const handleSubmit = async () => {
+  const payload = {
+    selectedService,
+    description,
+    selectedSlots,
   };
+
+  try {
+    const res = await fetch('/api/notify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (res.ok) {
+      alert('Request submitted! We’ll get back to you shortly.');
+    } else {
+      alert('There was an error sending your request. Please try again.');
+    }
+  } catch (err) {
+    console.error('Submit Error:', err);
+    alert('Something went wrong.');
+  }
+};
+
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-white to-gray-50 py-16 px-6 md:px-20">
