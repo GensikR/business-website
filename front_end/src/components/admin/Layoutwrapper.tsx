@@ -1,29 +1,45 @@
-// ClientAdminWrapper.tsx
+// LayoutWrapper.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
 import AdminNav from './AdminNav';
 import TopBar from './TopBar';
-import AdminLogin from './FacebookLogin';
+import AdminLogin from './AdminLogin';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 import '@/app/globals.css';
-
 
 export default function LayoutWrapper({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  //TODO: Change after admin login is implemented
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setLoggedIn(!!user);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-white">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   if (!loggedIn) {
     return (
       <div className="flex items-center justify-center h-screen bg-white">
         <div className="max-w-md w-full p-6 bg-white rounded shadow-md">
           <h1 className="text-2xl font-bold mb-4">Admin Login</h1>
-          <AdminLogin setLoggedIn={setLoggedIn} />
+          <AdminLogin />
         </div>
       </div>
     );

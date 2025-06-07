@@ -76,7 +76,7 @@ const FeaturedWork: React.FC = () => {
   };
 
   return (
-    <section className="bg-white py-12 px-6 md:px-20">
+  <section className="bg-white py-12 px-6 md:px-20">
   <div className="flex flex-col sm:flex-row justify-between items-center mb-8 px-4 sm:px-0">
     <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center sm:text-left w-full sm:w-auto">
       Featured Work
