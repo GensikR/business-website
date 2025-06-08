@@ -3,10 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FaChevronRight } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { UniversalHeaderProps } from "@/types";
-
 
 const UniversalHeader: React.FC<UniversalHeaderProps> = ({
   title,
@@ -65,13 +63,26 @@ const UniversalHeader: React.FC<UniversalHeaderProps> = ({
             className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-full shadow-xl text-lg md:text-xl transition-all duration-300"
           >
             <span>Get a Free Estimate</span>
-            <FaChevronRight className="ml-3 w-6 h-6" />
+            {/* Inline SVG arrow replacing FaChevronRight */}
+            <svg
+              className="ml-3 w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path d="M9 18l6-6-6-6" />
+            </svg>
           </Link>
 
           <Link
             href="/portfolio"
             className="inline-flex items-center bg-white bg-opacity-20 hover:bg-opacity-30 text-blue-900 font-medium py-4 px-8 rounded-full backdrop-blur-sm shadow-lg text-lg md:text-xl transition-all duration-300"
-            >
+          >
             View Our Work
           </Link>
         </motion.div>

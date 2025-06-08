@@ -14,7 +14,7 @@ import { initializeApp } from 'firebase/app';
 import firebaseConfig from '@/lib/fb_config';
 import { useRouter } from 'next/navigation';
 import type { WorkPost } from '@/types';
-import Image from 'next/image';
+//import Image from 'next/image';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -106,33 +106,27 @@ const FeaturedWork: React.FC = () => {
       ) : featuredPosts.length === 0 ? (
         <p className="text-center text-gray-500">No posts found.</p>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {featuredPosts.map((post) => (
-            <motion.div
-              key={post.id}
-              className="bg-gray-100 rounded-xl overflow-hidden shadow-md cursor-pointer hover:shadow-lg transition duration-300"
-              whileHover={{ scale: 1.02 }}
-              onClick={() => router.push(`/work/${post.slug}`)}
-            >
-              {post.img_srcs?.[0] && (
-                <div className="relative w-full h-48">
-                  <Image
-                    src={post.img_srcs[0]}
-                    alt={post.title}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              )}
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-gray-800">{post.title}</h3>
-                <p className="text-sm text-gray-600 mt-2 line-clamp-2">
-                  {post.intro}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  {featuredPosts.map((post) => (
+    <motion.div
+      key={post.id}
+      className="bg-gray-100 rounded-lg overflow-hidden shadow-md cursor-pointer"
+      whileHover={{ scale: 1.03 }}
+      onClick={() => router.push(`/portfolio/${post.slug}`)}
+    >
+      <img
+        src={post.img_srcs[0]}
+        alt={post.title}
+        className="w-full h-60 object-cover"
+      />
+      <div className="p-4">
+        <h3 className="text-xl font-semibold text-gray-800">{post.title}</h3>
+        <p className="text-gray-600 text-sm mt-2">{post.intro}</p>
+      </div>
+    </motion.div>
+  ))}
+</div>
+
       )}
     </section>
   );

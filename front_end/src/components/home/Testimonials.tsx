@@ -2,7 +2,6 @@
 
 import React from "react";
 import Link from "next/link";
-import { FaQuoteLeft, FaArrowRight } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 interface Testimonial {
@@ -41,6 +40,32 @@ const cardVariants = {
   }),
 };
 
+const QuoteIcon = () => (
+  <svg
+    className="w-10 h-10 text-blue-400"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path d="M7.17 6.17a4 4 0 0 1 5.66 0l1.41 1.41a4 4 0 0 1 0 5.66l-1.41 1.41a4 4 0 0 1-5.66-5.66l1.41-1.41zm-2.83 7.66a6 6 0 0 0 8.48 0l1.41-1.41a6 6 0 0 0 0-8.48l-1.41-1.41a6 6 0 0 0-8.48 8.48l1.41 1.41z" />
+  </svg>
+);
+
+const ArrowRightIcon = () => (
+  <svg
+    className="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path d="M5 12h14M13 5l7 7-7 7" />
+  </svg>
+);
+
 const Testimonials: React.FC = () => (
   <section className="relative py-20 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
     {/* Decorative Dots */}
@@ -77,8 +102,8 @@ const Testimonials: React.FC = () => (
             variants={cardVariants}
             className="bg-white/70 backdrop-blur-lg border border-gray-200 rounded-2xl p-8 flex flex-col h-full hover:shadow-2xl transition-shadow duration-300"
           >
-            <div className="text-blue-400 text-4xl mb-4">
-              <FaQuoteLeft />
+            <div className="mb-4">
+              <QuoteIcon />
             </div>
             <p className="text-2xl text-gray-800 leading-relaxed mb-6 flex-grow">
               {t.quote}
@@ -103,7 +128,7 @@ const Testimonials: React.FC = () => (
           className="inline-flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-full shadow-lg transition-all duration-300"
         >
           <span>View Featured Works</span>
-          <FaArrowRight />
+          <ArrowRightIcon />
         </Link>
       </motion.div>
     </div>

@@ -2,9 +2,23 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FaArrowRight } from "react-icons/fa";
 import { Service } from "@/types/index";
 import { services } from "@/lib/getService";
+
+const ArrowRightIcon = () => (
+  <svg
+    className="ml-2 w-4 h-4 inline-block"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path d="M5 12h14M13 5l7 7-7 7" />
+  </svg>
+);
 
 const Services: React.FC = () => {
   const [servicesData, setServicesData] = useState<Service[]>([]);
@@ -64,10 +78,10 @@ const Services: React.FC = () => {
                   </Link>
 
                   <Link
-                    href={`/services/${service.link}`} // ✅ Fixed path here
+                    href={`/services/${service.link}`}
                     className="inline-flex items-center justify-center text-blue-700 font-medium hover:text-blue-900 transition-colors"
                   >
-                    Learn More <FaArrowRight className="ml-2" />
+                    Learn More <ArrowRightIcon />
                   </Link>
                 </div>
               </div>
@@ -81,7 +95,7 @@ const Services: React.FC = () => {
             href="/consultation"
             className="inline-flex items-center gap-3 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-4 px-8 rounded-full text-lg shadow-lg transition-all duration-300"
           >
-            Get a Free Estimate <FaArrowRight className="w-5 h-5" />
+            Get a Free Estimate <ArrowRightIcon />
           </Link>
         </div>
       </div>

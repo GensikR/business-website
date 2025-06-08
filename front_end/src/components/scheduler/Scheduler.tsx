@@ -3,7 +3,6 @@
 import React, { useState, ChangeEvent } from 'react';
 import { services } from '@/lib/getService'; // reuse your services list
 import Image from 'next/image';
-import { FaArrowRight } from 'react-icons/fa';
 
 const MAX_IMAGES = 3;
 
@@ -44,32 +43,31 @@ const Scheduler: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-  const payload = {
-    selectedService,
-    description,
-    selectedSlots,
-  };
+    const payload = {
+      selectedService,
+      description,
+      selectedSlots,
+    };
 
-  try {
-    const res = await fetch('/api/notify', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const res = await fetch('/api/notify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
 
-    if (res.ok) {
-      alert('Request submitted! We’ll get back to you shortly.');
-    } else {
-      alert('There was an error sending your request. Please try again.');
+      if (res.ok) {
+        alert('Request submitted! We’ll get back to you shortly.');
+      } else {
+        alert('There was an error sending your request. Please try again.');
+      }
+    } catch (err) {
+      console.error('Submit Error:', err);
+      alert('Something went wrong.');
     }
-  } catch (err) {
-    console.error('Submit Error:', err);
-    alert('Something went wrong.');
-  }
-};
-
+  };
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-white to-gray-50 py-16 px-6 md:px-20">
@@ -178,7 +176,21 @@ const Scheduler: React.FC = () => {
               className="bg-blue-700 hover:bg-blue-800 text-white px-6 py-2 rounded-full flex items-center gap-2"
               disabled={(step === 1 && !selectedService) || (step === 2 && !description)}
             >
-              Next <FaArrowRight />
+              Next
+              {/* Inline SVG arrow replacing FaArrowRight */}
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
             </button>
           ) : (
             <button

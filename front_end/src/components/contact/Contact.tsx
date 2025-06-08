@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { FaArrowRight } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 const Contact: React.FC = () => {
@@ -213,7 +212,7 @@ const Contact: React.FC = () => {
             <textarea
               id="message"
               name="message"
-              rows={6}
+              rows={5}
               value={formData.message}
               onChange={handleChange}
               required
@@ -222,13 +221,26 @@ const Contact: React.FC = () => {
           </div>
 
           {/* Submit Button (full width) */}
-          <div className="md:col-span-2 text-center mt-4">
+          <div className="md:col-span-2 text-right">
             <button
               type="submit"
-              className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg transition transform hover:scale-105"
+              className="inline-flex items-center px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
             >
-              <span>Send Message</span>
-              <FaArrowRight className="ml-2 w-5 h-5" />
+              Send
+              {/* Inline SVG arrow replacing FaArrowRight */}
+              <svg
+                className="ml-3 w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
             </button>
           </div>
         </motion.form>
