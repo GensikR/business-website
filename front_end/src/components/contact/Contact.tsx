@@ -48,7 +48,7 @@ const Contact: React.FC = () => {
             Get a Free Estimate
           </h2>
           <p className="text-lg text-gray-600">
-            Tell us about your remodeling project and we'll send a detailed, no‑obligation quote.
+            Tell us about your remodeling project and we will send a detailed, no‑obligation quote.
           </p>
         </motion.div>
 

@@ -50,7 +50,7 @@ const FAQ: React.FC = () => {
           Frequently Asked Questions
         </h2>
         <p className="text-lg text-gray-600 text-center mb-12 max-w-3xl mx-auto">
-          Have questions about our remodeling services? We're here to help.
+          Have questions about our remodeling services? We are here to help.
         </p>
 
         {/* FAQ Items */}

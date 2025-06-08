@@ -21,7 +21,7 @@ const OurImpact: React.FC = () => {
         {/* Section Title */}
         <h2 className="text-3xl font-bold text-gray-800 mb-4">Our Impact</h2>
         <p className="text-lg text-gray-600 mb-12">
-          Discover the milestones that define Mauri Remodeling's success in delivering high-quality home remodeling services.
+          Discover the milestones that define Mauri Remodeling success in delivering high-quality home remodeling services.
         </p>
 
         {/* Impact Stats Grid */}

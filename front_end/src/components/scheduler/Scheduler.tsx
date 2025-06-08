@@ -3,7 +3,7 @@
 import React, { useState, ChangeEvent } from 'react';
 import { services } from '@/lib/getService'; // reuse your services list
 import Image from 'next/image';
-import { FaArrowRight, FaUpload } from 'react-icons/fa';
+import { FaArrowRight } from 'react-icons/fa';
 
 const MAX_IMAGES = 3;
 

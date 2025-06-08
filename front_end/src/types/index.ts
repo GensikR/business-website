@@ -55,7 +55,7 @@ export type WorkPost =
   body1: string;
   body2: string;
   conclusion: string;
-  category: Number;
+  category: number;
   img_srcs: string[];
   createdAt: string; 
   permalink: string;

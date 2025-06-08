@@ -13,7 +13,7 @@ const db = getFirestore(app);
 const PortfolioPostPage: React.FC = () => {
   const { slug } = useParams();
   const router = useRouter();
-  const [post, setPost] = useState<any | null>(null);
+  const [post, setPost] = useState<unknown | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 

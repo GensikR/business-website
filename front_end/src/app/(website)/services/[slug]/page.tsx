@@ -2,7 +2,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { getService, services } from "@/lib/getService";
+import { services } from "@/lib/getService";
 import FeaturedWork from "@/components/portfolio/FeaturedWork";
 
 export async function generateStaticParams() {

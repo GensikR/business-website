@@ -4,16 +4,8 @@ import Link from 'next/link';
 import {
   AiOutlineMenu,
   AiOutlineInbox,
-  AiOutlineCalculator,
-  AiOutlineCheckSquare,
   AiOutlineBook,
   AiOutlineCalendar,
-  AiOutlineTool,
-  AiOutlineLineChart,
-  AiOutlineUsergroupAdd,
-  AiOutlineProject,
-  AiOutlinePieChart,
-  AiOutlineBarChart,
 } from 'react-icons/ai';
 
 interface NavItemProps {

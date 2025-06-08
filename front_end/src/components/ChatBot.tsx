@@ -8,16 +8,13 @@ import {
   serverTimestamp,
   onSnapshot,
   query,
-  orderBy,
-  doc,
-  updateDoc
+  orderBy
 } 
 from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import firebaseConfig from '@/lib/fb_config';
 import {Message} from '@/types'; // Message type
 import {getBotResponse}  from '@/lib/chat/bot_brain';
-import { get } from 'http';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -26,7 +23,6 @@ const ChatBot: React.FC = () =>
 {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
   const [escalated, setEscalated] = useState(false);
   const [chatid, setChatId] = useState<string>('');
   const messageEndRef = useRef<HTMLDivElement>(null);
@@ -253,7 +249,6 @@ const ChatBot: React.FC = () =>
             />
             <button
               type="submit"
-              disabled={loading}
               className="bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 disabled:opacity-50"
             >
               Send

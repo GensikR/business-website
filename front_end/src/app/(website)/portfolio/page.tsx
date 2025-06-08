@@ -1,4 +1,3 @@
-import UniversalHeader from "@/components/UniversalHeader";
 import FeaturedWork from "@/components/portfolio/FeaturedWork"; 
 import Scheduler from "@/components/scheduler/Scheduler";
 

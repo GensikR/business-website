@@ -1,29 +1,36 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { loadFacebookSDK } from '@/lib/fb_sdk';
 
+// Extend the Window interface globally
 declare global {
   interface Window {
-    FB: any;
+    FB: {
+      login: (
+        callback: (response: StatusResponse) => void,
+        options?: { scope: string; return_scopes?: boolean }
+      ) => void;
+    };
+    fbAsyncInit: () => void;
   }
 }
 
-declare namespace fb {
-  interface AuthResponse {
-    accessToken: string;
-    expiresIn: number;
-    signedRequest: string;
-    userID: string;
-  }
+// Replace namespace with exported interfaces
+export interface AuthResponse {
+  accessToken: string;
+  expiresIn: number;
+  signedRequest: string;
+  userID: string;
+}
 
-  interface StatusResponse {
-    status: 'connected' | 'not_authorized' | 'unknown';
-    authResponse?: AuthResponse;
-  }
+export interface StatusResponse {
+  status: 'connected' | 'not_authorized' | 'unknown';
+  authResponse?: AuthResponse;
 }
 
 type FacebookConnectProps = {
-  onConnected: (accessToken: string) => void;
+  onConnected: (data: { userId: string; pageId: string; posts: unknown[] }) => void;
   buttonLabel?: string;
 };
 
@@ -32,25 +39,27 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const checkFB = () => {
-      if (window.FB) {
+    const initFacebook = async () => {
+      try {
+        await loadFacebookSDK(process.env.FACEBOOK_APP_ID!); // appId via env
         setIsSdkReady(true);
-      } else {
-        setTimeout(checkFB, 100);
+      } catch (err) {
+        console.error('Facebook SDK failed to load:', err);
+        setError('Failed to load Facebook SDK');
       }
     };
-    checkFB();
+
+    initFacebook();
   }, []);
 
   const handleFacebookConnect = () => {
     setError(null);
 
     window.FB.login(
-      (response: fb.StatusResponse) => {
+      (response: StatusResponse) => {
         if (response.status === 'connected' && response.authResponse) {
           const accessToken = response.authResponse.accessToken;
 
-          // Send token to backend as per your existing logic
           fetch('/api/facebook-login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -59,7 +68,7 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
             .then((res) => res.json())
             .then((data) => {
               if (data.success) {
-                onConnected(accessToken);
+                onConnected({ userId: data.userId, pageId: data.pageId, posts: data.posts });
               } else {
                 setError(data.message || 'Backend rejected the token');
               }

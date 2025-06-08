@@ -50,8 +50,12 @@ export async function POST(req: NextRequest) {
       pageId: page.id,
       postsProcessed: posts.length,
     });
-  } catch (error: any) {
-    console.error('Facebook login error:', error?.response?.data || error);
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error('Facebook login error:', error.response?.data || error.message);
+    } else {
+      console.error('Facebook login error:', error);
+    }
     return NextResponse.json({ success: false, message: 'Server error' }, { status: 500 });
   }
 }

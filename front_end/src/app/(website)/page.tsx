@@ -1,11 +1,7 @@
-import UniversalHeader from "@/components/UniversalHeader";
 import Services from "@/components/services/Services";
-import OurImpact from "@/components/home/OurImpact";
-import WhyUs from "@/components/home/WhyUs";
 import Testimonials from "@/components/home/Testimonials";
 import FAQ from "@/components/home/FAQ";
 import Team from "@/components/about/Team";
-import EstimatorHome from "@/components/estimator/EstimatorHome";
 import Scheduler from "@/components/scheduler/Scheduler";
 import FeaturedWork from "@/components/portfolio/FeaturedWork"; 
 
