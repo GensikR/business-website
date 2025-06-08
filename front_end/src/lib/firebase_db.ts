@@ -1,14 +1,14 @@
 import * as admin from 'firebase-admin';
-import * as path from 'path';
 
-// Initialize Firebase Admin SDK using service account credentials
-const serviceAccount = await import(path.join(__dirname, 'fb_key', 'mauri-79502-firebase-adminsdk-fbsvc-446a4bdb48.json'));
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    }),
+  });
+}
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
-
-// Export the Firestore instance
 const db = admin.firestore();
-
 export { db };

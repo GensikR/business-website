@@ -40,7 +40,11 @@ const processPosts = async (posts: FacebookPost[]) => {
     try {
       gptContent = await generateBlogParts(title, img_srcs);
     } catch (err: unknown) {
-      console.error(`GPT generation failed for post ${postID}:`, err.message);
+      if (err instanceof Error) {
+        console.error(`GPT generation failed for post ${postID}:`, err.message);
+      } else {
+        console.error(`GPT generation failed for post ${postID}:`, err);
+      }
       continue;
     }
 
@@ -61,7 +65,11 @@ const processPosts = async (posts: FacebookPost[]) => {
       console.log(`Post ${postID} saved to Firestore.`);
       // Consider not returning here, so you process all posts
     } catch (err: unknown) {
-      console.error(`Failed to save post ${postID} to Firestore:`, err.message);
+      if (err instanceof Error) {
+        console.error(`Failed to save post ${postID} to Firestore:`, err.message);
+      } else {
+        console.error(`Failed to save post ${postID} to Firestore:`, err);
+      }
     }
   }
   // You may want to return something meaningful or void

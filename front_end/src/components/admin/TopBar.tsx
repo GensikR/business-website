@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { AiOutlineMenu, AiOutlineSearch } from 'react-icons/ai';
 import { BiBell } from 'react-icons/bi';
 
@@ -39,8 +42,13 @@ const TopBar: React.FC = () => {
         </div>
 
         <div className="flex items-center">
-          <div className="rounded-full w-8 h-8 bg-gray-300 overflow-hidden mr-2">
-            <img src="../images/team/diana.png" alt="User Avatar" className="object-cover w-full h-full" />
+          <div className="relative rounded-full w-8 h-8 bg-gray-300 overflow-hidden mr-2">
+            <Image
+              src="/images/team/diana.png" // ✅ use absolute path from `public/`
+              alt="User Avatar"
+              fill
+              className="object-cover"
+            />
           </div>
           <div className="text-right">
             <span className="block text-sm font-semibold text-gray-700">Diana Rubio</span>

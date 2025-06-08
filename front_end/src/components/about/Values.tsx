@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
 interface Value {
   title: string;
@@ -57,11 +58,13 @@ const Values: React.FC = () => {
               key={index}
               className="group bg-white bg-opacity-60 backdrop-blur-lg p-8 rounded-3xl shadow-xl border border-blue-100 hover:-translate-y-2 hover:shadow-2xl transition duration-300 text-center min-h-[350px] flex flex-col items-center justify-start"
             >
-              <div className="flex items-center justify-center h-36 mb-6">
-                <img
+              <div className="relative h-36 w-36 mb-6">
+                <Image
                   src={value.imageSrc}
                   alt={value.imageAlt}
-                  className="h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                  layout="fill"
+                  objectFit="contain"
+                  className="transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
               <h3 className="text-2xl font-bold text-blue-600 mb-3">{value.title}</h3>

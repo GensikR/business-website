@@ -6,6 +6,7 @@ import { getFirestore, collection, query, where, getDocs } from 'firebase/firest
 import { initializeApp } from 'firebase/app';
 import firebaseConfig from '@/lib/fb_config';
 import { motion, AnimatePresence } from 'framer-motion';
+import { WorkPost } from '@/types';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -13,7 +14,7 @@ const db = getFirestore(app);
 const PortfolioPostPage: React.FC = () => {
   const { slug } = useParams();
   const router = useRouter();
-  const [post, setPost] = useState<unknown | null>(null);
+  const [post, setPost] = useState<WorkPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -30,8 +31,9 @@ const PortfolioPostPage: React.FC = () => {
           setLoading(false);
           return;
         }
-        const docData = snapshot.docs[0].data();
-        setPost({ id: snapshot.docs[0].id, ...docData });
+      const docData = snapshot.docs[0].data() as Omit<WorkPost, 'id'>;
+      setPost({ id: snapshot.docs[0].id, ...docData });
+
       } catch (error) {
         console.error('Error fetching post:', error);
         setPost(null);

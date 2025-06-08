@@ -57,7 +57,7 @@ export type WorkPost =
   conclusion: string;
   category: number;
   img_srcs: string[];
-  createdAt: string; 
+  created_time: string; 
   permalink: string;
 };
 
