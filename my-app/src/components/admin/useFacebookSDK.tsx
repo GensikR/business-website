@@ -22,7 +22,7 @@ export default function useFacebookSDK(): boolean {
 
     window.fbAsyncInit = () => {
       window.FB.init({
-        appId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID!,
+        appId: process.env.FACEBOOK_APP_ID!,
         cookie: true,
         xfbml: false,
         version: 'v18.0',
