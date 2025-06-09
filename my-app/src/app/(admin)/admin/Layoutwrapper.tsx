@@ -1,10 +1,9 @@
-// LayoutWrapper.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import AdminNav from './AdminNav';
-import TopBar from './TopBar';
-import AdminLogin from './AdminLogin';
+import AdminNav from '@/components/admin/AdminNav';
+import TopBar from '@/components/admin/TopBar';
+import AdminLogin from '@/components/admin/AdminLogin';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/utils/firebase';
 import '@/app/globals.css';
@@ -17,7 +16,9 @@ export default function ClientLayoutWrapper({
   const [loggedIn, setLoggedIn] = useState(true);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  // Check if the user is logged in using Firebase auth
+  useEffect(() => 
+  {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setLoggedIn(!!user);
       setLoading(false);

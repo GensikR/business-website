@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 import fetchFacebookPosts from '@/lib/post_processing/fetch_posts';
-import process_posts from '@/lib/post_processing/proccess_posts';
+//import process_posts from '@/lib/post_processing/proccess_posts';
 
 export async function POST(req: NextRequest) 
 {
@@ -42,8 +42,7 @@ export async function POST(req: NextRequest)
       pageId: page.id,
     });
 
-    // ✅ Process the posts
-    await process_posts(posts);
+    //await process_posts(posts);
 
     return NextResponse.json({
       success: true,

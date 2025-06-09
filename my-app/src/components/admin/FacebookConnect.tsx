@@ -23,7 +23,7 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
   useEffect(() => {
     const initFacebook = async () => {
       try {
-        await loadFacebookSDK(process.env.NEXT_PUBLIC_FACEBOOK_APP_ID!); // make sure this env var starts with NEXT_PUBLIC
+        await loadFacebookSDK(process.env.NEXT_PUBLIC_FACEBOOK_APP_ID!);
         setIsSdkReady(true);
       } catch (err) {
         console.error('Facebook SDK failed to load:', err);

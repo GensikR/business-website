@@ -100,8 +100,8 @@ const AdminNav: React.FC = () => {
           collapsed={collapsed}
         />
         <NavItem
-          href="/admin/blog"
-          label="Blog"
+          href="/admin/portfolio"
+          label="Portfolio"
           icon={
             <svg
               className="w-5 h-5"

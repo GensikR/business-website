@@ -1,6 +1,6 @@
 // AdminRootLayout.tsx
 import React from 'react';
-import ClientAdminWrapper from '@/components/admin/Layoutwrapper';
+import ClientAdminWrapper from './Layoutwrapper';
 
 export const metadata = 
 {
