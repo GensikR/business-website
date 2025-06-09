@@ -27,14 +27,18 @@ export type Appointment = {
   createdAt: string; // updated to be a string to fit common date formats
 };
 
-export type Service = 
-{
+export interface Service {
   title: string;
   description: string;
+  details: string;
   image: string;
   link: string;
-  details: string;
-};
+  gallery?: string[];           // Optional: list of image paths
+  features?: string[];          // Optional: list of short feature titles
+  featureDetails?: string[];    // Optional: detailed explanations for each feature
+  quoteCTA?: string;            // Optional: call-to-action text for contact/quote
+}
+
 
 export type ServiceButton = {
   id: ServiceId;

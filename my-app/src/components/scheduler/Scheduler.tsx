@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, ChangeEvent } from 'react';
-import { services } from '@/lib/utils/getService'; // reuse your services list
+import { all_services } from '@/lib/utils/getService'; // reuse your services list
 import Image from 'next/image';
 
 const MAX_IMAGES = 3;
@@ -78,7 +78,7 @@ const Scheduler: React.FC = () => {
           <div>
             <h2 className="text-xl font-semibold mb-4">1. Select a Service</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {services.map(service => (
+              {all_services.map(service => (
                 <button
                   key={service.link}
                   className={`border rounded-xl p-4 hover:bg-blue-50 transition ${
@@ -151,7 +151,7 @@ const Scheduler: React.FC = () => {
           <div>
             <h2 className="text-xl font-semibold mb-4">5. Review & Submit</h2>
             <ul className="space-y-2 text-gray-700 text-sm">
-              <li><strong>Service:</strong> {services.find(s => s.link === selectedService)?.title}</li>
+              <li><strong>Service:</strong> {all_services.find(s => s.link === selectedService)?.title}</li>
               <li><strong>Description:</strong> {description}</li>
               <li><strong>Time Slots:</strong> {selectedSlots.join(', ')}</li>
               <li><strong>Images:</strong> {images.length} uploaded</li>

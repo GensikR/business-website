@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Service } from "@/types/index";
-import { services } from "@/lib/utils/getService";
+import { all_services } from "@/lib/utils/getService";
 
 const ArrowRightIcon = () => (
   <svg
@@ -24,7 +24,7 @@ const Services: React.FC = () => {
   const [servicesData, setServicesData] = useState<Service[]>([]);
 
   useEffect(() => {
-    setServicesData(services);
+    setServicesData(all_services);
   }, []);
 
   return (
@@ -71,7 +71,7 @@ const Services: React.FC = () => {
                 {/* Links */}
                 <div className="mt-auto space-y-3 flex flex-col items-center">
                   <Link
-                    href="/consultation"
+                    href="#scheduler"
                     className="inline-block w-full text-center bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold py-2 px-4 rounded-full transition-all duration-300"
                   >
                     Get Free Estimate
@@ -92,7 +92,7 @@ const Services: React.FC = () => {
         {/* Main CTA at bottom */}
         <div className="mt-20 text-center">
           <Link
-            href="/consultation"
+            href="#scheduler"
             className="inline-flex items-center gap-3 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-4 px-8 rounded-full text-lg shadow-lg transition-all duration-300"
           >
             Get a Free Estimate <ArrowRightIcon />
