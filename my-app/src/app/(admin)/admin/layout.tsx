@@ -1,9 +1,10 @@
-// AdminRootLayout.tsx
+
+
 import React from 'react';
+import Script from 'next/script';
 import ClientAdminWrapper from './Layoutwrapper';
 
-export const metadata = 
-{
+export const metadata = {
   title: 'Admin Panel',
   description: 'Admin dashboard for managing the site',
 };
@@ -13,9 +14,29 @@ export default function AdminRootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   return (
     <html lang="en">
+      <head>
+        {/* Facebook SDK Initialization Script */}
+        <Script id="facebook-sdk-init" strategy="beforeInteractive">
+          {`
+            window.fbAsyncInit = function() {
+              FB.init({
+                appId      : '${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}',
+                xfbml      : true,
+                version    : 'v23.0'
+              });
+            };
+          `}
+        </Script>
+        <Script
+          strategy="beforeInteractive"
+          async
+          defer
+          crossOrigin="anonymous"
+          src="https://connect.facebook.net/en_US/sdk.js"
+        />
+      </head>
       <body className="bg-gray-100 text-gray-900 h-screen">
         <ClientAdminWrapper>{children}</ClientAdminWrapper>
       </body>

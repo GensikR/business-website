@@ -1,13 +1,11 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { loadFacebookSDK, StatusResponse } from '@/lib/utils/facebook_sdk';
 
 // Declare global FB for TypeScript
 declare global {
   interface Window {
-    FB: import('@/lib/utils/facebook_sdk').FacebookFB;
-    fbAsyncInit: () => void;
+    FB: any;
   }
 }
 
@@ -21,20 +19,17 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Load and initialize Facebook SDK
+  // Wait until FB is available on the window object
   useEffect(() => {
-    const initFacebook = async () => {
-      try {
-        const appId = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID!;
-        await loadFacebookSDK(appId);
+    const checkFB = () => {
+      if (typeof window !== 'undefined' && window.FB && typeof window.FB.init === 'function') {
         setIsSdkReady(true);
-      } catch (err) {
-        console.error('Facebook SDK failed to load:', err);
-        setError('Failed to load Facebook SDK');
+      } else {
+        setTimeout(checkFB, 300);
       }
     };
 
-    initFacebook();
+    checkFB();
   }, []);
 
   const handleFacebookConnect = useCallback(() => {
@@ -47,7 +42,7 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
     setLoading(true);
 
     window.FB.login(
-      (response: StatusResponse) => {
+      (response: any) => {
         if (response.status === 'connected' && response.authResponse) {
           const accessToken = response.authResponse.accessToken;
 
