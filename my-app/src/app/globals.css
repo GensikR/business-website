@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+
+:root {
+  --font-geist-sans: 'Geist', sans-serif;
+  --font-geist-mono: 'Geist Mono', monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+a {
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #3b82f6; /* Tailwind's blue-500 */
+}
