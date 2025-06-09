@@ -2,8 +2,8 @@ import { getFirestore, collection, query, where, getDocs } from 'firebase/firest
 import { initializeApp } from 'firebase/app';
 import { notFound } from 'next/navigation';
 import { WorkPost } from '@/types';
-import firebaseConfig from '@/lib/fb_config';
-import ImageCarousel from './ImageCarousel';
+import firebaseConfig from '@/lib/utils/firebase_config';
+import ImageCarousel from '../../../../components/portfolio/ImageCarousel';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);

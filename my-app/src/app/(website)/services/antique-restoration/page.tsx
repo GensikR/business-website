@@ -1,5 +1,5 @@
 import React from "react";
-import ServiceView from "../SelectedServiceView";
+import ServiceView from "../../../../components/services/SelectedServiceView";
 
 const AntiquesPage: React.FC = () => {
   return <ServiceView serviceName="Kitchen & Bath Remodeling" />;

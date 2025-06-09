@@ -9,7 +9,7 @@ import {
   serverTimestamp
 } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
-import firebaseConfig from '@/lib/fb_config';
+import firebaseConfig from '@/lib/utils/firebase_config';
 import { Message } from '@/types'; // Message type
 import { getBotResponse } from '@/lib/chat/bot_brain';
 

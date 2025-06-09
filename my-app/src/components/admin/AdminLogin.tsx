@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth } from '@/lib/utils/firebase';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('');

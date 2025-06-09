@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Service } from "@/types/index";
-import { services } from "@/lib/getService";
+import { services } from "@/lib/utils/getService";
 
 const ArrowRightIcon = () => (
   <svg

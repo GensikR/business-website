@@ -11,7 +11,7 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
-import firebaseConfig from '@/lib/fb_config';
+import firebaseConfig from '@/lib/utils/firebase_config';
 import { useRouter } from 'next/navigation';
 import type { WorkPost } from '@/types';
 //import Image from 'next/image';

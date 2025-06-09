@@ -12,7 +12,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
-import firebaseConfig from "@/lib/fb_config";
+import firebaseConfig from "@/lib/utils/firebase_config";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);

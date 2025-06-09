@@ -6,7 +6,7 @@ import AdminNav from './AdminNav';
 import TopBar from './TopBar';
 import AdminLogin from './AdminLogin';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth } from '@/lib/utils/firebase';
 import '@/app/globals.css';
 
 export default function ClientLayoutWrapper({

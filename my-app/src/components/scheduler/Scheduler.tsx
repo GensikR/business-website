@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, ChangeEvent } from 'react';
-import { services } from '@/lib/getService'; // reuse your services list
+import { services } from '@/lib/utils/getService'; // reuse your services list
 import Image from 'next/image';
 
 const MAX_IMAGES = 3;

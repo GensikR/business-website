@@ -1,10 +1,10 @@
 // app/layout.tsx
 import React from 'react';
-import NavBar from '../../components/NavBar';
-import Footer from '../../components/Footer';
+import NavBar from '../../components/layout/NavBar';
+import Footer from '../../components/layout/Footer';
 import ChatBot from '../../components/ChatBot';
 import '@/app/globals.css';
-import UniversalHeader from '../../components/UniversalHeader';
+import UniversalHeader from '../../components/layout/UniversalHeader';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -21,11 +21,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           backgroundImageUrl="/images/header5.png"
         />
 
-        {/* Main Content Area with consistent padding but no horizontal centering */}
+        {/* Main Content Area */}
         <main className="flex-grow px-6 md:px-20 relative">
           {/* Dots Background */}
           <div className="absolute inset-0 bg-[radial-gradient(#3b82f680_1px,transparent_1px)] bg-[length:20px_20px] z-0 pointer-events-none" />
-          
           {/* Children Pages */}
           <div className="relative z-10">
             {children}

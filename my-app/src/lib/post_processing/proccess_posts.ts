@@ -1,5 +1,5 @@
-import { db } from '@/lib/firebase_db';
-import { generateBlogParts } from '@/lib/aicontent';
+import { db } from '@/lib/utils/firebase_db';
+import { generateBlogParts } from '@/lib/ai/aicontent';
 import { GPTBlogParts, FacebookPost, Attachment } from '@/types';
 
 const extractImageSources = (attachments: Attachment[] = []): string[] => {

@@ -16,7 +16,7 @@ import {
   DocumentData,
 } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
-import firebaseConfig from '@/lib/fb_config'; // Adjust the path as necessary
+import firebaseConfig from '@/lib/utils/firebase_config'; // Adjust the path as necessary
 
 
 console.log('Firebase Config:', firebaseConfig); // Log the config to check if it's correct

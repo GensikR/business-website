@@ -15,16 +15,13 @@ export default function HomePage() {
       {/* Services Section */}
       <Services />
 
-
       {/* Featured Work Section */}
       <FeaturedWork />
 
-      {/* Scheduler Sectison */}
+      {/* Scheduler Section */}
       <div id="scheduler">
         <Scheduler />
       </div>
-
-      {/* Why Choose Us Section */}
 
       {/* Testimonials Section */}
       <Testimonials />

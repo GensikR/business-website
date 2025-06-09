@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { loadFacebookSDK, StatusResponse } from '@/lib/fb_sdk';
+import { loadFacebookSDK, StatusResponse } from '@/lib/utils/facebook_sdk';
 
 // Declare global FB for TypeScript
 declare global {
   interface Window {
-    FB: import('@/lib/fb_sdk').FacebookFB;
+    FB: import('@/lib/utils/facebook_sdk').FacebookFB;
     fbAsyncInit: () => void;
   }
 }
