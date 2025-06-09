@@ -25,7 +25,7 @@ export default function useFacebookSDK(): boolean {
         appId: process.env.FACEBOOK_APP_ID!,
         cookie: true,
         xfbml: false,
-        version: 'v18.0',
+        version: 'v23.0',
       });
       setSdkReady(true);
     };
