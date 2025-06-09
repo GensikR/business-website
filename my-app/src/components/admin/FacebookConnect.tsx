@@ -19,18 +19,33 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const initFB = useCallback(() => {
+    try {
+      if (!window.FB) return;
+      window.FB.init({
+        appId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID!,
+        xfbml: false,
+        version: 'v18.0',
+      });
+      setIsSdkReady(true);
+    } catch (err) {
+      console.error('FB.init failed', err);
+      setError('Facebook SDK init failed');
+    }
+  }, []);
+
   // Wait until FB is available on the window object
   useEffect(() => {
     const checkFB = () => {
       if (typeof window !== 'undefined' && window.FB && typeof window.FB.init === 'function') {
-        setIsSdkReady(true);
+        initFB();
       } else {
         setTimeout(checkFB, 300);
       }
     };
 
     checkFB();
-  }, []);
+  }, [initFB]);
 
   const handleFacebookConnect = useCallback(() => {
     if (!window.FB) {
