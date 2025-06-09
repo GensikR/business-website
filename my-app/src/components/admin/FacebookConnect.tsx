@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState, useCallback } from 'react';
 
 declare global {
@@ -14,11 +16,18 @@ type FacebookConnectProps = {
 
 export default function FacebookConnect({ onConnected, buttonLabel }: FacebookConnectProps) {
   const [isSdkReady, setIsSdkReady] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
+  // ✅ Load Facebook SDK once on client
   useEffect(() => {
-    // Initialize FB SDK
+    if (typeof window === 'undefined') return;
+
+    if (window.FB) {
+      setIsSdkReady(true);
+      return;
+    }
+
     window.fbAsyncInit = function () {
       window.FB.init({
         appId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID!,
@@ -29,10 +38,10 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
       setIsSdkReady(true);
     };
 
-    // Load Facebook SDK script dynamically
-    if (!document.getElementById('facebook-jssdk')) {
+    const scriptId = 'facebook-jssdk';
+    if (!document.getElementById(scriptId)) {
       const script = document.createElement('script');
-      script.id = 'facebook-jssdk';
+      script.id = scriptId;
       script.src = 'https://connect.facebook.net/en_US/sdk.js';
       script.async = true;
       script.defer = true;
@@ -40,18 +49,19 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
     }
   }, []);
 
+  // ✅ Call login only after SDK is ready
   const handleFacebookConnect = useCallback(() => {
-    if (!window.FB) {
-      setError('Facebook SDK not initialized');
+    if (!window.FB || !isSdkReady) {
+      setError('Facebook SDK not ready');
       return;
     }
 
-    setError(null);
     setLoading(true);
+    setError(null);
 
     window.FB.login(
       (response: any) => {
-        if (response.status === 'connected' && response.authResponse) {
+        if (response.status === 'connected') {
           const accessToken = response.authResponse.accessToken;
 
           fetch('/api/notify/facebook-login', {
@@ -68,16 +78,16 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
                   posts: data.posts,
                 });
               } else {
-                setError(data.message || 'Backend rejected the token');
+                setError(data.message || 'Backend rejected token');
               }
             })
             .catch((err) => {
-              console.error('Error sending token to server:', err);
-              setError('Failed to send token to server.');
+              console.error(err);
+              setError('Network error');
             })
             .finally(() => setLoading(false));
         } else {
-          setError('Login cancelled or not authorized');
+          setError('Login cancelled or unauthorized');
           setLoading(false);
         }
       },
@@ -87,7 +97,7 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
         return_scopes: true,
       }
     );
-  }, [onConnected]);
+  }, [isSdkReady, onConnected]);
 
   return (
     <div className="space-y-4">
@@ -95,7 +105,9 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
         onClick={handleFacebookConnect}
         disabled={!isSdkReady || loading}
         className={`px-4 py-2 rounded text-white transition ${
-          loading || !isSdkReady ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+          !isSdkReady || loading
+            ? 'bg-gray-400 cursor-not-allowed'
+            : 'bg-blue-600 hover:bg-blue-700'
         }`}
       >
         {loading ? 'Connecting...' : buttonLabel || 'Connect Facebook'}
