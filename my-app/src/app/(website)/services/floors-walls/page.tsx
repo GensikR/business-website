@@ -1,8 +1,8 @@
 import React from "react";
 import ServiceView from "../../../../components/services/SelectedServiceView";
 
-const FloorsWallls: React.FC = () => {
-  return <ServiceView serviceName="Kitchen & Bath Remodeling" />;
+const FloorsWalls: React.FC = () => {
+  return <ServiceView service_name="Floor & Wall Remodeling" />;
 };
 
-export default FloorsWallls;
+export default FloorsWalls;

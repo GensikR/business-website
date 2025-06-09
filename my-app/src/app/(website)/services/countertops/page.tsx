@@ -2,7 +2,7 @@ import React from "react";
 import ServiceView from "../../../../components/services/SelectedServiceView";
 
 const Countertops: React.FC = () => {
-  return <ServiceView serviceName="Kitchen & Bath Remodeling" />;
+  return <ServiceView service_name="Stone, Quartz & Countertops" />;
 };
 
 export default Countertops;

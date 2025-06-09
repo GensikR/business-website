@@ -33,10 +33,10 @@ export interface Service {
   details: string;
   image: string;
   link: string;
-  gallery?: string[];           // Optional: list of image paths
-  features?: string[];          // Optional: list of short feature titles
-  featureDetails?: string[];    // Optional: detailed explanations for each feature
-  quoteCTA?: string;            // Optional: call-to-action text for contact/quote
+  gallery?: string[];          
+  features?: string[];          
+  featureDetails?: string[];  
+  quoteCTA?: string;            
 }
 
 

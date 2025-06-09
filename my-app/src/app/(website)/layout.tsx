@@ -22,11 +22,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
 
         {/* Main Content Area */}
-        <main className="flex-grow px-6 md:px-20 relative">
+        <main className="flex-grow px-2 sm:px-4 md:px-6 lg:px-8 relative">
           {/* Dots Background */}
           <div className="absolute inset-0 bg-[radial-gradient(#3b82f680_1px,transparent_1px)] bg-[length:20px_20px] z-0 pointer-events-none" />
-          {/* Children Pages */}
-          <div className="relative z-10">
+
+          {/* Ultra-wide white container */}
+          <div className="relative z-10 bg-white mx-auto w-full rounded-lg shadow-md px-4 sm:px-6 md:px-10 lg:px-16 py-8">
             {children}
           </div>
         </main>
