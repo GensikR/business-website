@@ -21,37 +21,45 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Load Facebook SDK script if not already loaded
-    if (document.getElementById('facebook-jssdk')) {
-      setIsSdkReady(true); // SDK already loaded
-      return;
-    }
+    const loadFacebookSDK = () => {
+      return new Promise<void>((resolve, reject) => {
+        if (window.FB) {
+          resolve(); // Already loaded
+          return;
+        }
 
-    // Define fbAsyncInit which FB SDK will call once loaded
-    window.fbAsyncInit = () => {
-      window.FB.init({
-        appId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID!,
-        xfbml: false,
-        version: 'v18.0',
+        window.fbAsyncInit = function () {
+          window.FB.init({
+            appId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID!,
+            xfbml: false,
+            version: 'v18.0',
+          });
+          resolve();
+        };
+
+        const existingScript = document.getElementById('facebook-jssdk');
+        if (existingScript) {
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.id = 'facebook-jssdk';
+        script.src = 'https://connect.facebook.net/en_US/sdk.js';
+        script.async = true;
+        script.defer = true;
+        script.crossOrigin = 'anonymous';
+        script.onerror = () => reject('Failed to load Facebook SDK');
+
+        document.body.appendChild(script);
       });
-      setIsSdkReady(true);
     };
 
-    // Insert Facebook SDK script tag
-    const script = document.createElement('script');
-    script.id = 'facebook-jssdk';
-    script.src = 'https://connect.facebook.net/en_US/sdk.js';
-    script.async = true;
-    script.defer = true;
-    script.crossOrigin = 'anonymous';
-
-    document.body.appendChild(script);
-
-    // Cleanup function: optional but good practice
-    return () => {
-      // Optionally remove SDK script on unmount if needed
-      // document.getElementById('facebook-jssdk')?.remove();
-    };
+    loadFacebookSDK()
+      .then(() => setIsSdkReady(true))
+      .catch((err) => {
+        console.error(err);
+        setError('Facebook SDK failed to load.');
+      });
   }, []);
 
   const handleFacebookConnect = useCallback(() => {
