@@ -1,8 +1,5 @@
-'use client';
+import React, { useEffect, useState, useCallback } from 'react';
 
-import React, { useEffect, useState } from 'react';
-
-// Declare global FB for TypeScript
 declare global {
   interface Window {
     FB: any;
@@ -11,97 +8,99 @@ declare global {
 }
 
 type FacebookConnectProps = {
-  onConnected: (data: { userId: string; accessToken: string }) => void;
+  onConnected: (data: { userId: string; pageId: string; posts: unknown[] }) => void;
   buttonLabel?: string;
 };
 
 export default function FacebookConnect({ onConnected, buttonLabel }: FacebookConnectProps) {
   const [isSdkReady, setIsSdkReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [loginStatus, setLoginStatus] = useState<'connected' | 'not_authorized' | 'unknown' | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  // Callback to handle status response
-  function statusChangeCallback(response: any) {
-    setLoginStatus(response.status);
-    if (response.status === 'connected') {
-      // User logged in and authorized
-      onConnected({
-        userId: response.authResponse.userID,
-        accessToken: response.authResponse.accessToken,
-      });
-    } else {
-      setError('Please login to continue');
-    }
-  }
-
-  // Load FB SDK asynchronously & initialize
   useEffect(() => {
-    // If already loaded, just set ready
-    if (window.FB) {
-      setIsSdkReady(true);
-      // Check login status immediately
-      window.FB.getLoginStatus(statusChangeCallback);
-      return;
-    }
-
-    // Setup fbAsyncInit first
+    // Initialize FB SDK
     window.fbAsyncInit = function () {
       window.FB.init({
         appId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID!,
-        cookie: true,   // Enable cookies to allow the server to access the session
-        xfbml: true,    // Parse social plugins on this webpage
-        version: 'v23.0',
+        cookie: true,
+        xfbml: false,
+        version: 'v18.0',
       });
       setIsSdkReady(true);
-
-      // Check login status once SDK is ready
-      window.FB.getLoginStatus(statusChangeCallback);
     };
 
-    // Load SDK script asynchronously
-    (function (d, s, id) {
-      if (d.getElementById(id)) {
-        return;
-      }
-      const js = d.createElement(s) as HTMLScriptElement;
-      js.id = id;
-      js.src = 'https://connect.facebook.net/en_US/sdk.js';
-      js.async = true;
-      js.defer = true;
-      d.body.appendChild(js);
-    })(document, 'script', 'facebook-jssdk');
+    // Load Facebook SDK script dynamically
+    if (!document.getElementById('facebook-jssdk')) {
+      const script = document.createElement('script');
+      script.id = 'facebook-jssdk';
+      script.src = 'https://connect.facebook.net/en_US/sdk.js';
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
+    }
   }, []);
 
-  // Handler for login button click: calls FB.login()
-  const handleLogin = () => {
-    setError(null);
+  const handleFacebookConnect = useCallback(() => {
     if (!window.FB) {
-      setError('Facebook SDK not loaded');
+      setError('Facebook SDK not initialized');
       return;
     }
 
+    setError(null);
+    setLoading(true);
+
     window.FB.login(
       (response: any) => {
-        statusChangeCallback(response);
+        if (response.status === 'connected' && response.authResponse) {
+          const accessToken = response.authResponse.accessToken;
+
+          fetch('/api/notify/facebook-login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ accessToken }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.success) {
+                onConnected({
+                  userId: data.userId,
+                  pageId: data.pageId,
+                  posts: data.posts,
+                });
+              } else {
+                setError(data.message || 'Backend rejected the token');
+              }
+            })
+            .catch((err) => {
+              console.error('Error sending token to server:', err);
+              setError('Failed to send token to server.');
+            })
+            .finally(() => setLoading(false));
+        } else {
+          setError('Login cancelled or not authorized');
+          setLoading(false);
+        }
       },
-      { scope: 'public_profile,email,pages_show_list,pages_read_engagement,pages_read_user_content,pages_manage_posts,business_management' }
+      {
+        scope:
+          'pages_show_list,pages_read_engagement,pages_read_user_content,pages_manage_posts,business_management',
+        return_scopes: true,
+      }
     );
-  };
+  }, [onConnected]);
 
   return (
-    <div>
+    <div className="space-y-4">
       <button
-        onClick={handleLogin}
-        disabled={!isSdkReady}
-        className={`px-4 py-2 rounded text-white ${
-          !isSdkReady ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+        onClick={handleFacebookConnect}
+        disabled={!isSdkReady || loading}
+        className={`px-4 py-2 rounded text-white transition ${
+          loading || !isSdkReady ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
         }`}
       >
-        {buttonLabel || 'Login with Facebook'}
+        {loading ? 'Connecting...' : buttonLabel || 'Connect Facebook'}
       </button>
-
-      {error && <p className="text-red-500 mt-2">{error}</p>}
-      {loginStatus && <p>Login Status: {loginStatus}</p>}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
     </div>
   );
 }
