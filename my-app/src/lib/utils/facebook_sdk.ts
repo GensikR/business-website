@@ -1,4 +1,4 @@
-// src/lib/fb_sdk.ts
+// src/lib/utils/facebook_sdk.ts
 
 export interface AuthResponse {
   accessToken: string;
@@ -12,7 +12,7 @@ export interface StatusResponse {
   authResponse?: AuthResponse;
 }
 
-// ✅ Define and export the FacebookFB interface
+// ✅ Exported FacebookFB interface
 export interface FacebookFB {
   init: (options: {
     appId: string;
@@ -36,7 +36,7 @@ export interface FacebookFB {
   };
 }
 
-// ✅ Properly augment the global window
+// ✅ Augment global window object
 declare global {
   interface Window {
     FB: FacebookFB;
@@ -44,29 +44,33 @@ declare global {
   }
 }
 
+// ✅ Properly load the Facebook SDK and initialize it
 export const loadFacebookSDK = (appId: string): Promise<void> => {
   return new Promise((resolve, reject) => {
-    if (window.FB) {
-      return resolve();
-    }
+    if (typeof window === 'undefined') return reject('Window is undefined (SSR)');
+    if (window.FB) return resolve();
 
     window.fbAsyncInit = function () {
       window.FB.init({
         appId,
         cookie: true,
         xfbml: true,
-        version: 'v19.0', // Replace with latest if needed
+        version: 'v19.0', // Or latest supported version
       });
+
       window.FB.AppEvents?.logPageView?.();
       resolve();
     };
 
+    if (document.getElementById('facebook-jssdk')) return;
+
     const script = document.createElement('script');
+    script.id = 'facebook-jssdk';
     script.src = 'https://connect.facebook.net/en_US/sdk.js';
     script.async = true;
     script.defer = true;
     script.crossOrigin = 'anonymous';
-    script.onerror = reject;
+    script.onerror = () => reject(new Error('Failed to load Facebook SDK'));
 
     document.body.appendChild(script);
   });
