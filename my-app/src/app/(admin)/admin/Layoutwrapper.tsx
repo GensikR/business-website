@@ -1,31 +1,46 @@
-// ClientAdminWrapper.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
 import AdminNav from '@/components/admin/AdminNav';
 import TopBar from '@/components/admin/TopBar';
-import FacebookLogin from '@/components/admin/FacebookLogin';
-import { loadFacebookSDK } from '@/lib/utils/facebook_sdk';
+import AdminLogin from '@/components/admin/AdminLogin';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/lib/utils/firebase';
+import '@/app/globals.css';
 
-export default function LayoutWrapper({
+export default function ClientLayoutWrapper({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadFacebookSDK(process.env.NEXT_PUBLIC_FACEBOOK_APP_ID || '')
-      .then(() => console.log('FB SDK ready'))
-      .catch((err) => console.error('FB SDK failed to load:', err));
+  // Check if the user is logged in using Firebase auth
+  useEffect(() => 
+  {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setLoggedIn(!!user);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-white">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   if (!loggedIn) {
     return (
       <div className="flex items-center justify-center h-screen bg-white">
         <div className="max-w-md w-full p-6 bg-white rounded shadow-md">
           <h1 className="text-2xl font-bold mb-4">Admin Login</h1>
-          <FacebookLogin setLoggedIn={setLoggedIn} />
+          <AdminLogin />
         </div>
       </div>
     );
