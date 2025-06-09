@@ -1,10 +1,10 @@
-'use client';
+'use client'
 
 import React, { useState } from 'react';
-import useFacebookSDK from './useFacebookSDK'; // Make sure the hook correctly loads the SDK
+import useFacebookSDK from './useFacebookSDK'; // make sure path is correct
 
 type FacebookConnectProps = {
-  onConnected: (data: { accessToken: string; userId: string }) => void;
+  onConnected: (data: { userId: string; pageId: string; posts: unknown[] }) => void;
   buttonLabel?: string;
 };
 
@@ -19,19 +19,40 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
       return;
     }
 
-    setError(null);
     setLoading(true);
+    setError(null);
 
     window.FB.login(
       (response: any) => {
-        if (response.status === 'connected' && response.authResponse) {
-          const { accessToken, userID } = response.authResponse;
+        if (response.status === 'connected') {
+          const accessToken = response.authResponse.accessToken;
 
-          onConnected({ accessToken, userId: userID });
+          fetch('/api/notify/facebook-login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ accessToken }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.success) {
+                onConnected({
+                  userId: data.userId,
+                  pageId: data.pageId,
+                  posts: data.posts,
+                });
+              } else {
+                setError(data.message || 'Backend rejected the token.');
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+              setError('Error sending token to server.');
+            })
+            .finally(() => setLoading(false));
         } else {
           setError('Login cancelled or not authorized.');
+          setLoading(false);
         }
-        setLoading(false);
       },
       {
         scope:
@@ -47,9 +68,7 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
         onClick={handleFacebookConnect}
         disabled={!isSdkReady || loading}
         className={`px-4 py-2 rounded text-white transition ${
-          loading || !isSdkReady
-            ? 'bg-gray-400 cursor-not-allowed'
-            : 'bg-blue-600 hover:bg-blue-700'
+          loading || !isSdkReady ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
         }`}
       >
         {loading ? 'Connecting...' : buttonLabel || 'Connect Facebook'}
