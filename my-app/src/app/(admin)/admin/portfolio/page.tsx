@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import FacebookConnect from '@/components/admin/FacebookConnect';
 
 export default function PortfolioAdminPage() {
   return (
@@ -12,12 +11,6 @@ export default function PortfolioAdminPage() {
         Click the button below to sync your latest Facebook posts to the blog.
       </p>
 
-      <FacebookConnect
-        onConnected={(accessToken) => {
-          console.log('Access token received in BlogAdminPage:', accessToken);
-        }}
-        buttonLabel="Sync New Facebook Posts"
-      />
     </div>
   );
 }
