@@ -21,11 +21,12 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Initialize Facebook SDK on mount
+  // Load and initialize Facebook SDK
   useEffect(() => {
     const initFacebook = async () => {
       try {
-        await loadFacebookSDK(process.env.NEXT_PUBLIC_FACEBOOK_APP_ID!);
+        const appId = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID!;
+        await loadFacebookSDK(appId);
         setIsSdkReady(true);
       } catch (err) {
         console.error('Facebook SDK failed to load:', err);
