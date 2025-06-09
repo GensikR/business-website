@@ -1,13 +1,7 @@
 'use client'
 
-import React, { useEffect, useState, useCallback } from 'react';
-
-declare global {
-  interface Window {
-    FB: any;
-    fbAsyncInit: () => void;
-  }
-}
+import React, { useState } from 'react';
+import useFacebookSDK from './useFacebookSDK'; // make sure path is correct
 
 type FacebookConnectProps = {
   onConnected: (data: { userId: string; pageId: string; posts: unknown[] }) => void;
@@ -15,44 +9,13 @@ type FacebookConnectProps = {
 };
 
 export default function FacebookConnect({ onConnected, buttonLabel }: FacebookConnectProps) {
-  const [isSdkReady, setIsSdkReady] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const isSdkReady = useFacebookSDK();
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  // ✅ Load Facebook SDK once on client
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    if (window.FB) {
-      setIsSdkReady(true);
-      return;
-    }
-
-    window.fbAsyncInit = function () {
-      window.FB.init({
-        appId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID!,
-        cookie: true,
-        xfbml: false,
-        version: 'v18.0',
-      });
-      setIsSdkReady(true);
-    };
-
-    const scriptId = 'facebook-jssdk';
-    if (!document.getElementById(scriptId)) {
-      const script = document.createElement('script');
-      script.id = scriptId;
-      script.src = 'https://connect.facebook.net/en_US/sdk.js';
-      script.async = true;
-      script.defer = true;
-      document.body.appendChild(script);
-    }
-  }, []);
-
-  // ✅ Call login only after SDK is ready
-  const handleFacebookConnect = useCallback(() => {
-    if (!window.FB || !isSdkReady) {
-      setError('Facebook SDK not ready');
+  const handleFacebookConnect = () => {
+    if (!window.FB) {
+      setError('Facebook SDK not available.');
       return;
     }
 
@@ -78,16 +41,16 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
                   posts: data.posts,
                 });
               } else {
-                setError(data.message || 'Backend rejected token');
+                setError(data.message || 'Backend rejected the token.');
               }
             })
             .catch((err) => {
               console.error(err);
-              setError('Network error');
+              setError('Error sending token to server.');
             })
             .finally(() => setLoading(false));
         } else {
-          setError('Login cancelled or unauthorized');
+          setError('Login cancelled or not authorized.');
           setLoading(false);
         }
       },
@@ -97,7 +60,7 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
         return_scopes: true,
       }
     );
-  }, [isSdkReady, onConnected]);
+  };
 
   return (
     <div className="space-y-4">
@@ -105,9 +68,7 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
         onClick={handleFacebookConnect}
         disabled={!isSdkReady || loading}
         className={`px-4 py-2 rounded text-white transition ${
-          !isSdkReady || loading
-            ? 'bg-gray-400 cursor-not-allowed'
-            : 'bg-blue-600 hover:bg-blue-700'
+          loading || !isSdkReady ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
         }`}
       >
         {loading ? 'Connecting...' : buttonLabel || 'Connect Facebook'}
