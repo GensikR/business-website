@@ -3,7 +3,8 @@ import axios from 'axios';
 import fetchFacebookPosts from '@/lib/fetch_posts';
 import process_posts from '@/lib/proccess_posts';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest) 
+{
   try {
     const body = await req.json();
     const { accessToken } = body;
