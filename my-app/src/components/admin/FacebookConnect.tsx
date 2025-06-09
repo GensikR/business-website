@@ -6,6 +6,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 declare global {
   interface Window {
     FB: any;
+    fbAsyncInit: () => void;
   }
 }
 
@@ -19,33 +20,39 @@ export default function FacebookConnect({ onConnected, buttonLabel }: FacebookCo
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const initFB = useCallback(() => {
-    try {
-      if (!window.FB) return;
+  useEffect(() => {
+    // Load Facebook SDK script if not already loaded
+    if (document.getElementById('facebook-jssdk')) {
+      setIsSdkReady(true); // SDK already loaded
+      return;
+    }
+
+    // Define fbAsyncInit which FB SDK will call once loaded
+    window.fbAsyncInit = () => {
       window.FB.init({
         appId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID!,
         xfbml: false,
         version: 'v18.0',
       });
       setIsSdkReady(true);
-    } catch (err) {
-      console.error('FB.init failed', err);
-      setError('Facebook SDK init failed');
-    }
-  }, []);
-
-  // Wait until FB is available on the window object
-  useEffect(() => {
-    const checkFB = () => {
-      if (typeof window !== 'undefined' && window.FB && typeof window.FB.init === 'function') {
-        initFB();
-      } else {
-        setTimeout(checkFB, 300);
-      }
     };
 
-    checkFB();
-  }, [initFB]);
+    // Insert Facebook SDK script tag
+    const script = document.createElement('script');
+    script.id = 'facebook-jssdk';
+    script.src = 'https://connect.facebook.net/en_US/sdk.js';
+    script.async = true;
+    script.defer = true;
+    script.crossOrigin = 'anonymous';
+
+    document.body.appendChild(script);
+
+    // Cleanup function: optional but good practice
+    return () => {
+      // Optionally remove SDK script on unmount if needed
+      // document.getElementById('facebook-jssdk')?.remove();
+    };
+  }, []);
 
   const handleFacebookConnect = useCallback(() => {
     if (!window.FB) {
