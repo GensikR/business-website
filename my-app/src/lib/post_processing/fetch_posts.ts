@@ -13,6 +13,7 @@ const fetchFacebookPosts = async ({
   pageId,
 }: FetchFacebookPostsParams) => {
   console.log("User Access Token:", userAccessToken);
+
   try {
     const postsRes = await axios.get(`https://graph.facebook.com/v23.0/${pageId}/posts`, {
       params: {
@@ -21,16 +22,16 @@ const fetchFacebookPosts = async ({
       },
     });
 
+    const data = postsRes.data.data || postsRes.data;
+
     // Save posts JSON to file
-    fs.writeFileSync('facebook_posts.json', JSON.stringify(postsRes.data, null, 2));
+    fs.writeFileSync('facebook_posts.json', JSON.stringify(data, null, 2));
     console.log('Posts saved to facebook_posts.json');
 
-    return postsRes.data;
-  } catch (error: unknown) {
-    if (error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response) {
-      console.error('Error fetching posts:', error.response.data);
-    } else if (error instanceof Error) {
-      console.error('Error fetching posts:', error.message);
+    return data;
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      console.error('Error fetching posts:', error.response?.data || error.message);
     } else {
       console.error('Error fetching posts:', error);
     }
