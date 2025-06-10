@@ -9,8 +9,6 @@ import {
   onSnapshot,
   query,
   orderBy,
-  doc,
-  updateDoc
 } 
 from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
@@ -26,6 +24,7 @@ const ChatBot: React.FC = () =>
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  setLoading(false);
   const [escalated, setEscalated] = useState(false);
   const [chatid, setChatId] = useState<string>('');
   const messageEndRef = useRef<HTMLDivElement>(null);
