@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 import fetchFacebookPosts from '@/lib/post_processing/fetch_posts';
+import processPosts from '@/lib/post_processing/proccess_posts';
 
 export async function POST(req: NextRequest) {
   try {
@@ -53,6 +54,17 @@ export async function POST(req: NextRequest) {
       pageAccessToken: page.access_token,
       pageId: page.id,
     });
+
+    // Process posts
+    if (posts.length === 0) {
+      return NextResponse.json(
+        { success: false, message: 'No posts found for the page' },
+        { status: 404 }
+      );
+    }
+    await processPosts(posts);
+
+
 
     return NextResponse.json({
       success: true,
