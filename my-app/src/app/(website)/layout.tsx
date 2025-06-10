@@ -15,10 +15,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Hero Section */}
         <UniversalHeader
-          title="Mauri Remodeling"
-          subtitle="Transform Your Home with quality craftsmanship, honest pricing, and stunning results."
-          description="Whether you're updating a single room or tackling a full home remodel, we bring expertise and care to every project. Explore our work, schedule a free consultation, and take the first step toward your dream home."
+          
           backgroundImageUrl="/images/header5.png"
+          businessCardImageUrl="/images/business-card.jpg"
+          description="Whether you're updating a single room or tackling a full home remodel, we bring expertise and care to every project. Explore our work, schedule a free consultation, and take the first step toward your dream home."
         />
 
         {/* Main Content Area */}

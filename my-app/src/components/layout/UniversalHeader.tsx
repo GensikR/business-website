@@ -4,17 +4,21 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { UniversalHeaderProps } from "@/types";
+
+type UniversalHeaderProps = {
+  backgroundImageUrl: string;
+  businessCardImageUrl: string;
+  description?: string;
+};
 
 const UniversalHeader: React.FC<UniversalHeaderProps> = ({
-  title,
-  subtitle,
-  description,
   backgroundImageUrl,
+  businessCardImageUrl,
+  description,
 }) => {
   return (
     <section className="relative w-full h-screen overflow-hidden">
-      {/* Background + Overlay */}
+      {/* Background Image + Overlay */}
       {backgroundImageUrl && (
         <div className="absolute inset-0 -z-10">
           <Image
@@ -28,30 +32,26 @@ const UniversalHeader: React.FC<UniversalHeaderProps> = ({
         </div>
       )}
 
-      <div className="relative z-10 flex flex-col items-center justify-center h-full px-8 text-center">
-        {/* Title */}
-        <motion.h1
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
+      {/* Centered Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center">
+        {/* Business Card Image */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-6xl md:text-7xl lg:text-8xl font-extrabold text-white leading-tight max-w-4xl"
+          className="w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl border-4 border-white"
         >
-          {title}
-        </motion.h1>
+          <Image
+            src={businessCardImageUrl}
+            alt="Business Card"
+            width={800}
+            height={450}
+            className="w-full h-auto object-cover"
+            priority
+          />
+        </motion.div>
 
-        {/* Subtitle */}
-        {subtitle && (
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.7 }}
-            className="mt-6 text-xl md:text-2xl text-gray-200 max-w-3xl"
-          >
-            {subtitle}
-          </motion.p>
-        )}
-
-        {/* CTA Buttons */}
+        {/* Call to Action */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -63,7 +63,6 @@ const UniversalHeader: React.FC<UniversalHeaderProps> = ({
             className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-full shadow-xl text-lg md:text-xl transition-all duration-300"
           >
             <span>Get a Free Estimate</span>
-            {/* Inline SVG arrow replacing FaChevronRight */}
             <svg
               className="ml-3 w-6 h-6"
               fill="none"
@@ -72,8 +71,6 @@ const UniversalHeader: React.FC<UniversalHeaderProps> = ({
               strokeLinecap="round"
               strokeLinejoin="round"
               viewBox="0 0 24 24"
-              aria-hidden="true"
-              focusable="false"
             >
               <path d="M9 18l6-6-6-6" />
             </svg>
@@ -81,18 +78,18 @@ const UniversalHeader: React.FC<UniversalHeaderProps> = ({
 
           <Link
             href="/portfolio"
-            className="inline-flex items-center bg-white bg-opacity-20 hover:bg-opacity-30 text-blue-900 font-medium py-4 px-8 rounded-full backdrop-blur-sm shadow-lg text-lg md:text-xl transition-all duration-300"
+            className="inline-flex items-center bg-white/20 hover:bg-white/30 text-white font-medium py-4 px-8 rounded-full backdrop-blur-md shadow-lg text-lg md:text-xl transition-all duration-300"
           >
             View Our Work
           </Link>
         </motion.div>
 
-        {/* Description */}
+        {/* Optional Description */}
         {description && (
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.7 }}
+            transition={{ delay: 1.0, duration: 0.7 }}
             className="mt-8 text-lg md:text-xl text-gray-300 max-w-2xl leading-relaxed"
           >
             {description}
