@@ -63,7 +63,7 @@ export default function FacebookBusinessLoginPage() {
         setLoading(false);
       },
       {
-        scope: 'pages_show_list,pages_read_engagement,pages_manage_posts,pages_read_user_content,public_profile,email',
+        scope: 'pages_show_list,pages_read_engagement,pages_read_user_content,business_management',
         return_scopes: true,
       }
     );
