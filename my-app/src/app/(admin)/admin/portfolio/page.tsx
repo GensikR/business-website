@@ -1,23 +1,97 @@
 'use client';
 
-import React from 'react';
-import FacebookConnect from '@/components/admin/FacebookConnect';
+import React, { useEffect, useState } from 'react';
 
-export default function PortfolioAdminPage() {
+declare global {
+  interface Window {
+    FB: any;
+    fbAsyncInit: () => void;
+  }
+}
+
+export default function FacebookLoginPage() {
+  const [isSdkReady, setIsSdkReady] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Prevent double initialization
+    if (window.FB) {
+      setIsSdkReady(true);
+      return;
+    }
+
+    window.fbAsyncInit = function () {
+      window.FB.init({
+        appId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID!,
+        cookie: true,
+        xfbml: false,
+        version: 'v23.0',
+      });
+
+      setIsSdkReady(true);
+    };
+
+    const script = document.createElement('script');
+    script.src = 'https://connect.facebook.net/en_US/sdk.js';
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+  }, []);
+
+  const handleLogin = () => {
+    if (!window.FB) {
+      setError('Facebook SDK not loaded');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    window.FB.login(
+      (response: any) => {
+        if (response.status === 'connected') {
+          const { accessToken, userID } = response.authResponse;
+          setAccessToken(accessToken);
+          setUserId(userID);
+        } else {
+          setError('User cancelled or not authorized');
+        }
+        setLoading(false);
+      },
+      {
+        scope: 'public_profile,email',
+        return_scopes: true,
+      }
+    );
+  };
+
   return (
-    <div className="p-8 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Blog Admin</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen p-6">
+      <h1 className="text-2xl font-bold mb-6">Facebook Login</h1>
 
-      <p className="text-gray-600 mb-4">
-        Click the button below to sync your latest Facebook posts to the blog.
-      </p>
+      <button
+        onClick={handleLogin}
+        disabled={!isSdkReady || loading}
+        className={`px-4 py-2 rounded text-white transition ${
+          loading || !isSdkReady
+            ? 'bg-gray-400 cursor-not-allowed'
+            : 'bg-blue-600 hover:bg-blue-700'
+        }`}
+      >
+        {loading ? 'Logging in...' : 'Login with Facebook'}
+      </button>
 
-      <FacebookConnect
-        onConnected={(accessToken) => {
-          console.log('Access token received in BlogAdminPage:', accessToken);
-        }}
-        buttonLabel="Sync New Facebook Posts"
-      />
+      {error && <p className="text-red-500 mt-4">{error}</p>}
+
+      {userId && accessToken && (
+        <div className="mt-6 text-sm text-green-700">
+          <p><strong>User ID:</strong> {userId}</p>
+          <p><strong>Access Token:</strong> {accessToken}</p>
+        </div>
+      )}
     </div>
   );
 }
