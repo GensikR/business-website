@@ -1,5 +1,4 @@
 import axios from 'axios';
-import fs from 'fs';
 
 type FetchFacebookPostsParams = {
   userAccessToken: string;
@@ -23,10 +22,6 @@ const fetchFacebookPosts = async ({
     });
 
     const data = postsRes.data.data || postsRes.data;
-
-    // Save posts JSON to file
-    fs.writeFileSync('facebook_posts.json', JSON.stringify(data, null, 2));
-    console.log('Posts saved to facebook_posts.json');
 
     return data;
   } catch (error: any) {
