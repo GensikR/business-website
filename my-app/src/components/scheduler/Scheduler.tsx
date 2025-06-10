@@ -3,8 +3,10 @@
 import React, { useState, ChangeEvent } from 'react';
 import { all_services } from '@/lib/utils/getService'; // Ensure this path is correct
 import Image from 'next/image';
+import { generateTimeSlots } from '@/lib/utils/generateTimeSlots';
 
 const MAX_IMAGES = 3;
+const todaysDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
 
 const Scheduler: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -13,15 +15,8 @@ const Scheduler: React.FC = () => {
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [selectedSlots, setSelectedSlots] = useState<string[]>([]);
-
-  const timeSlots = [
-    'Monday 10am',
-    'Tuesday 2pm',
-    'Wednesday 4pm',
-    'Thursday 11am',
-    'Friday 1pm',
-    'Saturday 3pm',
-  ];
+  const [timeSlots, setTimeSlots] = useState<string[]>([]);
+  const [selectedDay, setSelectedDay] = useState<string>(todaysDate);
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -157,6 +152,25 @@ const Scheduler: React.FC = () => {
         {step === 4 && (
           <div>
             <h2 className="text-xl font-semibold mb-4">4. Choose Up to 3 Preferred Time Slots</h2>
+
+            {/* Day Selection UI */}
+            <div className="mb-4">
+              <label className="block mb-2 text-sm font-medium text-gray-700">Select a Day:</label>
+              <input
+                type="date"
+                className="border rounded-lg px-4 py-2"
+                value={selectedDay}
+                min={todaysDate}
+                onChange={(e) => {
+                  const day = e.target.value;
+                  setSelectedDay(day);
+                  const newSlots = generateTimeSlots(day);
+                  setTimeSlots(newSlots);
+                }}
+              />
+            </div>
+
+            {/* Time Slots */}
             <div className="grid grid-cols-2 gap-4">
               {timeSlots.map(slot => (
                 <button
@@ -174,6 +188,7 @@ const Scheduler: React.FC = () => {
             </div>
           </div>
         )}
+
 
         {step === 5 && (
           <div>
