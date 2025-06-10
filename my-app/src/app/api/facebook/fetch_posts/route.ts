@@ -62,9 +62,6 @@ export async function POST(req: NextRequest) {
         { status: 404 }
       );
     }
-    //TODO: Change this to process all posts in production
-    await processPosts([posts[0], posts[1]]); // Process only the first two posts for demonstration
-
 
 
     return NextResponse.json({

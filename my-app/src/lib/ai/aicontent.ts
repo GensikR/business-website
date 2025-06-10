@@ -2,13 +2,14 @@ import { OpenAI } from "openai";
 import dotenv from "dotenv";
 dotenv.config();
 
-import { GPTBlogParts, categories } from "@/types";
+import { GPTBlogParts } from "@/types";
+import { all_services } from "../utils/getService";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const categoryList = Object.keys(categories).join(", ");
+const categoryList = all_services.map((service) => service.title).join(", ");
 
 export async function generateBlogParts(
   roughTitle: string,
@@ -27,7 +28,7 @@ Respond ONLY with a valid JSON object using these exact keys:
   "title": (Improved and polished blog post title),
   "intro": (1 engaging paragraph introducing the project and its relevance),
   "body1": (1 paragraph describing the overall project and goals),
-  "body2": (1 paragraph about the remodeling process, materials used, and any challenges),
+  "body2": (2 paragraphs about the remodeling process, materials used, and any challenges),
   "conclusion": (1 paragraph summarizing the final result and benefits to the homeowner),
   "category": (one category selected from: ${categoryList})
 }
