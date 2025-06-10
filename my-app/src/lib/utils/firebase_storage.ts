@@ -12,6 +12,6 @@ if (!admin.apps.length) {
 }
 
 const storage = admin.storage();
-const bucket = storage.bucket(); 
+const bucket = storage.bucket(process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET); 
 
 export { storage, bucket };
