@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, ChangeEvent } from 'react';
-import { all_services } from '@/lib/utils/getService'; // reuse your services list
+import { all_services } from '@/lib/utils/getService'; // Ensure this path is correct
 import Image from 'next/image';
 
 const MAX_IMAGES = 3;
@@ -9,7 +9,7 @@ const MAX_IMAGES = 3;
 const Scheduler: React.FC = () => {
   const [step, setStep] = useState(1);
   const [selectedService, setSelectedService] = useState<string>('');
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState<string>('');
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [selectedSlots, setSelectedSlots] = useState<string[]>([]);
@@ -49,8 +49,29 @@ const Scheduler: React.FC = () => {
       selectedSlots,
     };
 
+    //TODO: Implement Twilio SMS notification
+  //   try {
+  //     const res = await fetch('/api/notify', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(payload),
+  //     });
+
+  //     if (res.ok) {
+  //       alert('Request submitted! We’ll get back to you shortly.');
+  //     } else {
+  //       alert('There was an error sending your request. Please try again.');
+  //     }
+  //   } catch (err) {
+  //     console.error('Submit Error:', err);
+  //     alert('Something went wrong.');
+  //   }
+  // };
+
     try {
-      const res = await fetch('/api/notify', {
+      const res = await fetch('/api/set-appointment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -60,6 +81,13 @@ const Scheduler: React.FC = () => {
 
       if (res.ok) {
         alert('Request submitted! We’ll get back to you shortly.');
+        // Reset form
+        setStep(1);
+        setSelectedService('');
+        setDescription('');
+        setImages([]);
+        setImagePreviews([]);
+        setSelectedSlots([]);
       } else {
         alert('There was an error sending your request. Please try again.');
       }
@@ -119,7 +147,7 @@ const Scheduler: React.FC = () => {
             <div className="flex flex-wrap gap-4">
               {imagePreviews.map((src, i) => (
                 <div key={i} className="w-24 h-24 relative">
-                  <Image src={src} alt="preview" fill className="object-cover rounded-lg" />
+                  <Image src={src} alt="preview" layout="fill" objectFit="cover" className="rounded-lg" />
                 </div>
               ))}
             </div>
