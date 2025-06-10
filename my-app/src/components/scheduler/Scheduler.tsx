@@ -1,27 +1,40 @@
 'use client';
 
 import React, { useState, ChangeEvent } from 'react';
-import { all_services } from '@/lib/utils/getService'; // Ensure this path is correct
-import Image from 'next/image';
-import { generateTimeSlots } from '@/lib/utils/generateTimeSlots';
+import SelectService from "@/components/scheduler/SelectService";
+import DescribeProject from "@/components/scheduler/DescribeProject";
+import UploadImages from "@/components/scheduler/UploadImages";
+import SelectTimeSlots from "@/components/scheduler/SelectTimeSlots";
+import CustomerInfo from "@/components/scheduler/CustomerInfo";
+import Submit from "@/components/scheduler/Submit";
 
 const MAX_IMAGES = 3;
-const todaysDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+const todaysDate = new Date().toISOString().split('T')[0];
 
 const Scheduler: React.FC = () => {
   const [step, setStep] = useState(1);
-  const [selectedService, setSelectedService] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
+  const [selectedService, setSelectedService] = useState('');
+  const [description, setDescription] = useState('');
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [selectedSlots, setSelectedSlots] = useState<string[]>([]);
   const [timeSlots, setTimeSlots] = useState<string[]>([]);
   const [selectedDay, setSelectedDay] = useState<string>(todaysDate);
+  const [customerInfo, setCustomerInfo] = useState({
+    name: '',
+    phone: '',
+    consent: false,
+    email: '',
+    address: '',
+  });
+
+  const updateCustomerInfo = (field: string, value: string | boolean) => {
+    setCustomerInfo(prev => ({ ...prev, [field]: value }));
+  };
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length + images.length > MAX_IMAGES) return;
-
     const previews = files.map(file => URL.createObjectURL(file));
     setImages(prev => [...prev, ...files]);
     setImagePreviews(prev => [...prev, ...previews]);
@@ -42,47 +55,31 @@ const Scheduler: React.FC = () => {
       selectedService,
       description,
       selectedSlots,
+      customerInfo,
     };
-
-    //TODO: Implement Twilio SMS notification
-  //   try {
-  //     const res = await fetch('/api/notify', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify(payload),
-  //     });
-
-  //     if (res.ok) {
-  //       alert('Request submitted! We’ll get back to you shortly.');
-  //     } else {
-  //       alert('There was an error sending your request. Please try again.');
-  //     }
-  //   } catch (err) {
-  //     console.error('Submit Error:', err);
-  //     alert('Something went wrong.');
-  //   }
-  // };
 
     try {
       const res = await fetch('/api/set-appointment', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
       if (res.ok) {
         alert('Request submitted! We’ll get back to you shortly.');
-        // Reset form
         setStep(1);
         setSelectedService('');
         setDescription('');
         setImages([]);
         setImagePreviews([]);
         setSelectedSlots([]);
+        setCustomerInfo({
+          name: '',
+          phone: '',
+          consent: false,
+          email: '',
+          address: '',
+        });
       } else {
         alert('There was an error sending your request. Please try again.');
       }
@@ -93,134 +90,82 @@ const Scheduler: React.FC = () => {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white to-gray-50 py-16 px-6 md:px-20">
-      <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-2xl p-8 space-y-8">
-        <h1 className="text-3xl font-bold text-blue-700 text-center">Schedule a Consultation</h1>
+    <main className="min-h-screen bg-gradient-to-b from-white via-blue-50 to-blue-100 py-20 px-4 md:px-8 lg:px-20">
+      <div className="max-w-4xl mx-auto bg-white shadow-2xl rounded-3xl px-10 py-12 space-y-10">
+        <div className="text-center">
+          <h1 className="text-4xl font-extrabold text-blue-800 mb-2">Schedule a Consultation</h1>
+          <p className="text-gray-500 text-base">We’ll connect you with a pro at your preferred time</p>
+        </div>
 
-        {step === 1 && (
-          <div>
-            <h2 className="text-xl font-semibold mb-4">1. Select a Service</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {all_services.map(service => (
-                <button
-                  key={service.link}
-                  className={`border rounded-xl p-4 hover:bg-blue-50 transition ${
-                    selectedService === service.link ? 'border-blue-600 bg-blue-100' : 'border-gray-300'
-                  }`}
-                  onClick={() => setSelectedService(service.link)}
-                >
-                  <h3 className="font-semibold text-blue-900">{service.title}</h3>
-                  <p className="text-sm text-gray-600">{service.description}</p>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {step === 2 && (
-          <div>
-            <h2 className="text-xl font-semibold mb-4">2. Describe Your Project</h2>
-            <textarea
-              className="w-full border border-gray-300 rounded-lg p-4 min-h-[120px]"
-              placeholder="Tell us what you need..."
-              value={description}
-              onChange={e => setDescription(e.target.value)}
-            />
-          </div>
-        )}
-
-        {step === 3 && (
-          <div>
-            <h2 className="text-xl font-semibold mb-4">3. Upload Reference Images (Optional)</h2>
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImageUpload}
-              className="mb-4"
-            />
-            <div className="flex flex-wrap gap-4">
-              {imagePreviews.map((src, i) => (
-                <div key={i} className="w-24 h-24 relative">
-                  <Image src={src} alt="preview" layout="fill" objectFit="cover" className="rounded-lg" />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {step === 4 && (
-          <div>
-            <h2 className="text-xl font-semibold mb-4">4. Choose Up to 3 Preferred Time Slots</h2>
-
-            {/* Day Selection UI */}
-            <div className="mb-4">
-              <label className="block mb-2 text-sm font-medium text-gray-700">Select a Day:</label>
-              <input
-                type="date"
-                className="border rounded-lg px-4 py-2"
-                value={selectedDay}
-                min={todaysDate}
-                onChange={(e) => {
-                  const day = e.target.value;
-                  setSelectedDay(day);
-                  const newSlots = generateTimeSlots(day);
-                  setTimeSlots(newSlots);
-                }}
+        {/* Steps */}
+        <div className="relative">
+          <div className="absolute left-0 top-2 h-full w-1 bg-blue-100 rounded"></div>
+          <div className="space-y-10 pl-4 md:pl-6">
+            {step === 1 && <SelectService selectedService={selectedService} setSelectedService={setSelectedService} />}
+            {step === 2 && <DescribeProject description={description} setDescription={setDescription} />}
+            {step === 3 && <UploadImages imagePreviews={imagePreviews} handleImageUpload={handleImageUpload} />}
+            {step === 4 && (
+              <SelectTimeSlots
+                timeSlots={timeSlots}
+                selectedSlots={selectedSlots}
+                toggleSlot={toggleSlot}
+                selectedDay={selectedDay}
+                setSelectedDay={setSelectedDay}
+                todaysDate={todaysDate}
+                setTimeSlots={setTimeSlots}
               />
-            </div>
-
-            {/* Time Slots */}
-            <div className="grid grid-cols-2 gap-4">
-              {timeSlots.map(slot => (
-                <button
-                  key={slot}
-                  onClick={() => toggleSlot(slot)}
-                  className={`p-3 rounded-xl border transition ${
-                    selectedSlots.includes(slot)
-                      ? 'bg-blue-600 text-white border-blue-700'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-blue-50'
-                  }`}
-                >
-                  {slot}
-                </button>
-              ))}
-            </div>
+            )}
+            {step === 5 && (
+              <CustomerInfo
+                name={customerInfo.name}
+                phone={customerInfo.phone}
+                consent={customerInfo.consent}
+                email={customerInfo.email}
+                address={customerInfo.address}
+                onChange={updateCustomerInfo}
+              />
+            )}
+            {step === 6 && (
+              <Submit
+                selectedService={selectedService}
+                description={description}
+                selectedSlots={selectedSlots}
+                images={images}
+              />
+            )}
           </div>
-        )}
+        </div>
 
-
-        {step === 5 && (
-          <div>
-            <h2 className="text-xl font-semibold mb-4">5. Review & Submit</h2>
-            <ul className="space-y-2 text-gray-700 text-sm">
-              <li><strong>Service:</strong> {all_services.find(s => s.link === selectedService)?.title}</li>
-              <li><strong>Description:</strong> {description}</li>
-              <li><strong>Time Slots:</strong> {selectedSlots.join(', ')}</li>
-              <li><strong>Images:</strong> {images.length} uploaded</li>
-            </ul>
-          </div>
-        )}
-
-        {/* Step Navigation */}
-        <div className="flex justify-between pt-6 border-t mt-6">
+        {/* Navigation */}
+        <div className="flex justify-between items-center border-t pt-8 mt-8">
           {step > 1 ? (
             <button
               onClick={() => setStep(step - 1)}
-              className="text-blue-600 hover:underline text-sm"
+              className="text-blue-600 hover:underline text-sm font-medium"
             >
               ← Back
             </button>
           ) : <span />}
 
-          {step < 5 ? (
+          {step < 6 ? (
             <button
               onClick={() => setStep(step + 1)}
-              className="bg-blue-700 hover:bg-blue-800 text-white px-6 py-2 rounded-full flex items-center gap-2"
-              disabled={(step === 1 && !selectedService) || (step === 2 && !description)}
+              className={`inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-2 rounded-full shadow transition ${
+                (step === 1 && !selectedService) ||
+                (step === 2 && !description) ||
+                (step === 4 && selectedSlots.length === 0) ||
+                (step === 5 && (!customerInfo.name || !customerInfo.phone))
+                  ? 'opacity-50 cursor-not-allowed'
+                  : ''
+              }`}
+              disabled={
+                (step === 1 && !selectedService) ||
+                (step === 2 && !description) ||
+                (step === 4 && selectedSlots.length === 0) ||
+                (step === 5 && (!customerInfo.name || !customerInfo.phone))
+              }
             >
               Next
-              {/* Inline SVG arrow replacing FaArrowRight */}
               <svg
                 className="w-4 h-4"
                 fill="none"
@@ -229,8 +174,6 @@ const Scheduler: React.FC = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 viewBox="0 0 24 24"
-                aria-hidden="true"
-                focusable="false"
               >
                 <path d="M9 18l6-6-6-6" />
               </svg>
@@ -238,7 +181,7 @@ const Scheduler: React.FC = () => {
           ) : (
             <button
               onClick={handleSubmit}
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full"
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-full shadow transition"
             >
               Submit Request
             </button>
