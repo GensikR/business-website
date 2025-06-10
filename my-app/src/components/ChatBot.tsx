@@ -1,24 +1,31 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import { X } from 'lucide-react';
-import Image from 'next/image';
 import {
   getFirestore,
   collection,
   addDoc,
-  serverTimestamp
-} from 'firebase/firestore';
+  serverTimestamp,
+  onSnapshot,
+  query,
+  orderBy,
+  doc,
+  updateDoc
+} 
+from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import firebaseConfig from '@/lib/utils/firebase_config';
-import { Message } from '@/types'; // Message type
-import { getBotResponse } from '@/lib/chat/bot_brain';
+import {Message} from '@/types'; // Message type
+import {getBotResponse}  from '@/lib/chat/bot_brain';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const ChatBot: React.FC = () => {
+const ChatBot: React.FC = () => 
+{
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
   const [escalated, setEscalated] = useState(false);
   const [chatid, setChatId] = useState<string>('');
   const messageEndRef = useRef<HTMLDivElement>(null);
@@ -29,40 +36,56 @@ const ChatBot: React.FC = () => {
       time: new Date().toISOString()
     }
   ]);
+  
 
-  useEffect(() => {
+  // Scroll to the bottom of the chat when a new message is added
+  useEffect(() => 
+  {
     messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const sendMessageToBot = (message: string) => {
-    if (message.toLowerCase().includes('human')) {
-      setEscalated(true);
-      escalateChat();
-      return;
+  // Send message to bot to receive a response
+  const sendMessageToBot = (message: string) => 
+  { 
+    if (message.toLowerCase().includes('human')) // Check if message contains 'human'
+    {
+      setEscalated(true); // Set escalated to true if human is in the message
+      escalateChat(); // Call escalateChat function
+      return; // Exit the function
     }
 
     const botResponse = getBotResponse(message);
+    // const usrMsg : Message = {
+    //   sender: 'user',
+    //   text: message,
+    //   time: new Date().toISOString()
+    // }
 
-    const botMsg: Message = {
+    // const botResponse = getBotResponse(usrMsg);
+    
+    const botMsg: Message = 
+    {
       sender: 'bot',
       text: botResponse,
       time: new Date().toISOString()
     };
-
     setMessages(prev => [...prev, botMsg]);
   };
 
-  const escalateChat = async () => {
+  // Escalate chat to admin when needed
+  const escalateChat = async () => 
+  { // Save chat to firestore to initiate admin chat 
     try {
       const chatRef = await addDoc(collection(db, 'Chats'), {
         createdAt: serverTimestamp()
       });
 
-      setChatId(chatRef.id);
+      setChatId(chatRef.id);  // Update chat ID state
 
-      const initialMessage: Message = {
+      const initialMessage: Message = 
+      {
         sender: 'bot',
-        text: "A human will be with you shortly.",
+        text: "A Human will be you shortly.",
         time: new Date().toISOString()
       };
 
@@ -74,11 +97,15 @@ const ChatBot: React.FC = () => {
     }
   };
 
-  const sendMessageToAdmin = async (message: Message) => {
+  // When chat is escalated, send message to admin by updating the chat ID
+  const sendMessageToAdmin = async (message: Message) => 
+  {
     if (!chatid) return;
 
-    try {
-      await addDoc(collection(db, 'Chats', chatid, 'messages'), {
+    try 
+    {
+      await addDoc(collection(db, 'Chats', chatid, 'messages'), 
+      {
         sender: message.sender,
         text: message.text,
         timestamp: serverTimestamp()
@@ -88,88 +115,149 @@ const ChatBot: React.FC = () => {
     }
   };
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  // Listen for new messages from admin by listening to updates in the chat collection
+  useEffect(() => 
+  {
+    if (!chatid) return;
 
-    const userMessage: Message = {
-      sender: 'user',
-      text: input,
-      time: new Date().toISOString()
+    const q = query(
+      collection(db, 'Chats', chatid, 'messages'),
+      orderBy('timestamp')
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => 
+    {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === 'added') {
+          const data = change.doc.data();
+          console.log('New message from admin:', data);
+          if (data.sender === 'admin') { // Only process admin messages
+            const newMessage: Message = {
+              sender: data.sender || 'unknown',
+              text: data.text || '',
+              time: data.time || (data.timestamp?.toDate()?.toISOString() ?? new Date().toISOString()),
+            };
+            setMessages(prev => [...prev, newMessage]);
+          }
+        }
+      });
+    });
+
+    return () => unsubscribe();
+  }, [chatid]);
+
+  // Send message to bot or admin if escalated
+  const handleSend = (e: React.FormEvent) => 
+    {
+      e.preventDefault();
+      if (!input.trim()) return;
+  
+      const userMessage: Message = 
+      {
+        sender: 'user',
+        text: input,
+        time: new Date().toISOString()
+      };
+  
+      setMessages(prev => [...prev, userMessage]);
+  
+      if (escalated) 
+      {
+        sendMessageToAdmin(userMessage);
+      } else 
+      {
+        sendMessageToBot(input);
+      }
+  
+      setInput('');
     };
-
-    setMessages(prev => [...prev, userMessage]);
-    setInput('');
-
-    if (escalated) {
-      sendMessageToAdmin(userMessage);
-    } else {
-      sendMessageToBot(input);
-    }
-  };
+  
+    // Handle button click from bot response
+    const handleButtonClick = (payload: string) => 
+    {
+      const userMessage: Message = 
+      {
+        sender: 'user',
+        text: payload,
+        time: new Date().toISOString()
+      };
+  
+      setMessages(prev => [...prev, userMessage]);
+  
+      if (escalated) {
+        sendMessageToAdmin(userMessage);
+      } else {
+        sendMessageToBot(payload);
+      }
+    };
 
   return (
     <>
       <button
+        className="fixed bottom-6 right-6 z-50 bg-white border border-gray-300 shadow-md rounded-full p-2 hover:shadow-lg transition"
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg z-50"
       >
-        Chat
+        <img src="/images/team/chatbot.png" alt="Chat" className="h-12 w-12 rounded-full object-cover" />
+
       </button>
 
       {isOpen && (
-        <div className="fixed bottom-20 right-6 bg-white border rounded-lg shadow-xl w-80 max-h-[70vh] flex flex-col z-50">
-          <div className="flex justify-between items-center p-3 border-b bg-blue-600 text-white">
-            <h4 className="font-semibold">Chat with us</h4>
-            <button onClick={() => setIsOpen(false)}>
-              <X className="w-5 h-5" />
+        <div className="fixed bottom-20 right-6 z-50 w-96 h-[500px] bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col overflow-hidden">
+          <div className="bg-blue-500 text-white px-4 py-2 flex justify-between items-center">
+            <h3 className="font-semibold text-sm">Chat with Us</h3>
+            <button onClick={() => setIsOpen(false)} aria-label="Close Chat">
+              <X className="h-4 w-4" />
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-3 space-y-2 text-sm">
-            {messages.map((msg, idx) => (
-              <div key={idx} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className="flex items-end space-x-2">
-                  {msg.sender === 'bot' && (
-                    <div className="w-6 h-6 relative">
-                      <Image
-                        src="/images/bot_avatar.png"
-                        alt="Bot avatar"
-                        fill
-                        className="object-cover rounded-full"
-                      />
+          <div className="p-4 text-sm text-gray-700 space-y-2 h-full overflow-y-auto">
+            {messages.map((msg, index) => (
+              <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div
+                  className={`px-3 py-2 rounded-md max-w-[70%] ${
+                    msg.sender === 'user'
+                      ? 'bg-blue-100 text-blue-800'
+                      : msg.sender === 'admin'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-gray-100 text-gray-800'
+                  }`}
+                >
+                  <div>{msg.text}</div>
+                  {msg.buttons && (
+                    <div className="mt-2 space-y-2">
+                      {msg.buttons.map((button, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => handleButtonClick(button.payload)}
+                          className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700 w-full"
+                        >
+                          {button.title}
+                        </button>
+                      ))}
                     </div>
                   )}
-                  <div
-                    className={`p-2 rounded-lg max-w-xs ${
-                      msg.sender === 'user'
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}
-                  >
-                    {msg.text}
-                  </div>
                 </div>
               </div>
             ))}
             <div ref={messageEndRef} />
           </div>
 
-          <div className="p-3 border-t flex items-center space-x-2">
+          <form onSubmit={handleSend} className="px-4 py-2 border-t bg-gray-50 flex items-center">
             <input
               type="text"
               value={input}
               onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleSend()}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm mr-2"
               placeholder="Type your message..."
-              className="flex-1 border rounded px-2 py-1 text-sm focus:outline-none"
             />
             <button
-              onClick={handleSend}
-              className="bg-blue-600 text-white px-3 py-1 rounded text-sm"
+              type="submit"
+              disabled={loading}
+              className="bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 disabled:opacity-50"
             >
               Send
             </button>
-          </div>
+          </form>
         </div>
       )}
     </>
