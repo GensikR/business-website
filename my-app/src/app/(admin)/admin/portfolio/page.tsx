@@ -9,15 +9,15 @@ declare global {
   }
 }
 
-export default function FacebookLoginPage() {
+export default function FacebookBusinessLoginPage() {
   const [isSdkReady, setIsSdkReady] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
+  // Load and initialize the FB SDK
   useEffect(() => {
-    // Prevent double initialization
     if (window.FB) {
       setIsSdkReady(true);
       return;
@@ -30,7 +30,6 @@ export default function FacebookLoginPage() {
         xfbml: false,
         version: 'v23.0',
       });
-
       setIsSdkReady(true);
     };
 
@@ -43,7 +42,7 @@ export default function FacebookLoginPage() {
 
   const handleLogin = () => {
     if (!window.FB) {
-      setError('Facebook SDK not loaded');
+      setError('Facebook SDK not loaded.');
       return;
     }
 
@@ -56,13 +55,15 @@ export default function FacebookLoginPage() {
           const { accessToken, userID } = response.authResponse;
           setAccessToken(accessToken);
           setUserId(userID);
+          console.log('Access Token:', accessToken);
+          console.log('User ID:', userID);
         } else {
-          setError('User cancelled or not authorized');
+          setError('User cancelled or did not authorize app.');
         }
         setLoading(false);
       },
       {
-        scope: 'public_profile,email',
+        scope: 'pages_show_list,pages_read_engagement,pages_manage_posts,pages_read_user_content,public_profile,email',
         return_scopes: true,
       }
     );
@@ -70,7 +71,7 @@ export default function FacebookLoginPage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6">
-      <h1 className="text-2xl font-bold mb-6">Facebook Login</h1>
+      <h1 className="text-2xl font-bold mb-6">Facebook Business Login</h1>
 
       <button
         onClick={handleLogin}
@@ -81,13 +82,13 @@ export default function FacebookLoginPage() {
             : 'bg-blue-600 hover:bg-blue-700'
         }`}
       >
-        {loading ? 'Logging in...' : 'Login with Facebook'}
+        {loading ? 'Connecting...' : 'Login with Facebook'}
       </button>
 
       {error && <p className="text-red-500 mt-4">{error}</p>}
 
       {userId && accessToken && (
-        <div className="mt-6 text-sm text-green-700">
+        <div className="mt-6 text-sm text-green-700 max-w-lg break-all">
           <p><strong>User ID:</strong> {userId}</p>
           <p><strong>Access Token:</strong> {accessToken}</p>
         </div>
