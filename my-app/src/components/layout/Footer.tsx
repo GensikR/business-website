@@ -2,50 +2,52 @@
 
 import React from "react";
 import Link from "next/link";
+import { categoryList } from "@/lib/utils/getService";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-white/30 backdrop-blur-md text-gray-800 border-t border-gray-200">
-      <div className="container mx-auto px-6 md:px-12 lg:px-24 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+    <footer className="bg-white/30 backdrop-blur-md text-gray-800 border-t border-gray-200 select-none">
+      <div className="container mx-auto px-6 md:px-12 lg:px-24 py-16 max-w-7xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+
         {/* Company Overview */}
-        <div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">Mauri Remodeling</h3>
+        <div className="flex flex-col space-y-4 px-4 max-w-md mx-auto md:mx-0">
+          <h3 className="text-2xl font-extrabold text-gray-900 tracking-wide mb-2">Mauri Remodeling</h3>
           <p className="text-sm text-gray-700 leading-relaxed">
-            We bring passion and precision to every project — from custom cabinets to full remodels.
-            Let Mauri transform your space with the quality craftsmanship you deserve.
+            Passion and precision on every project — from custom cabinets to full remodels. Transform your space with expert craftsmanship you can trust.
           </p>
         </div>
 
-        {/* Navigation */}
-        <div>
-          <h4 className="text-lg font-semibold mb-4 text-gray-900">Explore</h4>
-          <ul className="space-y-2 text-sm">
-            <li><Link href="/about" className="hover:text-blue-600">About Us</Link></li>
-            <li><Link href="/portfolio" className="hover:text-blue-600">Portfolio</Link></li>
-            <li><Link href="/services" className="hover:text-blue-600">Services</Link></li>
-            <li><Link href="/contact" className="hover:text-blue-600">Contact</Link></li>
-          </ul>
-        </div>
-
         {/* Services */}
-        <div>
-          <h4 className="text-lg font-semibold mb-4 text-gray-900">Services</h4>
+        <nav aria-label="Footer Services" className="flex flex-col px-4 max-w-xs mx-auto md:mx-0">
+          <h4 className="text-lg font-semibold mb-4 text-gray-900 tracking-wide">Our Services</h4>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/services" className="hover:text-blue-600">Cabinet Installation</Link></li>
-            <li><Link href="/services" className="hover:text-blue-600">Kitchen Remodeling</Link></li>
-            <li><Link href="/services" className="hover:text-blue-600">Flooring</Link></li>
-            <li><Link href="/services" className="hover:text-blue-600">Custom Furniture</Link></li>
+            {categoryList.map(({ slug, name }) => (
+              <li key={slug}>
+                <Link
+                  href={`/services/${slug}`}
+                  className="transition-colors hover:text-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+                >
+                  {name}
+                </Link>
+              </li>
+            ))}
           </ul>
-        </div>
+        </nav>
 
-        {/* Social & Chat */}
-        <div>
-          <h4 className="text-lg font-semibold mb-4 text-gray-900">Connect With Us</h4>
-          <div className="flex space-x-4 mb-6">
-            {/* Facebook SVG */}
-            <Link href="https://www.facebook.com/MauriIdeas" target="_blank" className="bg-white/50 p-2 rounded-full hover:bg-white transition" aria-label="Facebook">
+        {/* Connect With Us */}
+        <section aria-label="Social Media and Chat" className="flex flex-col px-4 max-w-xs mx-auto md:mx-0">
+          <h4 className="text-lg font-semibold mb-4 text-gray-900 tracking-wide">Connect With Us</h4>
+          <div className="flex space-x-4 mb-6 justify-center md:justify-start">
+            {/* Facebook */}
+            <Link
+              href="https://www.facebook.com/MauriIdeas"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              className="bg-white/50 p-3 rounded-full hover:bg-white transition-shadow shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            >
               <svg
-                className="w-5 h-5 text-gray-800"
+                className="w-6 h-6 text-gray-800"
                 fill="currentColor"
                 viewBox="0 0 24 24"
                 aria-hidden="true"
@@ -54,10 +56,16 @@ const Footer: React.FC = () => {
               </svg>
             </Link>
 
-            {/* Instagram SVG */}
-            <Link href="https://www.instagram.com/maurinteriors/" target="_blank" className="bg-white/50 p-2 rounded-full hover:bg-white transition" aria-label="Instagram">
+            {/* Instagram */}
+            <Link
+              href="https://www.instagram.com/maurinteriors/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="bg-white/50 p-3 rounded-full hover:bg-white transition-shadow shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
+            >
               <svg
-                className="w-5 h-5 text-gray-800"
+                className="w-6 h-6 text-gray-800"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
@@ -70,19 +78,21 @@ const Footer: React.FC = () => {
                 <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" />
               </svg>
             </Link>
-
           </div>
+
+          {/* Chat Button */}
           <button
             onClick={() => alert("Chat feature coming soon!")}
-            className="w-full text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-full shadow transition"
+            className="w-full sm:w-auto self-center md:self-start text-sm font-semibold bg-blue-600 hover:bg-blue-700 focus-visible:ring-4 focus-visible:ring-blue-400 text-white py-3 px-6 rounded-full shadow-md transition"
+            aria-label="Open chat with Mauri Remodeling"
           >
             Open Chat
           </button>
-        </div>
+        </section>
       </div>
 
-      {/* Bottom bar */}
-      <div className="border-t border-gray-300 py-6 text-sm text-center text-gray-600 px-6">
+      {/* Bottom Bar */}
+      <div className="border-t border-gray-300 py-6 text-sm text-center text-gray-600 px-6 select-text">
         &copy; {new Date().getFullYear()} Mauri Remodeling. All rights reserved.
       </div>
     </footer>

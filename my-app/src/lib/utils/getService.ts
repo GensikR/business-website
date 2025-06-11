@@ -1,8 +1,6 @@
 import { Service } from "@/types";
 
-
-export const all_services: Service[] = 
-[
+export const all_services: Service[] = [
   {
     title: "Kitchen & Bathroom Remodeling",
     description: "Transform your kitchen and bathroom into modern, functional spaces tailored to your needs.",
@@ -140,5 +138,8 @@ export const all_services: Service[] =
   }
 ];
 
-export const categoryList = all_services.map((service) => service.title).join(", ");
-
+// Corrected categoryList export: Array of categories with `name` and `slug`
+export const categoryList = all_services.map(service => ({
+  name: service.title,
+  slug: service.link
+}));
