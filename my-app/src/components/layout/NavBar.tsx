@@ -152,13 +152,14 @@ export default function NavBar() {
 
           {/* Estimate button (always visible) */}
           <Link
-            href="#scheduler"
-            className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold rounded-full shadow-lg transition-all
-              text-xs sm:text-sm px-4 py-2 sm:px-5 sm:py-2.5 leading-none whitespace-nowrap h-10 sm:h-auto"
-          >
-            <span className="block sm:hidden">Free Estimate</span>
-            <span className="hidden sm:block">Get a Free Estimate</span>
-          </Link>
+  href="#scheduler"
+  className="flex items-center justify-center bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold rounded-full shadow-lg transition-all
+    text-xs sm:text-sm px-4 py-2 sm:px-5 sm:py-2.5 whitespace-nowrap tracking-tight h-10 sm:h-auto"
+>
+  <span className="block sm:hidden">Free Estimate</span>
+  <span className="hidden sm:block">Get a Free Estimate</span>
+</Link>
+
 
         </div>
 
