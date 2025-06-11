@@ -231,9 +231,8 @@ export default function NavBar() {
 
               {/* Estimate button in mobile menu */}
               <Link
-                href="/consultation"
-                onClick={() => setMobileOpen(false)}
-                className="mt-4 block text-center bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-full shadow transition"
+                href="#scheduler"
+                className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition-all text-sm"
               >
                 Get a Free Estimate
               </Link>

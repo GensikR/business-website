@@ -14,7 +14,7 @@ type UniversalHeaderProps = {
 const UniversalHeader: React.FC<UniversalHeaderProps> = ({
   backgroundImageUrl,
   businessCardImageUrl,
-  description,
+  //description,
 }) => {
   return (
     <section className="relative w-full h-screen overflow-hidden">
