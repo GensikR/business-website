@@ -15,16 +15,7 @@ const navLinks = [
 ];
 
 // SVGs for social icons and menu icons
-const YoutubeIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    fill="currentColor"
-    viewBox="0 0 24 24"
-    {...props}
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path d="M19.615 3.184c-1.227-.135-6.136-.135-6.136-.135s-4.902 0-6.129.135c-1.345.15-2.332 1.19-2.476 2.58-.142 1.332-.142 4.103-.142 4.103s0 2.771.142 4.103c.144 1.39 1.13 2.43 2.476 2.58 1.228.135 6.129.135 6.129.135s4.907 0 6.134-.135c1.346-.15 2.336-1.19 2.478-2.58.142-1.332.142-4.103.142-4.103s0-2.771-.142-4.103c-.142-1.39-1.132-2.43-2.478-2.58zm-9.61 7.745v-5.21l4.727 2.6-4.727 2.61z" />
-  </svg>
-);
+
 
 const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -85,7 +76,6 @@ export default function NavBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const socialIcons = [
-    { Icon: YoutubeIcon, href: "#" },
     { Icon: InstagramIcon, href: "#" },
     { Icon: FacebookIcon, href: "#" },
   ];
@@ -162,11 +152,15 @@ export default function NavBar() {
 
           {/* Estimate button (always visible) */}
           <Link
-            href="#scheduler"
-            className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition-all text-sm"
-          >
-            Get a Free Estimate
-          </Link>
+  href="#scheduler"
+  className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold rounded-full shadow-lg transition-all 
+    text-sm px-4 py-2 
+    sm:px-5 sm:py-2.5 
+    md:text-sm 
+    h-10 sm:h-auto"
+>
+  Get a Free Estimate
+</Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -230,12 +224,13 @@ export default function NavBar() {
               </div>
 
               {/* Estimate button in mobile menu */}
-              <Link
-                href="#scheduler"
-                className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition-all text-sm"
-              >
-                Get a Free Estimate
-              </Link>
+               {/* Estimate button (always visible) */}
+            <Link
+              href="#scheduler"
+              className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition-all text-sm"
+            >
+              Get a Free Estimate
+            </Link>
             </div>
           </motion.div>
         )}
