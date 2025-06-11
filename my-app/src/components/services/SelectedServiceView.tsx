@@ -72,7 +72,7 @@ const ServiceView: React.FC<ServiceViewProps> = ({ service_name }) => {
                 aria-label={`Feature: ${feature}`}
               >
                 <h3 className="text-xl font-semibold mb-2 text-indigo-700">{feature}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{service.featureDetails[idx]}</p>
+                <p className="text-gray-600 text-sm leading-relaxed">{service.featureDetails?.[idx]}</p>
               </li>
             ))}
           </ul>
