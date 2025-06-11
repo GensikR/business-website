@@ -1,13 +1,21 @@
 "use client";
 import React from "react";
+import { requestNotificationPermission } from "@/lib/utils/request_fms_permission";
 
 const AdminPage = () => {
   return (
-    <div>
-      <div>
-        <p>Coming Soon - Admin Dashboard</p>
-      </div>
+    <div className="flex flex-col items-center justify-center min-h-screen gap-4 bg-white">
+      <p className="text-xl font-semibold">Coming Soon - Admin Dashboard</p>
+
       <button
+        className="bg-blue-600 text-white px-6 py-3 rounded shadow hover:bg-blue-700 transition"
+        onClick={requestNotificationPermission}
+      >
+        Enable Notifications
+      </button>
+
+      <button
+        className="bg-green-600 text-white px-6 py-3 rounded shadow hover:bg-green-700 transition"
         onClick={async () => {
           try {
             const res = await fetch("/api/notify/appointment", {
