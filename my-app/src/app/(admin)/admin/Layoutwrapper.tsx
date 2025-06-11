@@ -27,25 +27,30 @@ export default function ClientLayoutWrapper({
     return () => unsubscribe();
   }, []);
 
-  // Register service worker + ask for push permission
+  // Register service worker
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/firebase-messaging-sw.js')
+        .then((registration) => {
+          console.log('Service Worker registered:', registration);
+        })
+        .catch((err) => {
+          console.error('Service Worker registration failed:', err);
+        });
+    }
+  }, []);
+
+  // Ask for notification permission once after login
   useEffect(() => {
     if (loggedIn && !askedPermission) {
-      requestNotificationPermission();
-
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker
-          .register('/firebase-messaging-sw.js')
-          .then((registration) => {
-            console.log('Service Worker registered:', registration);
-          })
-          .catch((err) => {
-            console.error('Service Worker registration failed:', err);
-          });
-      }
+      requestNotificationPermission().then(() => {
+        setAskedPermission(true); // Prevent repeated prompts
+      });
     }
-  }, [loggedIn]);
+  }, [loggedIn, askedPermission]);
 
-  // Loading
+  // Loading state
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-white">

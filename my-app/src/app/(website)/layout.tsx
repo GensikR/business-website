@@ -1,12 +1,39 @@
-// app/layout.tsx
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import NavBar from '../../components/layout/NavBar';
 import Footer from '../../components/layout/Footer';
 import ChatBot from '../../components/ChatBot';
 import '@/app/globals.css';
 import UniversalHeader from '../../components/layout/UniversalHeader';
+import { requestNotificationPermission } from '@/lib/utils/request_fms_permission';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const [askedPermission, setAskedPermission] = useState(false);
+
+  useEffect(() => {
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/firebase-messaging-sw.js')
+        .then((registration) => {
+          console.log('Service Worker registered:', registration);
+        })
+        .catch((err) => {
+          console.error('Service Worker registration failed:', err);
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    // Request notification permission once
+    if (!askedPermission) {
+      requestNotificationPermission().then(() => {
+        setAskedPermission(true);
+      });
+    }
+  }, [askedPermission]);
+
   return (
     <html lang="en">
       <body className="font-sans bg-white text-gray-800 antialiased flex flex-col min-h-screen">
@@ -15,7 +42,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Hero Section */}
         <UniversalHeader
-          
           backgroundImageUrl="/images/header5.png"
           businessCardImageUrl="/images/business-card.jpg"
           description="Whether you're updating a single room or tackling a full home remodel, we bring expertise and care to every project. Explore our work, schedule a free consultation, and take the first step toward your dream home."

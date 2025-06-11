@@ -22,12 +22,13 @@ export async function POST(req: NextRequest) {
     const { title, body } = await req.json();
 
     // Get all tokens from Firestore
-    const tokensSnapshot = await db.collection('admin_tokens').get();
-    const tokens = tokensSnapshot.docs.map(doc => doc.data().token).filter(Boolean);
+    // const tokensSnapshot = await db.collection('admin_tokens').get();
+    // const tokens = tokensSnapshot.docs.map(doc => doc.data().token).filter(Boolean);
 
-    if (tokens.length === 0) {
-      return NextResponse.json({ error: 'No tokens found' }, { status: 404 });
-    }
+    // if (tokens.length === 0) {
+    //   return NextResponse.json({ error: 'No tokens found' }, { status: 404 });
+    // }
+    const tokens = ["cUtmWxPNMJGZ1BiKrZxAnW:APA91bERvoVKBel3E4lRlWu08uwVsGUUP95TDDzZ8GObmvwJFHSCiieiVqXvgAlDJ9ePjkl4KECPjcHx721rfY8g49tbG6tjsfMJN8Il-KAqB3QAytAtyI8"];
 
     const results = await Promise.all(
       tokens.map(async (token) => {
