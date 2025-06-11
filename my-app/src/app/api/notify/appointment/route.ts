@@ -28,24 +28,30 @@ export async function POST(req: NextRequest) {
     // if (tokens.length === 0) {
     //   return NextResponse.json({ error: 'No tokens found' }, { status: 404 });
     // }
-    const tokens = ["cUtmWxPNMJGZ1BiKrZxAnW:APA91bERvoVKBel3E4lRlWu08uwVsGUUP95TDDzZ8GObmvwJFHSCiieiVqXvgAlDJ9ePjkl4KECPjcHx721rfY8g49tbG6tjsfMJN8Il-KAqB3QAytAtyI8"];
+    // Fetch all tokens from the 'admin_tokens' collection in Firestore
+    const tokensSnapshot = await db.collection('admin_tokens').get();
+    const tokens = tokensSnapshot.docs.map(doc => doc.data().token).filter(Boolean);
+
+    if (tokens.length === 0) {
+      return NextResponse.json({ error: 'No tokens found' }, { status: 404 });
+    }
 
     const results = await Promise.all(
       tokens.map(async (token) => {
-        try {
-          const response = await messaging.send({
-            token,
-            notification: {
-              title: title || 'Test Notification',
-              body: body || 'Hello from Firebase!',
-            },
-          });
-          return { token, success: true, response };
-        } catch (error) {
-          const message = error instanceof Error ? error.message : String(error);
-          console.error(`Failed to send to ${token}:`, message);
-          return { token, success: false, error: message };
-        }
+      try {
+        const response = await messaging.send({
+        token,
+        notification: {
+          title: title || 'Test Notification',
+          body: body || 'Hello from Firebase!',
+        },
+        });
+        return { token, success: true, response };
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(`Failed to send to ${token}:`, message);
+        return { token, success: false, error: message };
+      }
       })
     );
 

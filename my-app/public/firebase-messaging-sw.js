@@ -11,20 +11,17 @@ firebase.initializeApp({
   appId: "1:627902290960:web:22ed7ea951e44c50ce3e95",
 });
 
-const messaging = firebase.messaging();
-
 messaging.onBackgroundMessage((payload) => {
-  console.log("[firebase-messaging-sw.js] Received background message ", payload);
-  
-  const { title, body } = payload.notification;
+  console.log(
+    '[firebase-messaging-sw.js] Received background message ',
+    payload
+  );
+  // Customize notification here
+  const notificationTitle = 'Background Message Title';
   const notificationOptions = {
-    body,
-    icon: "/images/company-logo.png",
+    body: 'Background Message body.',
+    icon: '/firebase-logo.png'
   };
-
-  self.registration.showNotification(title, notificationOptions);
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-self.addEventListener("notificationclick", function (event) {
-  event.notification.close();
-});
