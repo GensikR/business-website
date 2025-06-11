@@ -31,37 +31,55 @@ export default async function PortfolioPostPage({
 
   const doc = snapshot.docs[0];
   const data = doc.data() as Omit<WorkPost, 'id'>;
-
-  // Omit created_time to avoid serialization issues
   const { created_time: _, ...safeData } = data;
   const post: WorkPost = { id: doc.id, ...safeData } as WorkPost;
 
   return (
-    <main className="max-w-7xl mx-auto px-12 py-16 bg-white rounded-2xl shadow-xl drop-shadow-lg">
-      <h1 className="text-5xl font-extrabold mb-8 text-gray-900 tracking-tight">
-        {post.title}
-      </h1>
+    <main className="min-h-screen bg-gray-50 py-16 px-4 sm:px-6 lg:px-8 flex justify-center">
+      <div className="max-w-4xl w-full bg-white rounded-3xl shadow-2xl border border-gray-200 p-10
+                      flex flex-col gap-12
+                      transition-shadow duration-300
+                      hover:shadow-3xl">
+        {/* Header */}
+        <header>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight tracking-tight">
+            {post.title}
+          </h1>
+          <p className="mt-4 text-gray-500 text-base md:text-lg max-w-prose">
+            A look into our recent work and creative impact.
+          </p>
+        </header>
 
-      <ImageCarousel
-        images={post.img_srcs?.length ? post.img_srcs : ['/placeholder.jpg']}
-        title={post.title}
-      />
+        {/* Image Carousel */}
+        <div className="rounded-xl overflow-hidden shadow-lg ring-1 ring-gray-100">
+          <ImageCarousel
+            images={post.img_srcs?.length ? post.img_srcs : ['/placeholder.jpg']}
+            title={post.title}
+          />
+        </div>
 
-      <section className="mt-12 space-y-8 text-gray-800 text-lg leading-relaxed">
-        <p className="text-2xl font-medium text-gray-700">{post.intro}</p>
-        <p>{post.body1}</p>
-        <p>{post.body2}</p>
-        <p className="font-semibold">{post.conclusion}</p>
+        {/* Article Content */}
+        <article className="prose prose-lg max-w-none text-gray-800">
+          {post.intro && <p className="font-semibold text-lg text-gray-700">{post.intro}</p>}
+          {post.body1 && <p>{post.body1}</p>}
+          {post.body2 && <p>{post.body2}</p>}
+          {post.conclusion && <p className="font-semibold">{post.conclusion}</p>}
+        </article>
 
-        <a
-          href={post.permalink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block mt-6 text-blue-600 hover:text-blue-800 underline"
-        >
-          View Original Facebook Post
-        </a>
-      </section>
+        {/* External Link */}
+        {post.permalink && (
+          <div className="mt-8">
+            <a
+              href={post.permalink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block text-blue-600 hover:text-blue-800 font-semibold underline transition-colors"
+            >
+              View Original Facebook Post
+            </a>
+          </div>
+        )}
+      </div>
     </main>
   );
 }

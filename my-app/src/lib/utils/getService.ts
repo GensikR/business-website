@@ -1,5 +1,6 @@
 import { Service } from "@/types";
 
+
 export const all_services: Service[] = 
 [
   {
@@ -138,3 +139,6 @@ export const all_services: Service[] =
     quoteCTA: "Bring timeless treasures back to life."
   }
 ];
+
+export const categoryList = all_services.map((service) => service.title).join(", ");
+

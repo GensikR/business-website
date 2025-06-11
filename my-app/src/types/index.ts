@@ -77,8 +77,6 @@ export const categories = [
   "interior design",
 ];
 
-// types.ts or types/index.ts
-
 export interface MediaImage {
   src: string;
 }

@@ -3,13 +3,11 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { GPTBlogParts } from "@/types";
-import { all_services } from "../utils/getService";
+import { categoryList } from "../utils/getService";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-
-const categoryList = all_services.map((service) => service.title).join(", ");
 
 export async function generateBlogParts(
   roughTitle: string,
