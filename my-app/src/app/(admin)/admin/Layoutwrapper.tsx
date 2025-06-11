@@ -7,26 +7,45 @@ import AdminLogin from '@/components/admin/AdminLogin';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/utils/firebase';
 import '@/app/globals.css';
+import { requestNotificationPermission } from '@/lib/utils/request_fms_permission';
 
 export default function ClientLayoutWrapper({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [askedPermission, setAskedPermission] = useState(false);
 
-  // Check if the user is logged in using Firebase auth
-  useEffect(() => 
-  {
+  // Check login status
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setLoggedIn(!!user);
       setLoading(false);
     });
-
     return () => unsubscribe();
   }, []);
 
+  // Register service worker + ask for push permission
+  useEffect(() => {
+    if (loggedIn && !askedPermission) {
+      requestNotificationPermission();
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .register('/firebase-messaging-sw.js')
+          .then((registration) => {
+            console.log('Service Worker registered:', registration);
+          })
+          .catch((err) => {
+            console.error('Service Worker registration failed:', err);
+          });
+      }
+    }
+  }, [loggedIn]);
+
+  // Loading
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-white">
@@ -35,6 +54,7 @@ export default function ClientLayoutWrapper({
     );
   }
 
+  // Not logged in
   if (!loggedIn) {
     return (
       <div className="flex items-center justify-center h-screen bg-white">
@@ -46,6 +66,7 @@ export default function ClientLayoutWrapper({
     );
   }
 
+  // Logged in
   return (
     <>
       <TopBar />
