@@ -23,9 +23,7 @@ export default function AdminRootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes"/>
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-        <meta name="apple-mobile-web-app-title" content="Your App Name"/>
-      </head>
-      <head>
+        <meta name="apple-mobile-web-app-title" content="Mauri"/>
         {/* Facebook SDK Initialization Script */}
         <Script id="facebook-sdk-init" strategy="beforeInteractive">
           {`
