@@ -1,12 +1,12 @@
 // src/app/api/set-appointment/route.ts
+
 import { db } from '@/lib/utils/firebase_db';
-import { storage, bucket } from '@/lib/utils/firebase_storage'
+import { storage, bucket } from '@/lib/utils/firebase_storage';
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
-import { writeFile } from 'fs/promises';
+import { writeFile, unlink } from 'fs/promises';
 import path from 'path';
 import { tmpdir } from 'os';
-import { createReadStream } from 'fs';
 
 export const config = {
   api: {
@@ -16,7 +16,6 @@ export const config = {
 
 export async function POST(req: Request) {
   try {
-    // Use formData instead of req.json
     const formData = await req.formData();
 
     const selectedService = formData.get('selectedService')?.toString() || '';
@@ -41,22 +40,31 @@ export async function POST(req: Request) {
     for (const file of imageFiles) {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      const tempFilePath = path.join(tmpdir(), `${uuidv4()}-${file.name}`);
+
+      const filename = `appointments/${Date.now()}-${file.name}`;
+      const tempFilePath = path.join(tmpdir(), filename);
+
+      // Save to temp file
       await writeFile(tempFilePath, buffer);
 
-      const bucketFile = bucket.file(`appointments/${Date.now()}-${file.name}`);
-      await bucketFile.save(buffer, {
+      // Upload to Firebase Storage
+      const token = uuidv4(); // Use single token per image
+      await bucket.upload(tempFilePath, {
+        destination: filename,
         metadata: {
           contentType: file.type,
           metadata: {
-            firebaseStorageDownloadTokens: uuidv4(),
+            firebaseStorageDownloadTokens: token,
           },
         },
-        resumable: false,
       });
 
-      const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${storage.bucket().name}/o/${encodeURIComponent(bucketFile.name)}?alt=media&token=${uuidv4()}`;
+      // Generate public URL
+      const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filename)}?alt=media&token=${token}`;
       imageUrls.push(publicUrl);
+
+      // Clean up temp file
+      await unlink(tempFilePath);
     }
 
     const appointment = {
