@@ -11,28 +11,6 @@ import { requestNotificationPermission } from '@/lib/utils/request_fms_permissio
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [askedPermission, setAskedPermission] = useState(false);
 
-  useEffect(() => {
-    // Register service worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/firebase-messaging-sw.js')
-        .then((registration) => {
-          console.log('Service Worker registered:', registration);
-        })
-        .catch((err) => {
-          console.error('Service Worker registration failed:', err);
-        });
-    }
-  }, []);
-
-  useEffect(() => {
-    // Request notification permission once
-    if (!askedPermission) {
-      requestNotificationPermission().then(() => {
-        setAskedPermission(true);
-      });
-    }
-  }, [askedPermission]);
 
   return (
     <html lang="en">
