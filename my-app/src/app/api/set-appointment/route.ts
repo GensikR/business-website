@@ -1,12 +1,9 @@
 // src/app/api/set-appointment/route.ts
 
 import { db } from '@/lib/utils/firebase_db';
-import { storage, bucket } from '@/lib/utils/firebase_storage';
+import { bucket } from '@/lib/utils/firebase_storage';
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
-import { writeFile, unlink } from 'fs/promises';
-import path from 'path';
-import { tmpdir } from 'os';
 
 export const config = {
   api: {
@@ -40,31 +37,28 @@ export async function POST(req: Request) {
     for (const file of imageFiles) {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
-
       const filename = `appointments/${Date.now()}-${file.name}`;
-      const tempFilePath = path.join(tmpdir(), filename);
+      const token = uuidv4();
 
-      // Save to temp file
-      await writeFile(tempFilePath, buffer);
-
-      // Upload to Firebase Storage
-      const token = uuidv4(); // Use single token per image
-      await bucket.upload(tempFilePath, {
-        destination: filename,
+      const remoteFile = bucket.file(filename);
+      const stream = remoteFile.createWriteStream({
         metadata: {
           contentType: file.type,
           metadata: {
             firebaseStorageDownloadTokens: token,
           },
         },
+        resumable: false,
       });
 
-      // Generate public URL
+      await new Promise<void>((resolve, reject) => {
+        stream.on('error', reject);
+        stream.on('finish', resolve);
+        stream.end(buffer);
+      });
+
       const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filename)}?alt=media&token=${token}`;
       imageUrls.push(publicUrl);
-
-      // Clean up temp file
-      await unlink(tempFilePath);
     }
 
     const appointment = {
