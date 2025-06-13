@@ -1,9 +1,10 @@
 import nextDynamic from 'next/dynamic';
 
-export const dynamic = 'force-dynamic'; // Ensure server renders fresh data
+export const dynamic = 'force-dynamic'; 
 
+// Rename import to avoid conflict with export
 const EstimatesTable = nextDynamic(() => import('@/components/admin/EstimatesTable'), {
-  ssr: false, // Ensure it's a client component
+  ssr: false,
 });
 
 export default function AdminEstimatesPage() {
