@@ -29,12 +29,16 @@ const Scheduler: React.FC = () => {
   });
 
   const formRef = useRef<HTMLDivElement | null>(null);
+  const hasMounted = useRef(false);
 
   useEffect(() => {
-    if (formRef.current) {
-      formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (hasMounted.current) {
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      hasMounted.current = true;
     }
   }, [step]);
+
 
   const updateCustomerInfo = (field: string, value: string | boolean) => {
     setCustomerInfo(prev => ({ ...prev, [field]: value }));
