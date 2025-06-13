@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useEffect, useRef } from 'react';
 import SelectService from "@/components/scheduler/SelectService";
 import DescribeProject from "@/components/scheduler/DescribeProject";
 import UploadImages from "@/components/scheduler/UploadImages";
@@ -28,6 +28,14 @@ const Scheduler: React.FC = () => {
     address: '',
   });
 
+  const formRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [step]);
+
   const updateCustomerInfo = (field: string, value: string | boolean) => {
     setCustomerInfo(prev => ({ ...prev, [field]: value }));
   };
@@ -51,18 +59,25 @@ const Scheduler: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    const payload = {
-      selectedService,
-      description,
-      selectedSlots,
-      customerInfo,
-    };
+    const formData = new FormData();
+
+    formData.append('selectedService', selectedService);
+    formData.append('description', description);
+    formData.append('selectedDay', selectedDay);
+    formData.append('selectedSlots', JSON.stringify(selectedSlots));
+
+    Object.entries(customerInfo).forEach(([key, value]) => {
+      formData.append(`customerInfo[${key}]`, value.toString());
+    });
+
+    images.forEach((file) => {
+      formData.append('images', file);
+    });
 
     try {
       const res = await fetch('/api/set-appointment', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: formData,
       });
 
       if (res.ok) {
@@ -91,7 +106,7 @@ const Scheduler: React.FC = () => {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-white via-blue-50 to-blue-100 py-20 px-4 md:px-8 lg:px-20">
-      <div className="max-w-4xl mx-auto bg-white shadow-2xl rounded-3xl px-10 py-12 space-y-10">
+      <div ref={formRef} className="max-w-4xl mx-auto bg-white shadow-2xl rounded-3xl px-10 py-12 space-y-10">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold text-blue-800 mb-2">Schedule a Consultation</h1>
           <p className="text-gray-500 text-base">We’ll connect you with a pro at your preferred time</p>
