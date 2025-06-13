@@ -2,6 +2,8 @@
 import { db } from '@/lib/utils/firebase_db';
 import { format } from 'date-fns';
 
+export const dynamic = 'force-dynamic'; // 👈 This is key
+
 type Appointment = {
   id: string;
   selectedService: string;
