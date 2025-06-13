@@ -20,7 +20,7 @@ type Appointment = {
   createdAt: string;
 };
 
-export default function EstimatesTable() {
+export default function AppointmentView() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -49,18 +49,13 @@ export default function EstimatesTable() {
         <div key={appt.id} className="bg-white border border-gray-300 rounded-xl p-6 shadow-md">
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-xl font-semibold text-blue-800">{appt.selectedService}</h2>
-            <span className="text-sm text-gray-500">
-              {format(new Date(appt.createdAt), 'PPPpp')}
-            </span>
+            <span className="text-sm text-gray-500">{format(new Date(appt.createdAt), 'PPPpp')}</span>
           </div>
-
           <p className="text-gray-700 mb-2">{appt.description}</p>
-
           <div className="mb-2 text-sm">
             <strong>Preferred Day:</strong> {appt.selectedDay}<br />
             <strong>Time Slots:</strong> {appt.selectedSlots.join(', ')}
           </div>
-
           <div className="mb-2 text-sm">
             <strong>Customer Info:</strong><br />
             Name: {appt.customerInfo.name}<br />
@@ -69,24 +64,13 @@ export default function EstimatesTable() {
             Address: {appt.customerInfo.address}<br />
             Consent: {appt.customerInfo.consent ? 'Yes' : 'No'}
           </div>
-
-          {Array.isArray(appt.imageUrls) && appt.imageUrls.length > 0 && (
+          {appt.imageUrls && appt.imageUrls.length > 0 && (
             <div className="mt-2">
               <strong>Images:</strong>
               <div className="mt-1 flex gap-3 flex-wrap">
                 {appt.imageUrls.map((url, index) => (
-                  <a
-                    key={index}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block border rounded hover:scale-105 transition-transform"
-                  >
-                    <img
-                      src={url}
-                      alt={`Uploaded ${index + 1}`}
-                      className="w-24 h-24 object-cover rounded"
-                    />
+                  <a key={index} href={url} target="_blank" rel="noopener noreferrer">
+                    <img src={url} alt={`Uploaded ${index}`} className="w-24 h-24 object-cover rounded" />
                   </a>
                 ))}
               </div>

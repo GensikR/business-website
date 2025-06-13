@@ -1,17 +1,12 @@
-import nextDynamic from 'next/dynamic';
+import AppointmentView from '@/components/admin/AppointmentView'
 
-export const dynamic = 'force-dynamic'; 
+export const dynamic = 'force-dynamic'; // Forces fresh data on every request
 
-// Rename import to avoid conflict with export
-const EstimatesTable = nextDynamic(() => import('@/components/admin/EstimatesTable'), {
-  ssr: false,
-});
-
-export default function AdminEstimatesPage() {
+export default function AdminAppointmentsPage() {
   return (
     <main className="p-8">
       <h1 className="text-3xl font-bold mb-6">Admin: Customer Appointments</h1>
-      <EstimatesTable />
+      <AppointmentView />
     </main>
   );
 }
