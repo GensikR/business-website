@@ -6,10 +6,8 @@ import Footer from '../../components/layout/Footer';
 import ChatBot from '../../components/ChatBot';
 import '@/app/globals.css';
 import UniversalHeader from '../../components/layout/UniversalHeader';
-import { requestNotificationPermission } from '@/lib/utils/request_fms_permission';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const [askedPermission, setAskedPermission] = useState(false);
 
 
   return (
