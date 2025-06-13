@@ -21,34 +21,35 @@ const extractImageSources = (attachments: Attachment[] = []): string[] => {
   return images;
 };
 
-// Changed parameter to accept posts directly as array, not wrapped in { data: posts }
 const processPosts = async (posts: FacebookPost[]) => {
   for (const post of posts) {
     const postID = post.id;
-    const title = post.message?.trim() || 'No title';
-    const created_time = new Date(post.created_time);
-    const permalink_url = post.permalink_url || '';
+    const title = post.message?.trim();
 
-    const face_img_srcs = extractImageSources(post.attachments?.data);
-    
-    // Await the promise here!
-    const img_srcs = await store_imgs(face_img_srcs);
-
-    if (img_srcs.length === 0) {
-      console.warn(`Skipping post ${postID}: No images found.`);
+    // Skip if title is missing or empty
+    if (!title || title === '') {
+      console.warn(`Skipping post ${postID}: Missing title.`);
       continue;
     }
+
+    const face_img_srcs = extractImageSources(post.attachments?.data);
+
+    // Skip if fewer than 2 images
+    if (face_img_srcs.length < 2) {
+      console.warn(`Skipping post ${postID}: Less than 2 images.`);
+      continue;
+    }
+
+    const img_srcs = await store_imgs(face_img_srcs);
+    const created_time = new Date(post.created_time);
+    const permalink_url = post.permalink_url || '';
 
     let gptContent: GPTBlogParts | null = null;
 
     try {
-      gptContent = await generateBlogParts(title, img_srcs);
+      gptContent = await generateBlogParts(title, img_srcs, post.message);
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        console.error(`GPT generation failed for post ${postID}:`, err.message);
-      } else {
-        console.error(`GPT generation failed for post ${postID}:`, err);
-      }
+      console.error(`GPT generation failed for post ${postID}:`, err);
       continue;
     }
 
@@ -68,13 +69,10 @@ const processPosts = async (posts: FacebookPost[]) => {
       await db.collection('posts').doc(postID).set(postData, { merge: true });
       console.log(`Post ${postID} saved to Firestore.`);
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        console.error(`Failed to save post ${postID} to Firestore:`, err.message);
-      } else {
-        console.error(`Failed to save post ${postID} to Firestore:`, err);
-      }
+      console.error(`Failed to save post ${postID} to Firestore:`, err);
     }
   }
 };
+
 
 export default processPosts;

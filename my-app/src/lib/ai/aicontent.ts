@@ -11,16 +11,25 @@ const openai = new OpenAI({
 
 export async function generateBlogParts(
   roughTitle: string,
-  imageUrls: string[]
+  imageUrls: string[],
+  fbDescription?: string
 ): Promise<GPTBlogParts> {
   const prompt = `
-You are a professional blog writer specializing in high-end home remodeling.
+You are an expert home remodeling content strategist and professional blog writer.
 
-Your task is to create a structured, engaging blog post using the provided rough title and image URLs. The content will be published on the company's website and should reflect expertise, creativity, and a warm, professional tone.
+You are given a Facebook post with the following:
+- A rough title: "${roughTitle}"
+- A description: "${fbDescription || 'No description provided.'}"
+- A set of image URLs: ${imageUrls.join(", ")}
 
-Use the title to infer the type and purpose of the project. Use the image URLs (e.g., before/after shots, process photos) to imagine what was remodeled, the steps taken, materials used, and the final result. Fill in missing context realistically but professionally.
+Your job is to:
+1. Infer the remodeling service that this post is most likely about.
+   Choose **one** category from this list: ${categoryList}.
+2. Generate a polished blog post draft for the company's website that showcases the project.
+3. Use visual cues (like before/after, tools, rooms, finishes) and inferred project details to write realistically.
+4. Maintain a warm, expert, and trustworthy tone.
 
-Respond ONLY with a valid JSON object using these exact keys:
+Respond ONLY with this valid JSON object structure (no markdown, no extra explanation):
 
 {
   "title": (Improved and polished blog post title),
@@ -28,14 +37,8 @@ Respond ONLY with a valid JSON object using these exact keys:
   "body1": (1 paragraph describing the overall project and goals),
   "body2": (2 paragraphs about the remodeling process, materials used, and any challenges),
   "conclusion": (1 paragraph summarizing the final result and benefits to the homeowner),
-  "category": (one category selected from: ${categoryList})
+  "category": (best matching category from the provided list)
 }
-
-Inputs:
-- Title: ${roughTitle}
-- Images: ${imageUrls.join(", ")}
-
-IMPORTANT: Respond ONLY with a properly formatted JSON object. No markdown, no commentary, no extra text.
 `;
 
   const response = await openai.chat.completions.create({
@@ -58,3 +61,4 @@ IMPORTANT: Respond ONLY with a properly formatted JSON object. No markdown, no c
     throw err;
   }
 }
+
