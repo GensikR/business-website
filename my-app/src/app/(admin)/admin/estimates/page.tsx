@@ -1,5 +1,5 @@
 // app/admin/estimates/page.tsx
-
+"use client;"
 import { db } from '@/lib/utils/firebase_db';
 import { format } from 'date-fns';
 import { ChevronDown, ChevronUp } from 'lucide-react';
