@@ -14,7 +14,6 @@ export default function ClientLayoutWrapper({
 }) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [askedPermission, setAskedPermission] = useState(false);
 
   // Check login status
   useEffect(() => {
