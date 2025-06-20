@@ -10,6 +10,7 @@ const db = getFirestore(app);
 
 const Gallery: React.FC = () => {
   const [images, setImages] = useState<string[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -17,61 +18,66 @@ const Gallery: React.FC = () => {
         const q = query(collection(db, 'posts'), orderBy('created_time', 'desc'), limit(20));
         const snapshot = await getDocs(q);
 
-        const allImages: string[] = [];
+        const all: string[] = [];
         snapshot.forEach((doc) => {
           const data = doc.data();
           if (Array.isArray(data.img_srcs)) {
-            allImages.push(...data.img_srcs);
+            all.push(...data.img_srcs);
           }
         });
 
-        setImages(allImages.slice(0, 40)); // Limit final display
+        setImages(all.slice(0, 40));
       } catch (err) {
-        console.error('Error fetching images:', err);
+        console.error('Error fetching gallery images:', err);
       }
     };
 
     fetchImages();
   }, []);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((i) => (i + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [images.length]);
+
   if (images.length === 0) return null;
 
   return (
-    <section
-      style={{
-        maxWidth: 1200,
-        margin: '3rem auto',
-        padding: '0 1rem',
-      }}
-    >
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: '1rem',
-          borderRadius: 12,
-          overflow: 'hidden',
-        }}
-      >
-        {images.map((src, i) => (
-          <img
-            key={i}
-            src={src}
-            alt={`Gallery Image ${i + 1}`}
-            loading="lazy"
-            style={{
-              width: '100%',
-              height: 'auto',
-              borderRadius: 8,
-              objectFit: 'cover',
-              boxShadow: '0 8px 15px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08)',
-              transition: 'transform 0.3s ease',
-              cursor: 'zoom-in',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-          />
-        ))}
+    <section className="w-full py-16 bg-white">
+      <div className="relative max-w-5xl mx-auto aspect-[4/3] sm:aspect-video rounded-xl overflow-hidden shadow-xl">
+        <img
+          src={images[currentIndex]}
+          alt={`Gallery image ${currentIndex + 1}`}
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+          style={{ borderRadius: '12px' }}
+        />
+
+        <button
+          onClick={() => setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)}
+          className="absolute top-1/2 left-4 -translate-y-1/2 z-10 bg-white/70 hover:bg-white text-black p-3 rounded-full shadow-md"
+        >
+          ←
+        </button>
+
+        <button
+          onClick={() => setCurrentIndex((prev) => (prev + 1) % images.length)}
+          className="absolute top-1/2 right-4 -translate-y-1/2 z-10 bg-white/70 hover:bg-white text-black p-3 rounded-full shadow-md"
+        >
+          →
+        </button>
+
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+          {images.map((_, i) => (
+            <div
+              key={i}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                i === currentIndex ? 'bg-blue-600 scale-110' : 'bg-gray-300'
+              }`}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
