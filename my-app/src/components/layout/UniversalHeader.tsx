@@ -28,14 +28,13 @@ const UniversalHeader: React.FC<UniversalHeaderProps> = ({
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-black/70" />
         </div>
       )}
 
       {/* Centered Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center">
+      {/* <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center"> */}
         {/* Business Card Image */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -49,10 +48,10 @@ const UniversalHeader: React.FC<UniversalHeaderProps> = ({
             className="w-full h-auto object-cover"
             priority
           />
-        </motion.div>
+        </motion.div> */}
 
         {/* Call to Action */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.7 }}
@@ -82,7 +81,7 @@ const UniversalHeader: React.FC<UniversalHeaderProps> = ({
           >
             View Our Work
           </Link>
-        </motion.div>
+        </motion.div> */}
 
         {/* Optional Description */}
         {/* {description && (
@@ -95,7 +94,7 @@ const UniversalHeader: React.FC<UniversalHeaderProps> = ({
             {description}
           </motion.p>
         )} */}
-      </div>
+      {/* </div> */}
     </section>
   );
 };

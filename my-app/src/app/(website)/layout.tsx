@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Hero Section */}
         <UniversalHeader
-          backgroundImageUrl="/images/header5.png"
+          backgroundImageUrl="/images/logo.png"
           businessCardImageUrl="/images/business-card.jpg"
           description="Whether you're updating a single room or tackling a full home remodel, we bring expertise and care to every project. Explore our work, schedule a free consultation, and take the first step toward your dream home."
         />
