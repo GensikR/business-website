@@ -24,12 +24,7 @@ const Gallery: React.FC = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const q = query(
-          collection(db, 'posts'),
-          orderBy('created_time', 'desc'),
-          limit(20)
-        );
-
+        const q = query(collection(db, 'posts'), orderBy('created_time', 'desc'), limit(20));
         const snapshot = await getDocs(q);
 
         const imgList: string[] = [];
@@ -62,29 +57,31 @@ const Gallery: React.FC = () => {
 
   return (
     <section className="w-full py-12 px-4 bg-white">
-      <div className="relative max-w-5xl mx-auto aspect-[4/3] sm:aspect-video overflow-hidden rounded-xl shadow-xl">
+      <div className="relative w-full max-w-5xl h-[300px] sm:h-[450px] mx-auto overflow-hidden rounded-xl shadow-xl">
         <Image
           src={images[currentIndex]}
           alt={`Gallery Image ${currentIndex + 1}`}
           fill
-          className="object-contain sm:object-cover transition-opacity duration-500"
-          sizes="100vw"
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, 800px"
           priority
         />
 
+        {/* Arrows */}
         <button
           onClick={goPrev}
-          className="absolute top-1/2 left-4 -translate-y-1/2 bg-white/70 hover:bg-white text-black p-2 rounded-full shadow"
+          className="absolute top-1/2 left-4 -translate-y-1/2 bg-white/80 hover:bg-white text-black p-2 rounded-full shadow transition"
         >
           ←
         </button>
         <button
           onClick={goNext}
-          className="absolute top-1/2 right-4 -translate-y-1/2 bg-white/70 hover:bg-white text-black p-2 rounded-full shadow"
+          className="absolute top-1/2 right-4 -translate-y-1/2 bg-white/80 hover:bg-white text-black p-2 rounded-full shadow transition"
         >
           →
         </button>
 
+        {/* Dots */}
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
           {images.map((_, i) => (
             <div
