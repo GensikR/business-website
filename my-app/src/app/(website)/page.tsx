@@ -4,10 +4,14 @@ import FAQ from "@/components/home/FAQ";
 import Team from "@/components/about/Team";
 import Scheduler from "@/components/scheduler/Scheduler";
 import FeaturedWork from "@/components/portfolio/FeaturedWork"; 
+import Gallery from "@/components/portfolio/Gallery";
 
 export default function HomePage() {
   return (
     <div>
+
+      {/* Gallery */}
+      <Gallery/>
 
       {/* Team Section */}
       <Team />
