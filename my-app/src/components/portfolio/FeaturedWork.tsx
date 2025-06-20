@@ -8,7 +8,9 @@ import {
   orderBy,
   limit,
   getDocs,
-  where
+  where,
+  doc,
+  updateDoc,
 } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import firebaseConfig from '@/lib/utils/firebase_config';
@@ -23,6 +25,28 @@ const FETCH_LIMIT = 20;
 const getRandomPosts = <T,>(arr: T[], count: number): T[] => {
   const shuffled = [...arr].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
+};
+
+// 🔤 Converts title to slug
+const titleToSlug = (title: string): string =>
+  title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '');
+
+// ✅ Adds slug to Firestore if missing
+const ensureSlugForPost = async (post: WorkPost): Promise<WorkPost> => {
+  if (!post.slug && post.title) {
+    const newSlug = titleToSlug(post.title);
+    try {
+      await updateDoc(doc(db, 'posts', post.id), { slug: newSlug });
+      console.log(`✅ Slug added to "${post.title}": ${newSlug}`);
+      return { ...post, slug: newSlug };
+    } catch (err) {
+      console.error(`❌ Failed to update slug for "${post.title}":`, err);
+    }
+  }
+  return post;
 };
 
 interface FeaturedWorkProps {
@@ -55,10 +79,16 @@ const FeaturedWork: React.FC<FeaturedWorkProps> = ({ selectedCategory: selectedC
             );
 
       const snapshot = await getDocs(q);
-      const posts: WorkPost[] = snapshot.docs.map((docSnap) => ({
-        id: docSnap.id,
-        ...(docSnap.data() as Omit<WorkPost, 'id'>),
-      }));
+
+      const posts: WorkPost[] = await Promise.all(
+        snapshot.docs.map(async (docSnap) => {
+          const post = {
+            id: docSnap.id,
+            ...(docSnap.data() as Omit<WorkPost, 'id'>),
+          };
+          return await ensureSlugForPost(post);
+        })
+      );
 
       setFeaturedPosts(getRandomPosts(posts, 6));
     } catch (err) {
