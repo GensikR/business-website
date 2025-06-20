@@ -20,16 +20,32 @@ const Gallery: React.FC = () => {
   const [images, setImages] = useState<string[]>([]);
   const [current, setCurrent] = useState(0);
 
+  // 🔄 Fetch random images from Firestore
+  const fetchImages = async () => {
+    try {
+      const q = query(collection(db, 'posts'), orderBy('created_time', 'desc'));
+      const snapshot = await getDocs(q);
+
+      const allImages: string[] = [];
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const imgs = data.img_srcs;
+        if (Array.isArray(imgs)) {
+          allImages.push(...imgs);
+        }
+      });
+
+      // Shuffle and pick 20
+      const shuffled = allImages.sort(() => 0.5 - Math.random());
+      setImages(shuffled.slice(0, 20));
+    } catch (err) {
+      console.error('❌ Failed to fetch gallery images:', err);
+    }
+  };
+
   useEffect(() => {
-    // Static images for now – replace with Firestore fetch if needed
-    setImages([
-      '/images/header.png',
-      '/images/header1.png',
-      '/images/header2.png',
-      '/images/header3.png',
-      '/images/header4.png',
-      '/images/header5.png',
-    ]);
+    fetchImages();
   }, []);
 
   const next = () => setCurrent((prev) => (prev + 1) % images.length);
@@ -44,7 +60,7 @@ const Gallery: React.FC = () => {
           src={images[current]}
           alt=""
           fill
-          className="object-contain transition-opacity duration-500 bg-white"
+          className="object-contain bg-white transition-opacity duration-500"
           sizes="(max-width: 768px) 100vw, 800px"
         />
 
