@@ -1,4 +1,12 @@
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  updateDoc,
+} from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import { notFound } from 'next/navigation';
 import { WorkPost } from '@/types';
@@ -8,13 +16,39 @@ import ImageCarousel from '../../../../components/portfolio/ImageCarousel';
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// 🔤 Converts title to URL-friendly slug
+const titleToSlug = (title: string): string =>
+  title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+
+// ✅ Generates static paths and creates slugs in Firestore if needed
 export async function generateStaticParams() {
   const snapshot = await getDocs(collection(db, 'posts'));
-  return snapshot.docs.map((doc) => ({
-    slug: doc.data().slug as string,
-  }));
+
+  const paths = await Promise.all(
+    snapshot.docs.map(async (docSnap) => {
+      const data = docSnap.data();
+      let slug = data.slug;
+
+      if (!slug && data.title) {
+        slug = titleToSlug(data.title);
+        try {
+          await updateDoc(doc(db, 'posts', docSnap.id), { slug });
+          console.log(`✅ Slug created for "${data.title}": ${slug}`);
+        } catch (err) {
+          console.error(`❌ Failed to update slug for ${docSnap.id}:`, err);
+          return null;
+        }
+      }
+
+      if (!slug) return null;
+      return { slug };
+    })
+  );
+
+  return paths.filter(Boolean);
 }
 
+// ✅ Page Component for /portfolio/[slug]
 export default async function PortfolioPostPage({
   params,
 }: {
@@ -29,10 +63,13 @@ export default async function PortfolioPostPage({
     notFound();
   }
 
-  const doc = snapshot.docs[0];
-  const data = doc.data() as Omit<WorkPost, 'id'>;
-  const { created_time: _, ...safeData } = data;
-  const post: WorkPost = { id: doc.id, ...safeData } as WorkPost;
+  const docSnap = snapshot.docs[0];
+  const data = docSnap.data() as Omit<WorkPost, 'id'>;
+
+  const post: WorkPost = {
+    id: docSnap.id,
+    ...data,
+  };
 
   return (
     <main className="min-h-screen bg-gray-50 py-16 px-4 sm:px-6 lg:px-8 flex justify-center">
