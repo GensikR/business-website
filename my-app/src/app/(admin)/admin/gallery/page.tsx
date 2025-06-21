@@ -32,11 +32,11 @@ export default function GalleryAdmin() {
     if (files.length === 0) return;
     setUploading(true);
 
-    const uploadTasks = files.map(async (file, idx) => {
-      const storageRef = ref(storage, `gallery/${file.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
+    const uploadTasks = files.map((file, idx) => {
       return new Promise<void>((resolve, reject) => {
+        const storageRef = ref(storage, `gallery/${Date.now()}_${file.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
         uploadTask.on(
           'state_changed',
           (snapshot) => {
@@ -47,25 +47,37 @@ export default function GalleryAdmin() {
               return updated;
             });
           },
-          reject,
+          (error) => {
+            console.error('Upload failed:', error);
+            reject(error);
+          },
           async () => {
-            const url = await getDownloadURL(uploadTask.snapshot.ref);
-            await addDoc(collection(db, 'gallery'), {
-              url,
-              uploadedAt: serverTimestamp(),
-            });
-            resolve();
+            try {
+              const url = await getDownloadURL(uploadTask.snapshot.ref);
+              await addDoc(collection(db, 'gallery'), {
+                url,
+                uploadedAt: serverTimestamp(),
+              });
+              resolve();
+            } catch (err) {
+              console.error('Firestore save error:', err);
+              reject(err);
+            }
           }
         );
       });
     });
 
-    await Promise.all(uploadTasks);
-
-    alert('✅ Upload complete!');
-    setFiles([]);
-    setProgress([]);
-    setUploading(false);
+    try {
+      await Promise.all(uploadTasks);
+      alert('✅ Upload complete!');
+    } catch (error) {
+      alert('⚠️ Upload failed. Check console for details.');
+    } finally {
+      setUploading(false);
+      setFiles([]);
+      setProgress([]);
+    }
   };
 
   return (
@@ -103,9 +115,7 @@ export default function GalleryAdmin() {
         <p className="text-center text-sm font-medium text-gray-600">
           Click or drag & drop to upload images
         </p>
-        <p className="text-xs text-gray-400 mt-1">
-          PNG, JPG, JPEG — up to 10 files
-        </p>
+        <p className="text-xs text-gray-400 mt-1">PNG, JPG, JPEG — up to 10 files</p>
       </label>
 
       {files.length > 0 && (
