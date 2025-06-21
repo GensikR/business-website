@@ -69,14 +69,14 @@ export default function GalleryAdmin() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 text-white">
-      <h2 className="text-2xl font-bold mb-6">🖼️ Gallery Admin Panel</h2>
+    <div className="max-w-4xl mx-auto p-6 text-gray-800">
+      <h2 className="text-3xl font-bold mb-6 text-center">🖼️ Gallery Admin Panel</h2>
 
       <label
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
         onClick={handleClick}
-        className="cursor-pointer w-full border-2 border-dashed border-white/20 hover:border-pink-500 rounded-xl py-12 flex flex-col items-center justify-center text-white/70 hover:text-white transition"
+        className="cursor-pointer w-full border-2 border-dashed border-gray-300 hover:border-blue-500 rounded-xl py-12 flex flex-col items-center justify-center bg-gray-50 hover:bg-blue-50 transition"
       >
         <input
           ref={inputRef}
@@ -88,7 +88,7 @@ export default function GalleryAdmin() {
         />
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-10 w-10 mb-3 text-pink-400"
+          className="h-10 w-10 mb-3 text-blue-400"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -100,10 +100,12 @@ export default function GalleryAdmin() {
             d="M7 16V4m0 0L3 8m4-4l4 4m5 4v8m0 0l4-4m-4 4l-4-4"
           />
         </svg>
-        <p className="text-center text-sm font-medium">
+        <p className="text-center text-sm font-medium text-gray-600">
           Click or drag & drop to upload images
         </p>
-        <p className="text-xs text-white/40 mt-1">PNG, JPG, JPEG — up to 10 files</p>
+        <p className="text-xs text-gray-400 mt-1">
+          PNG, JPG, JPEG — up to 10 files
+        </p>
       </label>
 
       {files.length > 0 && (
@@ -111,18 +113,21 @@ export default function GalleryAdmin() {
           {files.map((file, idx) => (
             <div
               key={idx}
-              className="aspect-square overflow-hidden rounded-xl border border-white/10 relative group"
+              className="aspect-square overflow-hidden rounded-xl border border-gray-200 relative group"
             >
               <img
                 src={URL.createObjectURL(file)}
                 alt={`preview-${idx}`}
                 className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs text-white font-semibold">
+              <div className="absolute inset-0 bg-white/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs text-gray-700 font-semibold">
                 {file.name}
               </div>
               {uploading && (
-                <div className="absolute bottom-0 left-0 h-1 bg-pink-500" style={{ width: `${progress[idx]}%` }} />
+                <div
+                  className="absolute bottom-0 left-0 h-1 bg-blue-500"
+                  style={{ width: `${progress[idx]}%` }}
+                />
               )}
             </div>
           ))}
@@ -132,7 +137,7 @@ export default function GalleryAdmin() {
       <button
         onClick={handleUpload}
         disabled={files.length === 0 || uploading}
-        className="mt-6 px-5 py-2 bg-pink-600 hover:bg-pink-700 transition rounded-xl text-white font-semibold shadow"
+        className="mt-6 px-6 py-2 bg-blue-600 hover:bg-blue-700 transition rounded-lg text-white font-medium shadow"
       >
         {uploading ? 'Uploading...' : 'Upload to Gallery'}
       </button>
