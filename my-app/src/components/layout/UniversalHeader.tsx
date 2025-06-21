@@ -1,7 +1,8 @@
-"use client";
+'use client';
 
 import React from "react";
 import Image from "next/image";
+import PhoneNumber from "@/components/PhoneNumber"; // Adjust path based on your project structure
 
 type UniversalHeaderProps = {
   backgroundImageUrl: string;

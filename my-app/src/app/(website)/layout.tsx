@@ -6,6 +6,7 @@ import Footer from '../../components/layout/Footer';
 import ChatBot from '../../components/ChatBot';
 import '@/app/globals.css';
 import UniversalHeader from '../../components/layout/UniversalHeader';
+import PhoneNumber from '@/components/PhoneNumber';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 
@@ -25,6 +26,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <UniversalHeader
           backgroundImageUrl="/images/logo.png"
         />
+
+        <PhoneNumber/>
+        
 
         {/* Main Content Area */}
         <main className="flex-grow px-2 sm:px-4 md:px-6 lg:px-8 relative">
