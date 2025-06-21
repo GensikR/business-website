@@ -7,6 +7,7 @@ import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import firebaseConfig from '@/lib/utils/firebase_config';
 import FeaturedWork from '@/components/portfolio/FeaturedWork';
 import Scheduler from '@/components/scheduler/Scheduler';
+import Gallery from '../portfolio/Gallery';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -43,13 +44,7 @@ const ServiceView: React.FC<ServiceViewProps> = ({ service_name }) => {
 
       {/* Hero Image */}
       <div className="rounded-2xl overflow-hidden shadow-2xl mb-12 ring-1 ring-gray-200 hover:shadow-3xl transition-shadow duration-300">
-        <img
-          src={service.image}
-          alt={service.title}
-          className="w-full object-cover h-72 md:h-[500px]"
-          loading="lazy"
-          draggable={false}
-        />
+        <Gallery/>
       </div>
 
       {/* Service Details */}
@@ -80,7 +75,7 @@ const ServiceView: React.FC<ServiceViewProps> = ({ service_name }) => {
       )}
 
       {/* Featured Work & Scheduler */}
-      <FeaturedWork selectedCategory={service_name} />
+      <FeaturedWork />
       <Scheduler />
     </div>
   );
