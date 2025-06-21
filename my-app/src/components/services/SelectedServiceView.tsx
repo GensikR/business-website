@@ -44,7 +44,7 @@ const ServiceView: React.FC<ServiceViewProps> = ({ service_name }) => {
 
       {/* Hero Image */}
       <div className="rounded-2xl overflow-hidden shadow-2xl mb-12 ring-1 ring-gray-200 hover:shadow-3xl transition-shadow duration-300">
-        <Gallery/>
+        <Gallery category={service_name}/>
       </div>
 
       {/* Service Details */}

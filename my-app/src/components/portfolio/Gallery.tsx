@@ -1,21 +1,25 @@
 'use client';
-
 import React, { useEffect, useState } from 'react';
 import {
   collection,
   query,
   orderBy,
   limit,
-  getDocs
+  getDocs,
 } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import firebaseConfig from '@/lib/utils/firebase_config';
+import { all_services } from '@/lib/utils/getService';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const Gallery: React.FC = () => {
+interface GalleryProps {
+  category?: string;
+}
+
+const Gallery: React.FC<GalleryProps> = ({ category }) => {
   const [images, setImages] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -25,22 +29,32 @@ const Gallery: React.FC = () => {
         const q = query(collection(db, 'gallery'), orderBy('uploadedAt', 'desc'), limit(50));
         const snapshot = await getDocs(q);
 
-        const urls: string[] = [];
-        snapshot.forEach((doc) => {
-          const data = doc.data();
-          if (data.url) {
-            urls.push(data.url);
-          }
-        });
+        const allImages = snapshot.docs
+          .map((doc) => doc.data())
+          .filter((data) => data.url) as { url: string; category?: string }[];
 
-        setImages(urls);
+        let filtered = allImages;
+
+        if (category) {
+          const serviceMatch = all_services.find(s => s.link === category);
+          const title = serviceMatch?.title ?? category;
+
+          const matching = allImages.filter((img) =>
+            img.category?.toLowerCase() === title.toLowerCase()
+          );
+
+          // If fewer than 10, include other recent ones too
+          filtered = matching.length >= 10 ? matching : [...matching, ...allImages.slice(0, 10)];
+        }
+
+        setImages(filtered.map((img) => img.url));
       } catch (err) {
         console.error('Error fetching gallery images:', err);
       }
     };
 
     fetchImages();
-  }, []);
+  }, [category]);
 
   useEffect(() => {
     if (images.length === 0) return;
@@ -62,7 +76,9 @@ const Gallery: React.FC = () => {
         />
 
         <button
-          onClick={() => setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)}
+          onClick={() =>
+            setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
+          }
           className="absolute top-1/2 left-4 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-black p-3 rounded-full shadow-md"
         >
           ←

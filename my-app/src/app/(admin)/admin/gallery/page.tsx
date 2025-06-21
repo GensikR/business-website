@@ -11,6 +11,7 @@ import {
   doc,
   query,
   orderBy,
+  updateDoc,
 } from 'firebase/firestore';
 import {
   ref,
@@ -18,23 +19,26 @@ import {
   getDownloadURL,
   deleteObject,
 } from 'firebase/storage';
+import { all_services } from '@/lib/utils/getService';  
+const CATEGORIES = all_services.map(service => service.title).concat('Other');
 
 export default function GalleryAdmin() {
   const [files, setFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState<number[]>([]);
   const [uploadedImages, setUploadedImages] = useState<
-    { id: string; url: string; path: string }[]
+    { id: string; url: string; path: string; category?: string }[]
   >([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const fetchGallery = async () => {
     const q = query(collection(db, 'gallery'), orderBy('uploadedAt', 'desc'));
     const snapshot = await getDocs(q);
-    const data = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      url: doc.data().url,
-      path: doc.data().path, // ✅ Needed for deleting from Storage
+    const data = snapshot.docs.map((docSnap) => ({
+      id: docSnap.id,
+      url: docSnap.data().url,
+      path: docSnap.data().path,
+      category: docSnap.data().category,
     }));
     setUploadedImages(data);
   };
@@ -89,8 +93,9 @@ export default function GalleryAdmin() {
               const url = await getDownloadURL(uploadTask.snapshot.ref);
               await addDoc(collection(db, 'gallery'), {
                 url,
-                path: uniquePath, // ✅ Save path for deletion
+                path: uniquePath,
                 uploadedAt: serverTimestamp(),
+                category: 'All',
               });
               resolve();
             } catch (err) {
@@ -105,7 +110,7 @@ export default function GalleryAdmin() {
     try {
       await Promise.all(uploadTasks);
       alert('✅ Upload complete!');
-      await fetchGallery(); // 🔄 Refresh after upload
+      await fetchGallery();
     } catch (error) {
       alert('⚠️ Upload failed. Check console for details.');
     } finally {
@@ -129,11 +134,22 @@ export default function GalleryAdmin() {
     }
   };
 
+  const updateCategory = async (id: string, newCategory: string) => {
+    try {
+      await updateDoc(doc(db, 'gallery', id), { category: newCategory });
+      setUploadedImages((prev) =>
+        prev.map((img) => (img.id === id ? { ...img, category: newCategory } : img))
+      );
+    } catch (err) {
+      console.error('❌ Failed to update category:', err);
+      alert('Failed to update category. Check console for details.');
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6 text-gray-800">
       <h2 className="text-3xl font-bold mb-6 text-center">🖼️ Gallery Admin Panel</h2>
 
-      {/* Upload Dropzone */}
       <label
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
@@ -168,7 +184,6 @@ export default function GalleryAdmin() {
         <p className="text-xs text-gray-400 mt-1">PNG, JPG, JPEG — up to 10 files</p>
       </label>
 
-      {/* Previews of files being uploaded */}
       {files.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6">
           {files.map((file, idx) => (
@@ -195,7 +210,6 @@ export default function GalleryAdmin() {
         </div>
       )}
 
-      {/* Upload button */}
       <button
         onClick={handleUpload}
         disabled={files.length === 0 || uploading}
@@ -204,7 +218,6 @@ export default function GalleryAdmin() {
         {uploading ? 'Uploading...' : 'Upload to Gallery'}
       </button>
 
-      {/* Uploaded image management */}
       {uploadedImages.length > 0 && (
         <div className="mt-12">
           <h3 className="text-xl font-semibold mb-4">📁 Uploaded Images</h3>
@@ -214,17 +227,26 @@ export default function GalleryAdmin() {
                 key={img.id}
                 className="relative border rounded-lg overflow-hidden group"
               >
-                <img
-                  src={img.url}
-                  alt="Uploaded"
-                  className="w-full h-48 object-cover"
-                />
+                <img src={img.url} alt="Uploaded" className="w-full h-48 object-cover" />
                 <button
                   onClick={() => handleDelete(img.id, img.path)}
                   className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded shadow hover:bg-red-700 transition"
                 >
                   Delete
                 </button>
+                <div className="absolute bottom-2 left-2 bg-white/90 px-2 py-1 rounded shadow">
+                  <select
+                    value={img.category || 'All'}
+                    onChange={(e) => updateCategory(img.id, e.target.value)}
+                    className="text-xs text-gray-700 bg-white border border-gray-300 rounded"
+                  >
+                    {CATEGORIES.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             ))}
           </div>
