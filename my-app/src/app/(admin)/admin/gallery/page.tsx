@@ -19,7 +19,8 @@ import {
   getDownloadURL,
   deleteObject,
 } from 'firebase/storage';
-import { all_services } from '@/lib/utils/getService';  
+import { all_services } from '@/lib/utils/getService';
+
 const CATEGORIES = all_services.map(service => service.title).concat('Other');
 
 export default function GalleryAdmin() {
@@ -29,7 +30,6 @@ export default function GalleryAdmin() {
   const [uploadedImages, setUploadedImages] = useState<
     { id: string; url: string; path: string; category?: string }[]
   >([]);
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const fetchGallery = async () => {
     const q = query(collection(db, 'gallery'), orderBy('uploadedAt', 'desc'));
@@ -61,8 +61,6 @@ export default function GalleryAdmin() {
     e.preventDefault();
     if (e.dataTransfer.files) handleFiles(e.dataTransfer.files);
   };
-
-  const handleClick = () => inputRef.current?.click();
 
   const handleUpload = async () => {
     if (files.length === 0) return;
@@ -153,33 +151,17 @@ export default function GalleryAdmin() {
       <label
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
-        onClick={handleClick}
-        className="cursor-pointer w-full border-2 border-dashed border-gray-300 hover:border-blue-500 rounded-xl py-12 flex flex-col items-center justify-center bg-gray-50 hover:bg-blue-50 transition"
+        className="w-full border-2 border-dashed border-gray-300 hover:border-blue-500 rounded-xl py-12 flex flex-col items-center justify-center bg-gray-50 hover:bg-blue-50 transition"
       >
         <input
-          ref={inputRef}
           type="file"
           accept="image/*"
           multiple
           onChange={handleFileChange}
-          className="hidden"
+          className="block mb-3"
         />
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-10 w-10 mb-3 text-blue-400"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M7 16V4m0 0L3 8m4-4l4 4m5 4v8m0 0l4-4m-4 4l-4-4"
-          />
-        </svg>
         <p className="text-center text-sm font-medium text-gray-600">
-          Click or drag & drop to upload images
+          Select or drag & drop images
         </p>
         <p className="text-xs text-gray-400 mt-1">PNG, JPG, JPEG — up to 10 files</p>
       </label>
@@ -223,10 +205,7 @@ export default function GalleryAdmin() {
           <h3 className="text-xl font-semibold mb-4">📁 Uploaded Images</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {uploadedImages.map((img) => (
-              <div
-                key={img.id}
-                className="relative border rounded-lg overflow-hidden group"
-              >
+              <div key={img.id} className="relative border rounded-lg overflow-hidden group">
                 <img src={img.url} alt="Uploaded" className="w-full h-48 object-cover" />
                 <button
                   onClick={() => handleDelete(img.id, img.path)}
