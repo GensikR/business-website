@@ -1,15 +1,47 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { db, storage } from '@/lib/utils/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  getDocs,
+  deleteDoc,
+  doc,
+  query,
+  orderBy,
+} from 'firebase/firestore';
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  deleteObject,
+} from 'firebase/storage';
 
 export default function GalleryAdmin() {
   const [files, setFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState<number[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<
+    { id: string; url: string; path: string }[]
+  >([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const fetchGallery = async () => {
+    const q = query(collection(db, 'gallery'), orderBy('uploadedAt', 'desc'));
+    const snapshot = await getDocs(q);
+    const data = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      url: doc.data().url,
+      path: doc.data().path, // ✅ Needed for deleting from Storage
+    }));
+    setUploadedImages(data);
+  };
+
+  useEffect(() => {
+    fetchGallery();
+  }, []);
 
   const handleFiles = (fileList: FileList | File[]) => {
     const newFiles = Array.from(fileList);
@@ -34,7 +66,8 @@ export default function GalleryAdmin() {
 
     const uploadTasks = files.map((file, idx) => {
       return new Promise<void>((resolve, reject) => {
-        const storageRef = ref(storage, `gallery/${Date.now()}_${file.name}`);
+        const uniquePath = `gallery/${Date.now()}_${file.name}`;
+        const storageRef = ref(storage, uniquePath);
         const uploadTask = uploadBytesResumable(storageRef, file);
 
         uploadTask.on(
@@ -56,6 +89,7 @@ export default function GalleryAdmin() {
               const url = await getDownloadURL(uploadTask.snapshot.ref);
               await addDoc(collection(db, 'gallery'), {
                 url,
+                path: uniquePath, // ✅ Save path for deletion
                 uploadedAt: serverTimestamp(),
               });
               resolve();
@@ -71,6 +105,7 @@ export default function GalleryAdmin() {
     try {
       await Promise.all(uploadTasks);
       alert('✅ Upload complete!');
+      await fetchGallery(); // 🔄 Refresh after upload
     } catch (error) {
       alert('⚠️ Upload failed. Check console for details.');
     } finally {
@@ -80,10 +115,25 @@ export default function GalleryAdmin() {
     }
   };
 
+  const handleDelete = async (id: string, path: string) => {
+    const confirm = window.confirm('Are you sure you want to delete this image?');
+    if (!confirm) return;
+
+    try {
+      await deleteObject(ref(storage, path));
+      await deleteDoc(doc(db, 'gallery', id));
+      setUploadedImages((prev) => prev.filter((img) => img.id !== id));
+    } catch (err) {
+      console.error('❌ Failed to delete image:', err);
+      alert('Failed to delete image. Check console for details.');
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6 text-gray-800">
       <h2 className="text-3xl font-bold mb-6 text-center">🖼️ Gallery Admin Panel</h2>
 
+      {/* Upload Dropzone */}
       <label
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
@@ -118,6 +168,7 @@ export default function GalleryAdmin() {
         <p className="text-xs text-gray-400 mt-1">PNG, JPG, JPEG — up to 10 files</p>
       </label>
 
+      {/* Previews of files being uploaded */}
       {files.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6">
           {files.map((file, idx) => (
@@ -144,6 +195,7 @@ export default function GalleryAdmin() {
         </div>
       )}
 
+      {/* Upload button */}
       <button
         onClick={handleUpload}
         disabled={files.length === 0 || uploading}
@@ -151,6 +203,33 @@ export default function GalleryAdmin() {
       >
         {uploading ? 'Uploading...' : 'Upload to Gallery'}
       </button>
+
+      {/* Uploaded image management */}
+      {uploadedImages.length > 0 && (
+        <div className="mt-12">
+          <h3 className="text-xl font-semibold mb-4">📁 Uploaded Images</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            {uploadedImages.map((img) => (
+              <div
+                key={img.id}
+                className="relative border rounded-lg overflow-hidden group"
+              >
+                <img
+                  src={img.url}
+                  alt="Uploaded"
+                  className="w-full h-48 object-cover"
+                />
+                <button
+                  onClick={() => handleDelete(img.id, img.path)}
+                  className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded shadow hover:bg-red-700 transition"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
