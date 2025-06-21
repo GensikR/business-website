@@ -21,6 +21,11 @@ const UniversalHeader: React.FC<UniversalHeaderProps> = ({ backgroundImageUrl })
             className="w-full h-auto object-contain"
             priority
           />
+
+          {/* PhoneNumber component positioned at the bottom */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full px-4">
+            <PhoneNumber />
+          </div>
         </div>
       )}
     </section>

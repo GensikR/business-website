@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           backgroundImageUrl="/images/logo.png"
         />
 
-        <PhoneNumber/>
+        {/* <PhoneNumber/> */}
         
 
         {/* Main Content Area */}
