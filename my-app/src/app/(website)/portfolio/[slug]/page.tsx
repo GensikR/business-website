@@ -12,6 +12,7 @@ import { notFound } from 'next/navigation';
 import { WorkPost } from '@/types';
 import firebaseConfig from '@/lib/utils/firebase_config';
 import ImageCarousel from '../../../../components/portfolio/ImageCarousel';
+import Gallery from '@/components/portfolio/Gallery';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -116,6 +117,7 @@ export default async function PortfolioPostPage({
             </a>
           </div>
         )}
+        <Gallery/>
       </div>
     </main>
   );
