@@ -1,8 +1,15 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getFirestore, collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  orderBy,
+  limit,
+  getDocs
+} from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
 import firebaseConfig from '@/lib/utils/firebase_config';
 
 const app = initializeApp(firebaseConfig);
@@ -15,18 +22,18 @@ const Gallery: React.FC = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const q = query(collection(db, 'posts'), orderBy('created_time', 'desc'), limit(20));
+        const q = query(collection(db, 'gallery'), orderBy('uploadedAt', 'desc'), limit(50));
         const snapshot = await getDocs(q);
 
-        const all: string[] = [];
+        const urls: string[] = [];
         snapshot.forEach((doc) => {
           const data = doc.data();
-          if (Array.isArray(data.img_srcs)) {
-            all.push(...data.img_srcs);
+          if (data.url) {
+            urls.push(data.url);
           }
         });
 
-        setImages(all.slice(0, 40));
+        setImages(urls);
       } catch (err) {
         console.error('Error fetching gallery images:', err);
       }
@@ -36,11 +43,12 @@ const Gallery: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if (images.length === 0) return;
     const timer = setInterval(() => {
       setCurrentIndex((i) => (i + 1) % images.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, [images.length]);
+  }, [images]);
 
   if (images.length === 0) return null;
 
@@ -51,19 +59,18 @@ const Gallery: React.FC = () => {
           src={images[currentIndex]}
           alt={`Gallery image ${currentIndex + 1}`}
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
-          style={{ borderRadius: '12px' }}
         />
 
         <button
           onClick={() => setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)}
-          className="absolute top-1/2 left-4 -translate-y-1/2 z-10 bg-white/70 hover:bg-white text-black p-3 rounded-full shadow-md"
+          className="absolute top-1/2 left-4 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-black p-3 rounded-full shadow-md"
         >
           ←
         </button>
 
         <button
           onClick={() => setCurrentIndex((prev) => (prev + 1) % images.length)}
-          className="absolute top-1/2 right-4 -translate-y-1/2 z-10 bg-white/70 hover:bg-white text-black p-3 rounded-full shadow-md"
+          className="absolute top-1/2 right-4 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-black p-3 rounded-full shadow-md"
         >
           →
         </button>
