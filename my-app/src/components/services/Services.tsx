@@ -88,16 +88,6 @@ const Services: React.FC = () => {
             </div>
           ))}
         </div>
-
-        {/* Main CTA at bottom */}
-        <div className="mt-20 text-center">
-          <Link
-            href="#scheduler"
-            className="inline-flex items-center gap-3 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-4 px-8 rounded-full text-lg shadow-lg transition-all duration-300"
-          >
-            Get a Free Estimate <ArrowRightIcon />
-          </Link>
-        </div>
       </div>
     </section>
   );

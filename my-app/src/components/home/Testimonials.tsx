@@ -115,22 +115,6 @@ const Testimonials: React.FC = () => (
           </motion.div>
         ))}
       </div>
-
-      {/* Call to Action */}
-      <motion.div
-        className="mt-16"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6, duration: 0.6 }}
-      >
-        <Link
-          href="/case-studies"
-          className="inline-flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-full shadow-lg transition-all duration-300"
-        >
-          <span>View Featured Works</span>
-          <ArrowRightIcon />
-        </Link>
-      </motion.div>
     </div>
   </section>
 );

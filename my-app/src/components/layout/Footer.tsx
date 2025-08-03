@@ -79,15 +79,6 @@ const Footer: React.FC = () => {
               </svg>
             </Link>
           </div>
-
-          {/* Chat Button */}
-          <button
-            onClick={() => alert("Chat feature coming soon!")}
-            className="w-full sm:w-auto self-center md:self-start text-sm font-semibold bg-blue-600 hover:bg-blue-700 focus-visible:ring-4 focus-visible:ring-blue-400 text-white py-3 px-6 rounded-full shadow-md transition"
-            aria-label="Open chat with Mauri Remodeling"
-          >
-            Open Chat
-          </button>
         </section>
       </div>
 
