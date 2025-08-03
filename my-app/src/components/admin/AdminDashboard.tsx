@@ -9,21 +9,20 @@ import {
   Layers,
   ArrowLeft
 } from 'lucide-react';
+import Appointments from "@/components/admin/Appointments"
+import Calendar from "@/components/admin/Calendar"
+import GalleryAdmin from './GalleryAdmin';
+import Inbox from './inbox/Inbox';
+import PortfolioAdmin from './PortfolioAdmin';
 
 type SectionKey = 'appointments' | 'calendar' | 'gallery' | 'inbox' | 'portfolio';
-
-const Appointments = () => <div className="text-center py-10">📋 Appointments View</div>;
-const Calendar = () => <div className="text-center py-10">📆 Calendar View</div>;
-const Gallery = () => <div className="text-center py-10">🖼️ Gallery Editor</div>;
-const Inbox = () => <div className="text-center py-10">📨 Inbox</div>;
-const Portfolio = () => <div className="text-center py-10">🗂️ Portfolio Manager</div>;
 
 const sections: Record<SectionKey, React.ReactNode> = {
   appointments: <Appointments />,
   calendar: <Calendar />,
-  gallery: <Gallery />,
+  gallery: <GalleryAdmin />,
   inbox: <Inbox />,
-  portfolio: <Portfolio />,
+  portfolio: <PortfolioAdmin />,
 };
 
 const options: { id: SectionKey; label: string; icon: React.ElementType }[] = [
@@ -43,7 +42,7 @@ const AdminDashboard = () => {
         {!activeTab && (
           <>
             <h1 className="text-xl font-bold text-blue-800">
-              🎮 What would you like to manage?
+              What would you like to manage?
             </h1>
             <p className="text-gray-600 text-sm">Tap a tool below to begin</p>
 

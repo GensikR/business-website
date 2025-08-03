@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Chat, Message } from '../../../../types';
-import ChatList from '../../../../components/admin/inbox/ChatList';
-import ChatWindow from '../../../../components/admin/inbox/ChatWindow';
+import { Chat, Message } from '@/types';
+import ChatList from '@/components/admin/inbox/ChatList';
+import ChatWindow from '@/components/admin/inbox/ChatWindow';
 import {
   getFirestore,
   collection,
@@ -16,10 +16,8 @@ import {
   DocumentData,
 } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
-import firebaseConfig from '@/lib/utils/firebase_config'; // Adjust the path as necessary
+import firebaseConfig from '@/lib/utils/firebase_config';
 
-
-console.log('Firebase Config:', firebaseConfig); // Log the config to check if it's correct
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
@@ -27,7 +25,6 @@ const Inbox: React.FC = () => {
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null); 
   const [chats, setChats] = useState<Chat[]>([]); 
 
-  // Fetch chats and messages
   const fetchChats = async () => {
     const chatsRef = collection(db, 'Chats');
     const q = query(chatsRef, orderBy('createdAt', 'desc'));
@@ -59,7 +56,6 @@ const Inbox: React.FC = () => {
     setChats(chatsList);
   };
 
-  // Real-time listener for chat list
   useEffect(() => {
     const chatsRef = collection(db, 'Chats');
     const unsubscribe = onSnapshot(chatsRef, () => {
@@ -68,7 +64,6 @@ const Inbox: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
-  // Real-time listener for selected chat
   useEffect(() => {
     if (!selectedChat?.id) return;
 
@@ -106,12 +101,15 @@ const Inbox: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      <div className="w-1/3 border-r p-4 overflow-y-auto">
-        <ChatList chats={chats} onSelectChat={handleSelectChat} />
-      </div>
-      <div className="flex-1 p-4">
-        <ChatWindow chat={selectedChat} onSendMessage={handleSendMessage} />
+    <div className="max-w-4xl mx-auto p-4 flex flex-col gap-4 h-full text-gray-800">
+      <h2 className="text-2xl font-bold text-blue-800 text-center mb-2">📨 Inbox</h2>
+      <div className="flex flex-col md:flex-row gap-4 md:h-[75vh]">
+        <div className="md:w-1/3 w-full border rounded-xl shadow-sm overflow-y-auto bg-white">
+          <ChatList chats={chats} onSelectChat={handleSelectChat} />
+        </div>
+        <div className="md:flex-1 w-full border rounded-xl shadow-sm bg-white">
+          <ChatWindow chat={selectedChat} onSendMessage={handleSendMessage} />
+        </div>
       </div>
     </div>
   );

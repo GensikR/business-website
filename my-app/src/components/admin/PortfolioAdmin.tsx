@@ -17,7 +17,7 @@ type ProcessStatus =
   | 'Processing'
   | 'Done';
 
-export default function FacebookBusinessLoginPage() {
+export default function PortfolioAdmin() {
   const [isSdkReady, setIsSdkReady] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +30,6 @@ export default function FacebookBusinessLoginPage() {
   const [postsProcessed, setPostsProcessed] = useState<number>(0);
   const [processStatus, setProcessStatus] = useState<ProcessStatus>('Not Logged In');
 
-  // Load Facebook SDK
   useEffect(() => {
     if (window.FB) {
       setIsSdkReady(true);
@@ -54,7 +53,6 @@ export default function FacebookBusinessLoginPage() {
     document.body.appendChild(script);
   }, []);
 
-  // Fetch posts from server
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -86,12 +84,10 @@ export default function FacebookBusinessLoginPage() {
     }
   }, [loggedIn, userId, accessToken, postsFetched]);
 
-  // Process posts in chunks
   useEffect(() => {
     const process = async () => {
       try {
         setProcessStatus('Processing');
-
         const chunkSize = 5;
         for (let i = 0; i < posts.length; i += chunkSize) {
           const chunk = posts.slice(i, i + chunkSize);
@@ -124,7 +120,6 @@ export default function FacebookBusinessLoginPage() {
     }
   }, [processStatus, posts]);
 
-  // Facebook Login
   const handleLogin = () => {
     if (!window.FB) {
       setError('Facebook SDK not loaded.');
@@ -156,13 +151,13 @@ export default function FacebookBusinessLoginPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-100">
-      <h1 className="text-3xl font-bold mb-4">Facebook Business Login</h1>
+    <div className="w-full px-4 py-6 max-w-xl mx-auto text-center bg-white rounded-xl shadow-sm">
+      <h1 className="text-2xl font-bold text-blue-800 mb-4">📣 Portfolio Manager</h1>
 
       <button
         onClick={handleLogin}
         disabled={!isSdkReady || loading}
-        className={`px-4 py-2 rounded text-white transition ${
+        className={`w-full py-2 text-white font-semibold rounded-md transition ${
           loading || !isSdkReady
             ? 'bg-gray-400 cursor-not-allowed'
             : 'bg-blue-600 hover:bg-blue-700'
@@ -171,8 +166,7 @@ export default function FacebookBusinessLoginPage() {
         {loading ? 'Connecting...' : 'Login with Facebook'}
       </button>
 
-      {/* Show process status */}
-      <div className="mt-4 text-sm text-gray-700 font-medium">
+      <p className="mt-4 text-sm font-medium text-gray-700">
         <span>Status: </span>
         <span
           className={`font-semibold ${
@@ -187,27 +181,24 @@ export default function FacebookBusinessLoginPage() {
         >
           {processStatus}
         </span>
-      </div>
+      </p>
 
-      {/* Show error */}
-      {error && <p className="mt-4 text-red-600">{error}</p>}
+      {error && <p className="text-red-600 mt-3">{error}</p>}
 
-      {/* Show fetched posts */}
       {postsFetched && (
-        <div className="mt-6 w-full max-w-md">
-          <h2 className="text-xl font-semibold mb-2">
-            Fetched {postsNumber} Posts
+        <div className="mt-6 text-left">
+          <h2 className="text-lg font-semibold text-gray-800 mb-1">
+            Fetched {postsNumber} posts
           </h2>
-
-          <p className="text-sm text-gray-600 mb-2">
+          <p className="text-sm text-gray-500 mb-2">
             Processed {postsProcessed} / {postsNumber}
           </p>
 
-          <ul className="space-y-2 max-h-96 overflow-y-auto">
+          <ul className="space-y-2 max-h-64 overflow-y-auto border-t pt-2">
             {posts.map((post, index) => (
               <li
                 key={index}
-                className="p-3 border border-gray-300 rounded bg-white text-sm"
+                className="p-3 border border-gray-200 bg-gray-50 rounded text-sm text-gray-800"
               >
                 {post.message || '[No message]'}
               </li>
