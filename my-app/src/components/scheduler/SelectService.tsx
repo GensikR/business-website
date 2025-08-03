@@ -18,12 +18,12 @@ const SelectService: React.FC<{
 
   return (
     <section>
-      <h2 className="text-xl sm:text-2xl font-bold text-blue-800 mb-4 sm:mb-6 flex items-center gap-2">
+      <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 mb-4 sm:mb-6 flex items-center gap-2">
         <Sparkles className="text-yellow-500 w-5 h-5 sm:w-6 sm:h-6" />
         1. Select a Service
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5">
         {servicesWithOther.map((service) => {
           const isSelected = selectedService === service.link;
 
@@ -31,7 +31,7 @@ const SelectService: React.FC<{
             <button
               key={service.link}
               onClick={() => setSelectedService(service.link)}
-              className={`text-left rounded-xl border shadow-sm p-4 sm:p-6 transition hover:shadow-md hover:border-blue-400 group
+              className={`text-left rounded-xl border shadow-sm p-3 sm:p-4 transition hover:shadow-md hover:border-blue-400 group w-full
                 ${
                   isSelected
                     ? "border-blue-600 bg-blue-50 ring-2 ring-blue-200"
@@ -48,7 +48,7 @@ const SelectService: React.FC<{
                   </span>
                 )}
               </div>
-              <p className="mt-1 sm:mt-2 text-gray-600 text-sm leading-snug hidden sm:block">
+              <p className="mt-1 text-gray-600 text-sm leading-snug">
                 {service.description}
               </p>
             </button>

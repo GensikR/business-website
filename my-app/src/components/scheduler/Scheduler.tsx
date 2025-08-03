@@ -39,7 +39,6 @@ const Scheduler: React.FC = () => {
     }
   }, [step]);
 
-
   const updateCustomerInfo = (field: string, value: string | boolean) => {
     setCustomerInfo(prev => ({ ...prev, [field]: value }));
   };
@@ -64,7 +63,6 @@ const Scheduler: React.FC = () => {
 
   const handleSubmit = async () => {
     const formData = new FormData();
-
     formData.append('selectedService', selectedService);
     formData.append('description', description);
     formData.append('selectedDay', selectedDay);
@@ -109,17 +107,17 @@ const Scheduler: React.FC = () => {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white via-blue-50 to-blue-100 py-20 px-4 md:px-8 lg:px-20">
-      <div ref={formRef} className="max-w-4xl mx-auto bg-white shadow-2xl rounded-3xl px-10 py-12 space-y-10">
+    <main className="min-h-screen bg-gradient-to-b from-white via-blue-50 to-blue-100 py-10 px-4 sm:py-12 sm:px-6 md:px-8 lg:px-20">
+      <div ref={formRef} className="w-full max-w-4xl mx-auto bg-white shadow-2xl rounded-2xl sm:rounded-3xl px-4 sm:px-6 md:px-10 py-8 sm:py-10 space-y-10">
         <div className="text-center">
-          <h1 className="text-4xl font-extrabold text-blue-800 mb-2">Schedule a Consultation</h1>
-          <p className="text-gray-500 text-base">We’ll connect you with a pro at your preferred time</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-blue-800 mb-2">Schedule a Consultation</h1>
+          <p className="text-gray-500 text-sm sm:text-base">We’ll connect you with a pro at your preferred time</p>
         </div>
 
         {/* Steps */}
         <div className="relative">
-          <div className="absolute left-0 top-2 h-full w-1 bg-blue-100 rounded"></div>
-          <div className="space-y-10 pl-4 md:pl-6">
+          <div className="absolute left-0 top-2 h-full w-1 bg-blue-100 rounded hidden sm:block"></div>
+          <div className="space-y-10 pl-0 sm:pl-4 md:pl-6">
             {step === 1 && <SelectService selectedService={selectedService} setSelectedService={setSelectedService} />}
             {step === 2 && <DescribeProject description={description} setDescription={setDescription} />}
             {step === 3 && <UploadImages imagePreviews={imagePreviews} handleImageUpload={handleImageUpload} />}
@@ -156,11 +154,11 @@ const Scheduler: React.FC = () => {
         </div>
 
         {/* Navigation */}
-        <div className="flex justify-between items-center border-t pt-8 mt-8">
+        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 border-t pt-8 mt-8">
           {step > 1 ? (
             <button
               onClick={() => setStep(step - 1)}
-              className="text-blue-600 hover:underline text-sm font-medium"
+              className="text-blue-600 hover:underline text-sm font-medium self-start sm:self-auto"
             >
               ← Back
             </button>
@@ -169,7 +167,7 @@ const Scheduler: React.FC = () => {
           {step < 6 ? (
             <button
               onClick={() => setStep(step + 1)}
-              className={`inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-2 rounded-full shadow transition ${
+              className={`inline-flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold px-4 py-2 text-sm sm:text-base sm:px-6 rounded-full shadow transition ${
                 (step === 1 && !selectedService) ||
                 (step === 2 && !description) ||
                 (step === 4 && selectedSlots.length === 0) ||
@@ -200,7 +198,7 @@ const Scheduler: React.FC = () => {
           ) : (
             <button
               onClick={handleSubmit}
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-full shadow transition"
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 text-sm sm:text-base sm:px-6 rounded-full shadow transition self-end sm:self-auto"
             >
               Submit Request
             </button>

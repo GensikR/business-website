@@ -21,15 +21,18 @@ const InputField: React.FC<{
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }> = ({ label, icon, type, value, placeholder, onChange }) => (
   <div>
-    <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-    <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500 bg-white transition">
+    <label className="block text-sm sm:text-base font-medium text-gray-700 mb-1 sm:mb-2">
+      {label}
+    </label>
+    <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 sm:py-2.5 focus-within:ring-2 focus-within:ring-blue-500 bg-white transition">
       <span className="text-gray-500 mr-2">{icon}</span>
       <input
         type={type}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full outline-none bg-transparent text-sm"
+        className="w-full outline-none bg-transparent text-sm sm:text-base"
+        autoComplete="off"
       />
     </div>
   </div>
@@ -45,9 +48,11 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
 }) => {
   return (
     <section>
-      <h2 className="text-2xl font-bold text-blue-800 mb-6">5. Your Contact Information</h2>
+      <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 mb-5 sm:mb-6">
+        5. Your Contact Information
+      </h2>
 
-      <div className="space-y-6">
+      <div className="space-y-5 sm:space-y-6">
         <InputField
           label="Full Name"
           icon={<User className="w-4 h-4" />}
@@ -92,7 +97,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
             onChange={(e) => onChange('consent', e.target.checked)}
             className="mt-1 accent-blue-600 w-4 h-4 rounded"
           />
-          <label htmlFor="consent" className="text-sm text-gray-700 leading-snug">
+          <label htmlFor="consent" className="text-sm sm:text-base text-gray-700 leading-snug">
             I consent to be contacted via phone or text message regarding this request.
           </label>
         </div>
