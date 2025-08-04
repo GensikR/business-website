@@ -4,7 +4,7 @@ import React from 'react';
 import { Phone, MessageCircle } from 'lucide-react';
 
 export default function PhoneNumber() {
-  const number = '+12144042790';
+  const number = '+12144042798';
 
   return (
     <div className="w-full flex justify-center mt-16 sm:mt-20">
