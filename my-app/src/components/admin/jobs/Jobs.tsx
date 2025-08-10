@@ -1,45 +1,25 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-  CalendarCheck,
-  ImagePlus,
-  MessageSquareText,
-  ClipboardList,
-  Layers,
-  ArrowLeft
-} from 'lucide-react';
-import Appointments from "@/components/admin/Appointments"
-import Calendar from "@/components/admin/Calendar"
-import GalleryAdmin from './GalleryAdmin';
-import Inbox from './inbox/Inbox';
-import PortfolioAdmin from './PortfolioAdmin';
-import Employees from './employees/Employees';
-import Jobs from './jobs/Jobs'
+import { PlusCircle, List, ArrowLeft } from 'lucide-react';
 
-type SectionKey = 'appointments' | 'calendar' | 'gallery' | 'inbox' | 'portfolio' | 'employees' | 'jobs';
+import AddJob from './AddJob';
+import CurrentJobs from './CurrentJobs';
+
+type SectionKey = 'addJob' | 'currentJobs';
 
 const sections: Record<SectionKey, React.ReactNode> = {
-  appointments: <Appointments />,
-  calendar: <Calendar />,
-  gallery: <GalleryAdmin />,
-  inbox: <Inbox />,
-  portfolio: <PortfolioAdmin />,
-  employees: <Employees />,
-  jobs: <Jobs />,
+  addJob: <AddJob />,
+  currentJobs: <CurrentJobs />,
 };
 
 const options: { id: SectionKey; label: string; icon: React.ElementType }[] = [
-  { id: 'appointments', label: 'Appointments', icon: ClipboardList },
-  { id: 'calendar', label: 'Calendar', icon: CalendarCheck },
-  { id: 'gallery', label: 'Gallery', icon: ImagePlus },
-  { id: 'inbox', label: 'Inbox', icon: MessageSquareText },
-  { id: 'portfolio', label: 'Portfolio', icon: Layers },
-  { id: 'employees', label: 'Employees', icon: Layers},
-  { id: 'jobs', label: 'Jobs', icon: Layers},
+  { id: 'addJob', label: 'Add New Job', icon: PlusCircle },
+  { id: 'currentJobs', label: 'Current Jobs', icon: List },
 ];
 
-const AdminDashboard = () => {
+const Jobs = () =>
+{
   const [activeTab, setActiveTab] = useState<SectionKey | null>(null);
 
   return (
@@ -48,9 +28,9 @@ const AdminDashboard = () => {
         {!activeTab && (
           <>
             <h1 className="text-xl font-bold text-blue-800">
-              What would you like to manage?
+              Jobs Management
             </h1>
-            <p className="text-gray-600 text-sm">Tap a tool below to begin</p>
+            <p className="text-gray-600 text-sm">Select an option below</p>
 
             <div className="grid grid-cols-2 gap-3 mt-6">
               {options.map(({ id, label, icon: Icon }) => (
@@ -70,16 +50,18 @@ const AdminDashboard = () => {
         )}
 
         {activeTab && (
-          <div className="text-left">
+          <div className="text-left max-w-sm mx-auto">
             <button
               onClick={() => setActiveTab(null)}
               className="mb-4 flex items-center gap-1 text-blue-600 hover:underline text-sm"
             >
               <ArrowLeft className="w-4 h-4" />
-              Dashboard
+              Back
             </button>
 
-            <div className="bg-white rounded-xl shadow p-4">{sections[activeTab]}</div>
+            <div className="bg-white rounded-xl shadow p-4">
+              {sections[activeTab]}
+            </div>
           </div>
         )}
       </div>
@@ -87,4 +69,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default Jobs;
