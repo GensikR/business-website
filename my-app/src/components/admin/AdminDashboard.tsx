@@ -14,8 +14,9 @@ import Calendar from "@/components/admin/Calendar"
 import GalleryAdmin from './GalleryAdmin';
 import Inbox from './inbox/Inbox';
 import PortfolioAdmin from './PortfolioAdmin';
+import Employees from './employees/Employees';
 
-type SectionKey = 'appointments' | 'calendar' | 'gallery' | 'inbox' | 'portfolio';
+type SectionKey = 'appointments' | 'calendar' | 'gallery' | 'inbox' | 'portfolio' | 'employees';
 
 const sections: Record<SectionKey, React.ReactNode> = {
   appointments: <Appointments />,
@@ -23,6 +24,8 @@ const sections: Record<SectionKey, React.ReactNode> = {
   gallery: <GalleryAdmin />,
   inbox: <Inbox />,
   portfolio: <PortfolioAdmin />,
+  employees: <Employees />
+
 };
 
 const options: { id: SectionKey; label: string; icon: React.ElementType }[] = [
@@ -31,6 +34,7 @@ const options: { id: SectionKey; label: string; icon: React.ElementType }[] = [
   { id: 'gallery', label: 'Gallery', icon: ImagePlus },
   { id: 'inbox', label: 'Inbox', icon: MessageSquareText },
   { id: 'portfolio', label: 'Portfolio', icon: Layers },
+  { id: 'employees', label: 'Employees', icon: Layers},
 ];
 
 const AdminDashboard = () => {
