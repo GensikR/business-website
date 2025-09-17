@@ -10,31 +10,23 @@ type UniversalHeaderProps = {
 
 const UniversalHeader: React.FC<UniversalHeaderProps> = ({ backgroundImageUrl }) => {
   return (
-    <section className="w-full bg-white py-8 sm:py-16">
+    <section className="w-full bg-white relative">
       {backgroundImageUrl && (
-        <div className="relative w-full max-w-5xl mx-auto px-4">
-          <div className="relative">
-            <Image
-              src={backgroundImageUrl}
-              alt="Header image"
-              width={1600}
-              height={800}
-              className="w-full h-auto object-contain"
-              priority
-            />
-
-            {/* ❗ Hidden on small screens (mobile), shown only on desktop */}
-            <div className="hidden sm:block absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full px-4">
-              <PhoneNumber />
-            </div>
-          </div>
-
-          {/* ❗Shown only on small screens (mobile), not on desktop */}
-          <div className="block sm:hidden mt-4">
-            <PhoneNumber />
-          </div>
+        <div className="relative w-full h-[60vh] overflow-hidden">
+          <Image
+            src={backgroundImageUrl}
+            alt="Header image"
+            fill
+            className="object-cover"
+            priority
+          />
         </div>
       )}
+
+      {/* Positioning the PhoneNumber component, let its internal styles handle appearance */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
+        <PhoneNumber />
+      </div>
     </section>
   );
 };

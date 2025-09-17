@@ -7,23 +7,21 @@ export default function PhoneNumber() {
   const number = '+12144042798';
 
   return (
-    <div className="w-full flex justify-center mt-16 sm:mt-20">
-      <div className="flex gap-3">
-        <a
-          href={`tel:${number}`}
-          className="flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 text-white rounded-full shadow-md hover:bg-blue-700 transition"
-        >
-          <Phone className="w-4 h-4" />
-          Call
-        </a>
-        <a
-          href={`sms:${number}`}
-          className="flex items-center gap-2 px-4 py-2 text-sm bg-green-600 text-white rounded-full shadow-md hover:bg-green-700 transition"
-        >
-          <MessageCircle className="w-4 h-4" />
-          Text
-        </a>
-      </div>
+    <div className="flex gap-4 sm:gap-6">
+      <a
+        href={`tel:${number}`}
+        className="flex items-center gap-2 px-6 py-3 text-base bg-[#4a85a0] text-white rounded-full shadow-lg transition transform hover:scale-105 hover:shadow-xl"
+      >
+        <Phone className="w-5 h-5" />
+        Call
+      </a>
+      <a
+        href={`sms:${number}`}
+        className="flex items-center gap-2 px-6 py-3 text-base bg-[#D4AF37] text-black rounded-full shadow-lg transition transform hover:scale-105 hover:shadow-xl"
+      >
+        <MessageCircle className="w-5 h-5" />
+        Text
+      </a>
     </div>
   );
 }

@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Hero Section */}
         <UniversalHeader
-          backgroundImageUrl="/images/logo.png"
+          backgroundImageUrl="/images/background.png"
         />
 
         {/* <PhoneNumber/> */}
