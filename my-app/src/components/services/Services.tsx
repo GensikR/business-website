@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Service } from "@/types/index";
@@ -7,7 +7,7 @@ import { all_services } from "@/lib/utils/getService";
 
 const ArrowRightIcon = () => (
   <svg
-    className="ml-2 w-4 h-4 inline-block"
+    className="ml-2 w-4 h-4 inline-block transition-transform duration-300 group-hover:translate-x-1"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
@@ -21,75 +21,79 @@ const ArrowRightIcon = () => (
 );
 
 const Services: React.FC = () => {
-  const [servicesData, setServicesData] = useState<Service[]>([]);
-
-  useEffect(() => {
-    setServicesData(all_services);
-  }, []);
+  // NOTE: The useEffect and useState for servicesData can be removed
+  // if all_services can be imported and used directly, as it is here.
+  const servicesData: Service[] = all_services;
 
   return (
-    <section className="py-24 bg-gradient-to-b from-gray-100 to-white">
-      <div className="container mx-auto px-6 md:px-12 lg:px-20">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">
-            Craftsmanship Meets Creativity
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Explore our diverse remodeling services designed to elevate your
-            living space — personalized, precise, and built to last.
-          </p>
-        </div>
+    // The component is designed to be placed inside the ComponentContainer.
+    // We provide its own internal padding.
+    <div className="py-20 px-6 md:px-12">
+      {/* Section Header - Styled for the dark, warm theme */}
+      <div className="text-center mb-16">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4">
+          Craftsmanship Meets Creativity
+        </h2>
+        <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+          Explore our diverse remodeling services designed to elevate your
+          living space — personalized, precise, and built to last.
+        </p>
+      </div>
 
-        {/* Services Grid */}
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-          {servicesData.map((service, index) => (
-            <div
-              key={index}
-              className="group relative bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300 flex flex-col"
-            >
-              {/* Image */}
-              <div className="relative h-56 w-full overflow-hidden">
-                <Image
-                  src={service.image}
-                  alt={service.title}
-                  layout="fill"
-                  objectFit="cover"
-                  className="group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
+      {/* Services Grid */}
+      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {servicesData.map((service) => (
+          // CARD REDESIGN: "Glassmorphism" effect for an elegant, modern look.
+          <div
+            key={service.title}
+            className="group relative bg-[#292524]/50 backdrop-blur-sm border border-white/10 
+                       rounded-2xl overflow-hidden shadow-lg shadow-black/40
+                       transition-all duration-300 hover:border-white/20 hover:-translate-y-2 flex flex-col"
+          >
+            {/* Image */}
+            <div className="relative h-56 w-full overflow-hidden">
+              <Image
+                src={service.image}
+                alt={service.title}
+                layout="fill"
+                objectFit="cover"
+                className="group-hover:scale-105 transition-transform duration-500"
+              />
+            </div>
 
-              {/* Content */}
-              <div className="p-6 flex flex-col flex-grow">
-                <h3 className="text-2xl font-semibold text-blue-800 mb-2 group-hover:text-blue-900 transition-colors">
-                  {service.title}
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
-                  {service.description}
-                </p>
+            {/* Content */}
+            <div className="p-6 flex flex-col flex-grow">
+              <h3 className="text-2xl font-semibold text-white mb-3">
+                {service.title}
+              </h3>
+              <p className="text-gray-300 text-sm leading-relaxed mb-6 line-clamp-3 flex-grow">
+                {service.description}
+              </p>
 
-                {/* Links */}
-                <div className="mt-auto space-y-3 flex flex-col items-center">
-                  <Link
-                    href="#scheduler"
-                    className="inline-block w-full text-center bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold py-2 px-4 rounded-full transition-all duration-300"
-                  >
-                    Get Free Estimate
-                  </Link>
+              {/* Links - Styled with the brand's gold accent color */}
+              <div className="mt-auto space-y-4 flex flex-col items-center">
+                <Link
+                  href="#scheduler"
+                  className="inline-block w-full text-center bg-[#D4AF37] hover:bg-amber-400 
+                             text-stone-900 text-sm font-bold py-3 px-4 rounded-full
+                             transition-all duration-300 shadow-md hover:shadow-lg"
+                >
+                  Get Free Estimate
+                </Link>
 
-                  <Link
-                    href={`/services/${service.link}`}
-                    className="inline-flex items-center justify-center text-blue-700 font-medium hover:text-blue-900 transition-colors"
-                  >
-                    Learn More <ArrowRightIcon />
-                  </Link>
-                </div>
+                <Link
+                  href={`/services/${service.link}`}
+                  className="group inline-flex items-center justify-center text-gray-300 font-medium 
+                             hover:text-white transition-colors duration-300"
+                >
+                  Learn More <ArrowRightIcon />
+                </Link>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-    </section>
+    </div>
   );
 };
 

@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { motion } from "framer-motion";
 
 interface Testimonial {
@@ -31,6 +30,7 @@ const testimonialsData: Testimonial[] = [
   },
 ];
 
+// Animation variants remain the same - they work perfectly with the new theme
 const cardVariants = {
   hidden: { opacity: 0, y: 40 },
   visible: (i: number) => ({
@@ -40,51 +40,40 @@ const cardVariants = {
   }),
 };
 
+// Quote Icon - Styled with the brand's gold accent color
 const QuoteIcon = () => (
   <svg
-    className="w-10 h-10 text-blue-400"
-    fill="currentColor"
-    viewBox="0 0 24 24"
-    aria-hidden="true"
-  >
-    <path d="M7.17 6.17a4 4 0 0 1 5.66 0l1.41 1.41a4 4 0 0 1 0 5.66l-1.41 1.41a4 4 0 0 1-5.66-5.66l1.41-1.41zm-2.83 7.66a6 6 0 0 0 8.48 0l1.41-1.41a6 6 0 0 0 0-8.48l-1.41-1.41a6 6 0 0 0-8.48 8.48l1.41 1.41z" />
-  </svg>
-);
-
-const ArrowRightIcon = () => (
-  <svg
-    className="w-5 h-5"
+    className="w-10 h-10 text-[#D4AF37]"
     fill="none"
     stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
+    strokeWidth="1.5"
     viewBox="0 0 24 24"
     aria-hidden="true"
   >
-    <path d="M5 12h14M13 5l7 7-7 7" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21l-3-3m0 0l3-3m-3 3h6m-9-6a9 9 0 1118 0 9 9 0 01-18 0z" />
   </svg>
 );
 
-const Testimonials: React.FC = () => (
-  <section className="relative py-20 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
-    {/* Decorative Dots */}
-    <div className="absolute inset-0 bg-[radial-gradient(#3b82f680_1px,transparent_1px)] bg-[length:20px_20px]" />
 
-    <div className="relative z-10 container mx-auto px-6 lg:px-12 text-center max-w-7xl">
-      {/* Section Title */}
+const Testimonials: React.FC = () => (
+  // The main wrapper is now a simple div with padding, designed for the ComponentContainer
+  <div className="py-20 px-6 md:px-12">
+    <div className="relative z-10 mx-auto text-center max-w-7xl">
+      {/* Section Title - Styled for the dark theme with a gold accent */}
       <motion.h2
-        className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4"
+        className="text-4xl md:text-5xl font-extrabold text-white mb-4"
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        Success <span className="text-blue-600">Stories</span>
+        Success <span className="text-[#D4AF37]">Stories</span>
       </motion.h2>
       <motion.p
-        className="text-lg text-gray-600 mb-16 max-w-2xl mx-auto"
+        className="text-lg text-gray-300 mb-16 max-w-3xl mx-auto"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
         transition={{ delay: 0.3, duration: 0.6 }}
       >
         Discover how Mauri Remodeling has brought dreams to life with world‑class craftsmanship and personalized service.
@@ -93,30 +82,33 @@ const Testimonials: React.FC = () => (
       {/* Testimonials Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {testimonialsData.map((t, i) => (
+          // Card Redesign - "Glassmorphism" effect to match the other components
           <motion.div
             key={i}
             custom={i}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.5 }}
             variants={cardVariants}
-            className="bg-white/70 backdrop-blur-lg border border-gray-200 rounded-2xl p-8 flex flex-col h-full hover:shadow-2xl transition-shadow duration-300"
+            className="bg-[#292524]/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 
+                       flex flex-col h-full shadow-lg shadow-black/40
+                       transition-all duration-300 hover:border-white/20 hover:-translate-y-2"
           >
-            <div className="mb-4">
+            <div className="mb-5">
               <QuoteIcon />
             </div>
-            <p className="text-2xl text-gray-800 leading-relaxed mb-6 flex-grow">
-              {t.quote}
+            <p className="text-lg text-gray-200 leading-relaxed mb-6 flex-grow text-left">
+              "{t.quote}"
             </p>
-            <div className="mt-4">
-              <p className="text-xl font-semibold text-blue-700">{t.author}</p>
-              <p className="text-gray-500">{t.company}</p>
+            <div className="mt-auto text-left">
+              <p className="text-xl font-semibold text-white">{t.author}</p>
+              <p className="text-gray-400">{t.company}</p>
             </div>
           </motion.div>
         ))}
       </div>
     </div>
-  </section>
+  </div>
 );
 
 export default Testimonials;

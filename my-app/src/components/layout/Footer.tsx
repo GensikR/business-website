@@ -1,4 +1,4 @@
-"use client";
+"use-client";
 
 import React from "react";
 import Link from "next/link";
@@ -6,26 +6,27 @@ import { categoryList } from "@/lib/utils/getService";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-white/30 backdrop-blur-md text-gray-800 border-t border-gray-200 select-none">
-      <div className="container mx-auto px-6 md:px-12 lg:px-24 py-16 max-w-7xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+    // 1. MAIN CONTAINER: Updated to a dark, semi-transparent "glass" theme.
+    <footer className="bg-[#292524]/80 backdrop-blur-md text-gray-300 border-t border-white/10 select-none">
+      <div className="container mx-auto px-6 md:px-12 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
 
-        {/* Company Overview */}
-        <div className="flex flex-col space-y-4 px-4 max-w-md mx-auto md:mx-0">
-          <h3 className="text-2xl font-extrabold text-gray-900 tracking-wide mb-2">Mauri Remodeling</h3>
-          <p className="text-sm text-gray-700 leading-relaxed">
+        {/* Company Overview - Text colors updated for readability */}
+        <div className="flex flex-col space-y-4">
+          <h3 className="text-2xl font-extrabold text-white tracking-wide mb-2">Mauri Remodeling</h3>
+          <p className="text-sm text-gray-300 leading-relaxed">
             Passion and precision on every project — from custom cabinets to full remodels. Transform your space with expert craftsmanship you can trust.
           </p>
         </div>
 
-        {/* Services */}
-        <nav aria-label="Footer Services" className="flex flex-col px-4 max-w-xs mx-auto md:mx-0">
-          <h4 className="text-lg font-semibold mb-4 text-gray-900 tracking-wide">Our Services</h4>
-          <ul className="space-y-2 text-sm">
+        {/* Services - Links now use the gold accent color on hover */}
+        <nav aria-label="Footer Services" className="flex flex-col">
+          <h4 className="text-lg font-semibold mb-4 text-white tracking-wide">Our Services</h4>
+          <ul className="space-y-3 text-sm">
             {categoryList.map(({ slug, name }) => (
               <li key={slug}>
                 <Link
                   href={`/services/${slug}`}
-                  className="transition-colors hover:text-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+                  className="transition-colors hover:text-[#D4AF37] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] rounded"
                 >
                   {name}
                 </Link>
@@ -34,20 +35,20 @@ const Footer: React.FC = () => {
           </ul>
         </nav>
 
-        {/* Connect With Us */}
-        <section aria-label="Social Media and Chat" className="flex flex-col px-4 max-w-xs mx-auto md:mx-0">
-          <h4 className="text-lg font-semibold mb-4 text-gray-900 tracking-wide">Connect With Us</h4>
-          <div className="flex space-x-4 mb-6 justify-center md:justify-start">
+        {/* Connect With Us - Social icons restyled for the dark theme */}
+        <section aria-label="Social Media and Chat" className="flex flex-col">
+          <h4 className="text-lg font-semibold mb-4 text-white tracking-wide">Connect With Us</h4>
+          <div className="flex space-x-4">
             {/* Facebook */}
             <Link
               href="https://www.facebook.com/MauriIdeas"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Facebook"
-              className="bg-white/50 p-3 rounded-full hover:bg-white transition-shadow shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="bg-white/10 p-3 rounded-full hover:bg-white/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
             >
               <svg
-                className="w-6 h-6 text-gray-800"
+                className="w-6 h-6 text-gray-200"
                 fill="currentColor"
                 viewBox="0 0 24 24"
                 aria-hidden="true"
@@ -62,29 +63,24 @@ const Footer: React.FC = () => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
-              className="bg-white/50 p-3 rounded-full hover:bg-white transition-shadow shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
+              className="bg-white/10 p-3 rounded-full hover:bg-white/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
             >
-              <svg
-                className="w-6 h-6 text-gray-800"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
+               <svg
+                className="w-6 h-6 text-gray-200"
+                fill="currentColor"
                 viewBox="0 0 24 24"
                 aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
               >
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                <path d="M16 11.37a4 4 0 1 1-4.73-4.73 4 4 0 0 1 4.73 4.73z" />
-                <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" />
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.012 3.584-.07 4.85c-.148 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.85s.012-3.584.07-4.85c.148-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.85-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.667.072 4.947c.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072s3.667-.014 4.947-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.947s-.014-3.667-.072-4.947c-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.689-.073-4.948-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44 1.441-.645 1.441-1.44-.645-1.44-1.441-1.44z" />
               </svg>
             </Link>
           </div>
         </section>
       </div>
 
-      {/* Bottom Bar */}
-      <div className="border-t border-gray-300 py-6 text-sm text-center text-gray-600 px-6 select-text">
-        &copy; {new Date().getFullYear()} Mauri Remodeling. All rights reserved.
+      {/* Bottom Bar - Styled for the dark theme */}
+      <div className="border-t border-white/10 py-6 text-sm text-center text-gray-400 px-6 select-text">
+        &copy; {new Date().getFullYear()} Mauri Remodeling. All Rights Reserved.
       </div>
     </footer>
   );
