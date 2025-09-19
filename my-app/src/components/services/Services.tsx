@@ -28,10 +28,10 @@ const Services: React.FC = () => {
   return (
     // The component is designed to be placed inside the ComponentContainer.
     // We provide its own internal padding.
-    <div className="py-20 px-6 md:px-12">
+    <div className=" md:px-12">
       {/* Section Header - Styled for the dark, warm theme */}
       <div className="text-center mb-16">
-        <h2 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight ">
           Craftsmanship Meets Creativity
         </h2>
         <p className="text-lg text-gray-300 max-w-3xl mx-auto">

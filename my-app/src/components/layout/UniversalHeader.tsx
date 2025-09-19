@@ -12,18 +12,18 @@ const UniversalHeader: React.FC<UniversalHeaderProps> = ({ backgroundImageUrl })
   return (
     <section className="w-full bg-white relative">
       {backgroundImageUrl && (
-        <div className="relative w-full h-[60vh] overflow-hidden">
+        <div className="relative w-full h-[53vh] md:h-[60vh] lg:h-[80vh]">
           <Image
             src={backgroundImageUrl}
             alt="Header image"
             fill
-            className="object-cover"
+            className="object-cover object-center"
             priority
           />
         </div>
       )}
 
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10">
         <PhoneNumber />
       </div>
     </section>
