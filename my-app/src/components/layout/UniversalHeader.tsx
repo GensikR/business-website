@@ -12,7 +12,7 @@ const UniversalHeader: React.FC<UniversalHeaderProps> = ({ backgroundImageUrl })
   return (
     <section className="w-full bg-white relative">
       {backgroundImageUrl && (
-        <div className="relative w-full h-[53vh] md:h-[60vh] lg:h-[80vh]">
+        <div className="relative w-full h-[50vh] md:h-[60vh] lg:h-[80vh]">
           <Image
             src={backgroundImageUrl}
             alt="Header image"
