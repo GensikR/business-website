@@ -1,5 +1,8 @@
+
+
 // generateTimeSlots.ts
-export function generateTimeSlots(dateString: string): string[] {
+export function generateTimeSlots(dateString: string): string[] 
+{
   const slots: string[] = [];
   const startHour = 9;
   const endHour = 20;

@@ -1,4 +1,4 @@
-import Scheduler from "@/components/scheduler/Scheduler";
+import Scheduler from "@/app/(website)/components/scheduler/Scheduler";
 
 export default function ContactPage() {
   return (

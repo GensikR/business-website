@@ -1,7 +1,7 @@
-import Story from "@/components/about/Story";
-import Values from "@/components/about/Values";
-import Team from "@/components/about/Team";
-import Mission from "@/components/about/Mission";
+import Story from "@/app/(website)/components/about/Story";
+import Values from "@/app/(website)/components/about/Values";
+import Team from "@/app/(website)/components/about/Team";
+import Mission from "@/app/(website)/components/about/Mission";
 
 export default function AboutPage() {
   return (

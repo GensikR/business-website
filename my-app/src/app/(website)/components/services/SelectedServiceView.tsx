@@ -5,9 +5,9 @@ import { all_services } from '@/lib/utils/getService';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import firebaseConfig from '@/lib/utils/firebase_config';
-import FeaturedWork from '@/components/portfolio/FeaturedWork';
-import Scheduler from '@/components/scheduler/Scheduler';
-import Gallery from '../portfolio/Gallery';
+import FeaturedWork from '@/app/(website)/components/portfolio/FeaturedWork';
+import Scheduler from '@/app/(website)/components/scheduler/Scheduler';
+import Gallery from '../../app/(website)/components/portfolio/Gallery';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);

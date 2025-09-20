@@ -1,57 +1,45 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import {
-  collection,
-  query,
-  orderBy,
-  limit,
-  getDocs,
-} from 'firebase/firestore';
-import { initializeApp } from 'firebase/app';
-// CORRECTED: The import path is now 'firebase/firestore'
-import { getFirestore } from 'firebase/firestore'; 
-import firebaseConfig from '@/lib/utils/firebase_config';
-import { all_services } from '@/lib/utils/getService';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { fetch_db_collection } from '@/lib/utils/firebase';
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-interface GalleryProps {
-  category?: string;
-}
-
-const Gallery: React.FC<GalleryProps> = ({ category }) => {
+const Gallery: React.FC= () => 
+{
   const [images, setImages] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const q = query(collection(db, 'gallery'), orderBy('uploadedAt', 'desc'), limit(50));
-        const snapshot = await getDocs(q);
-        const allImages = snapshot.docs.map((doc) => doc.data()).filter((data) => data.url) as { url: string; category?: string }[];
-        let filtered = allImages;
-        if (category) {
-          const serviceMatch = all_services.find(s => s.link === category);
-          const title = serviceMatch?.title ?? category;
-          const matching = allImages.filter((img) => img.category?.toLowerCase() === title.toLowerCase());
-          filtered = matching.length >= 10 ? matching : [...matching, ...allImages.slice(0, 10)];
-        }
-        setImages(filtered.map((img) => img.url));
-      } catch (err) {
-        console.error('Error fetching gallery images:', err);
-      }
-    };
-    fetchImages();
-  }, [category]);
+useEffect(() => 
+{
+  const getImages = async () => 
+  {
+    try 
+    {
+      const max = 100;
+      const collectionName = "gallery";
 
-  useEffect(() => {
+      const imageDocs = await fetch_db_collection(collectionName, max);
+      const urls = imageDocs
+        .map((doc: any) => doc.url)
+        .filter((url: string | undefined) => !!url);
+
+      setImages(urls);
+    } catch (error) {
+      console.error("Failed to fetch gallery images:", error);
+      setImages([]); 
+    } 
+  };
+
+  getImages();
+}, []);
+
+
+  useEffect(() => 
+  {
     if (images.length === 0) return;
     const timer = setInterval(() => {
       setCurrentIndex((i) => (i + 1) % images.length);
-    }, 5000);
+    }, 7000);
     return () => clearInterval(timer);
   }, [images]);
 

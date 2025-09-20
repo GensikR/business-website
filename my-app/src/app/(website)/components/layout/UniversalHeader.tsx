@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import PhoneNumber from "@/components/PhoneNumber";
+import PhoneNumber from "@/app/(website)/components/PhoneNumber";
 
 type UniversalHeaderProps = {
   backgroundImageUrl: string;

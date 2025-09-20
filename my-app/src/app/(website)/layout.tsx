@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
-import NavBar from '../../components/layout/NavBar';
-import Footer from '../../components/layout/Footer';
-import ChatBot from '../../components/ChatBot';
+import NavBar from './components/layout/NavBar';
+import Footer from './components/layout/Footer';
+import ChatBot from './components/ChatBot';
 import '@/app/globals.css';
-import UniversalHeader from '../../components/layout/UniversalHeader';
-import ComponentContainer from '@/components/layout/ComponentContainer';
+import UniversalHeader from './components/layout/UniversalHeader';
+import ComponentContainer from '@/app/(website)/components/layout/ComponentContainer';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

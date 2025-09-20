@@ -1,36 +1,36 @@
-import Services from "@/components/services/Services";
-import Testimonials from "@/components/home/Testimonials";
-import FAQ from "@/components/home/FAQ";
-import Team from "@/components/about/Team";
-import Scheduler from "@/components/scheduler/Scheduler";
-import FeaturedWork from "@/components/portfolio/FeaturedWork"; 
-import Gallery from "@/components/portfolio/Gallery";
-import ComponentContainer from "@/components/layout/ComponentContainer";
+import Services from "@/app/(website)/components/services/Services";
+import Testimonials from "@/app/(website)/components/home/Testimonials";
+import FAQ from "@/app/(website)/components/home/FAQ";
+import Team from "@/app/(website)/components/about/Team";
+import Scheduler from "@/app/(website)/components/scheduler/Scheduler";
+import FeaturedWork from "@/app/(website)/components/portfolio/FeaturedWork"; 
+import Gallery from "@/app/(website)/components/portfolio/Gallery";
 
-export default function HomePage() {
+export default function HomePage() 
+{
   return (
     <div>
-      {/* Gallery */}
+      {/*TODO REFACTOR Gallery */}
       <Gallery/>
 
-      {/* Team Section */}
+      {/*TODO REFACTOR  Team Section */}
       <Team />
   
-      {/* Services Section */}
+      {/*TODO REFACTOR  Services Section */}
       <Services />
       
-      {/* Featured Work Section */}
+      {/*TODO REFACTOR  Featured Work Section */}
       <FeaturedWork />
       
-      {/* Scheduler Section */}
+      {/*TODO REFACTOR Scheduler Section */}
       <div id="scheduler">
         <Scheduler />
       </div>
 
-      {/* Testimonials Section */}
+      {/*TODO REFACTOR  Testimonials Section */}
       <Testimonials />
 
-      {/* FAQ Section */}
+      {/*TODO REFACTOR FAQ Section */}
       <FAQ />
       </div>
   );
