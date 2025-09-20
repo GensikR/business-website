@@ -10,10 +10,10 @@ export default function HomePage()
 {
   return (
     <div>
-      {/*TODO REFACTOR Gallery */}
+      {/*Gallery */}
       <Gallery/>
 
-      {/*TODO REFACTOR  Team Section */}
+      {/*Team Section */}
       <Team />
   
       {/*TODO REFACTOR  Services Section */}

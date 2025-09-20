@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import AdminLogin from '@/components/admin/AdminLogin';
+import AdminLogin from './components/admin/AdminLogin';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/utils/firebase';
 import '@/app/globals.css';

@@ -1,4 +1,5 @@
 "use client";
+//TODO: Make it possible to full screen
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -20,14 +21,11 @@ const ArrowRightIcon = () => (
   </svg>
 );
 
-const Services: React.FC = () => {
-  // NOTE: The useEffect and useState for servicesData can be removed
-  // if all_services can be imported and used directly, as it is here.
+const Services: React.FC = () => 
+{
   const servicesData: Service[] = all_services;
 
   return (
-    // The component is designed to be placed inside the ComponentContainer.
-    // We provide its own internal padding.
     <div className=" md:px-12">
       {/* Section Header - Styled for the dark, warm theme */}
       <div className="text-center mb-16">
@@ -43,7 +41,6 @@ const Services: React.FC = () => {
       {/* Services Grid */}
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {servicesData.map((service) => (
-          // CARD REDESIGN: "Glassmorphism" effect for an elegant, modern look.
           <div
             key={service.title}
             className="group relative bg-[#292524]/50 backdrop-blur-sm border border-white/10 
@@ -70,7 +67,7 @@ const Services: React.FC = () => {
                 {service.description}
               </p>
 
-              {/* Links - Styled with the brand's gold accent color */}
+              {/* Links */}
               <div className="mt-auto space-y-4 flex flex-col items-center">
                 <Link
                   href="#scheduler"
